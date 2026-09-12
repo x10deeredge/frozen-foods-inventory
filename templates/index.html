@@ -1,0 +1,2838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#080808"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="manifest" href="/static/manifest.json"/>
+  <link rel="icon" type="image/jpeg" href="/static/logo.jpg"/>
+  <link rel="apple-touch-icon" href="/static/logo.jpg"/>
+  <title>PANDA'S — Wholesale Distribution System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          jet:'#080808', smoke:'#0e0e0e', card:'#141414', inner:'#1b1b1b',
+          border:'#242424', rail:'#303030', silver:'#888', chrome:'#bbb',
+          offwhite:'#edecea', muted:'#555', lime:'#c9f227', danger:'#f03030',
+          ok:'#3dd68c', info:'#60a5fa', amber:'#f59e0b'
+        }
+      }}
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',system-ui,sans-serif;background:#080808;color:#edecea;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    ::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:4px}
+
+    /* TABS */
+    .tab-panel{display:none}
+    .tab-panel.active{display:block;animation:fadeUp .22s cubic-bezier(.16,1,.3,1)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    .slide-in{opacity:0;transform:translateY(10px);animation:slideIn .3s cubic-bezier(.16,1,.3,1) forwards}
+    @keyframes slideIn{to{opacity:1;transform:translateY(0)}}
+
+    /* CARDS */
+    .card{background:#141414;border:1px solid #232323;border-radius:16px}
+    .card-sm{background:#191919;border:1px solid #262626;border-radius:12px}
+    .card-xs{background:#161616;border:1px solid #222;border-radius:10px;transition:border-color .15s}
+    .card-xs:hover{border-color:#333}
+
+    /* FORM */
+    .field{display:block;width:100%;background:#0b0b0b!important;border:1px solid #242424!important;color:#edecea!important;border-radius:10px!important;padding:10px 13px!important;font-size:13.5px;font-family:'Inter',sans-serif;outline:none!important;transition:border-color .18s,box-shadow .18s;-webkit-appearance:none;appearance:none}
+    .field:focus{border-color:#c9f227!important;box-shadow:0 0 0 3px rgba(201,242,39,.08)!important}
+    .field::placeholder{color:#383838!important}
+    .field.err{border-color:#f03030!important;box-shadow:0 0 0 3px rgba(240,48,48,.08)!important}
+    select.field option{background:#161616;color:#edecea}
+    .lbl{font-size:11px;font-weight:700;color:#666;letter-spacing:.4px;text-transform:uppercase;display:block;margin-bottom:5px}
+
+    /* BUTTONS */
+    .btn-lime{background:#c9f227;color:#080808;font-weight:700;font-size:13.5px;border:none;border-radius:10px;padding:11px 18px;width:100%;cursor:pointer;transition:background .15s,transform .1s,box-shadow .15s;font-family:'Inter',sans-serif}
+    .btn-lime:hover{background:#d8ff30;box-shadow:0 4px 18px rgba(201,242,39,.18)}
+    .btn-lime:active{transform:scale(.98)}
+    .btn-lime:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+    .btn-ghost{background:transparent;color:#777;font-weight:600;font-size:12px;border:1px solid #262626;border-radius:10px;padding:9px 14px;width:100%;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+    .btn-ghost:hover{border-color:#383838;color:#bbb}
+    .btn-icon{background:transparent;border:1px solid #232323;border-radius:8px;color:#666;padding:6px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+    .btn-icon:hover{border-color:#383838;color:#aaa}
+    .btn-icon.lime:hover{border-color:rgba(201,242,39,.3);color:#c9f227;background:rgba(201,242,39,.06)}
+    .btn-icon.red:hover{border-color:rgba(240,48,48,.3);color:#f03030;background:rgba(240,48,48,.06)}
+
+    /* BADGES */
+    .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+    .b-lime{background:rgba(201,242,39,.1);color:#c9f227;border:1px solid rgba(201,242,39,.2)}
+    .b-silver{background:rgba(187,187,187,.08);color:#999;border:1px solid rgba(187,187,187,.15)}
+    .b-ok{background:rgba(61,214,140,.1);color:#3dd68c;border:1px solid rgba(61,214,140,.2)}
+    .b-danger{background:rgba(240,48,48,.1);color:#f03030;border:1px solid rgba(240,48,48,.2)}
+    .b-amber{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
+    .b-info{background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2)}
+
+    /* NAV */
+    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;cursor:pointer;color:#444;transition:color .15s;border:none;background:none;font-family:'Inter',sans-serif}
+    .nav-btn .ni{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .nav-btn span{font-size:9px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+    .nav-btn.active{color:#c9f227}
+    .nav-btn.active .ni{background:rgba(201,242,39,.1)}
+
+    /* STAT CARD */
+    .stat-card{background:#121212;border:1px solid #202020;border-radius:14px;padding:16px;transition:border-color .2s}
+    .stat-card:hover{border-color:#2a2a2a}
+    .stat-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+
+    /* EMPTY STATE */
+    .empty{text-align:center;padding:42px 18px}
+    .empty-ico{width:42px;height:42px;border-radius:12px;background:#161616;border:1px solid #242424;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#3a3a3a}
+    .empty strong{color:#666;font-weight:600;display:block;margin-bottom:3px;font-size:13px}
+    .empty p{color:#3a3a3a;font-size:12px}
+
+    /* TOASTS */
+    .toast{position:fixed;top:18px;right:14px;z-index:9999;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:500;max-width:320px;pointer-events:none;animation:tIn .25s ease,tOut .3s ease 2.8s forwards}
+    .t-ok{background:#091a10;color:#3dd68c;border:1px solid #1a3d28}
+    .t-err{background:#1a0909;color:#f87171;border:1px solid #3d1a1a}
+    .t-warn{background:#1a1400;color:#fbbf24;border:1px solid #3d2e00}
+    @keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes tOut{from{opacity:1}to{opacity:0}}
+
+    /* MODALS */
+    .overlay{display:none;position:fixed;inset:0;z-index:1000;flex-direction:column;justify-content:flex-end}
+    .overlay.open{display:flex}
+    .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(6px)}
+    .sheet{position:relative;background:#111;border:1px solid #222;border-radius:22px 22px 0 0;padding:22px 18px;max-width:640px;width:100%;margin:0 auto;max-height:92vh;overflow-y:auto;animation:sheetUp .28s cubic-bezier(.16,1,.3,1)}
+    @keyframes sheetUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .sheet::-webkit-scrollbar{width:0}
+    .handle{width:34px;height:4px;background:#282828;border-radius:4px;margin:0 auto 16px}
+
+    /* SEGMENT / PERIOD FILTER PILLS */
+    .filter-pill{padding:6px 11px;font-size:11px;font-weight:700;border-radius:20px;border:1px solid #262626;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;color:#666;background:#141414;white-space:nowrap}
+    .filter-pill.active{background:#c9f227;color:#080808;border-color:#c9f227}
+
+    .seg-btn{flex:1;padding:8px 10px;font-size:11px;font-weight:700;border-radius:8px;border:none;cursor:pointer;transition:all .18s;font-family:'Inter',sans-serif;color:#444;background:transparent;letter-spacing:.4px;text-transform:uppercase}
+    .seg-btn.active{background:#c9f227;color:#080808}
+
+    .srch-wrap{position:relative}
+    .srch-wrap .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#333;pointer-events:none}
+    .srch-wrap .field{padding-left:36px!important}
+
+    .stock-track{height:4px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-top:6px}
+    .stock-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.16,1,.3,1)}
+    .p-track{height:3px;background:#1a1a1a;border-radius:3px;overflow:hidden}
+    .p-pos{height:100%;background:#c9f227;border-radius:3px;transition:width .6s cubic-bezier(.16,1,.3,1)}
+
+    .pulse-dot{width:7px;height:7px;border-radius:50%;display:inline-block;animation:pulse 1.6s infinite}
+    .pulse-amber{background:#f59e0b}
+    .pulse-danger{background:#f03030}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+    .cl-link{cursor:pointer;transition:color .15s}
+    .cl-link:hover{color:#c9f227}
+
+    .chart-wrap{position:relative}
+    .sec-title{font-size:17px;font-weight:800;color:#edecea;letter-spacing:-.2px}
+    .sec-sub{font-size:12px;color:#444;margin-top:2px}
+
+    .stock-on-hand-box{background:rgba(201,242,39,.04);border:1px solid rgba(201,242,39,.18);border-radius:10px;padding:10px 13px;display:flex;align-items:center;justify-content:space-between}
+    .cart-row{background:#121212;border:1px solid #202020;border-radius:12px;padding:12px;position:relative}
+
+    /* 3D PANDA LOGO */
+    .panda-logo-img{width:36px;height:36px;border-radius:10px;object-fit:cover;border:1px solid rgba(201,242,39,.35);box-shadow:0 0 16px rgba(201,242,39,.18)}
+
+    /* DROPDOWNS */
+    .pop-menu{display:none;position:absolute;right:0;top:100%;margin-top:8px;background:#141414;border:1px solid #262626;border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.75);z-index:100;min-width:240px;overflow:hidden;animation:popIn .2s ease}
+    .pop-menu.open{display:block}
+    @keyframes popIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* HIGH-CONTRAST CLEAN CORPORATE INVOICE & AUDIT PRINT STYLING */
+    .print-doc-container{background:#ffffff!important;color:#111827!important;font-family:'Inter',system-ui,sans-serif;padding:32px;border-radius:10px;box-shadow:0 4px 25px rgba(0,0,0,.15);line-height:1.45}
+    .print-doc-container th{color:#4b5563!important;border-bottom:2px solid #e5e7eb!important}
+    .print-doc-container td{border-bottom:1px solid #f3f4f6!important}
+
+    @media print {
+      body * { visibility: hidden !important; }
+      .print-doc-container, .print-doc-container * { visibility: visible !important; }
+      .print-doc-container { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; margin: 0 !important; padding: 20mm !important; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ AUTHENTICATION SCREEN (REAL LOGIN GATE) ═══════════════════ -->
+<div id="auth-gate-screen" class="fixed inset-0 z-[9999] bg-[#080808] flex items-center justify-center p-4">
+  <div class="max-w-sm w-full card p-6 border border-border">
+    <div class="text-center mb-6">
+      <img src="/static/logo.jpg" alt="PANDA'S Logo" class="w-16 h-16 mx-auto rounded-2xl border-2 border-lime/40 mb-3 shadow-xl shadow-lime/15"/>
+      <div class="text-[22px] font-black text-offwhite tracking-tight flex items-center justify-center gap-1.5">
+        <span>PANDA'S</span>
+        <span class="badge b-lime text-[10px] py-0.5 px-2 font-mono">ERP</span>
+      </div>
+      <div class="text-[11px] text-muted font-bold uppercase tracking-widest mt-1">Wholesale Distribution System</div>
+    </div>
+
+    <!-- Auth Tabs -->
+    <div class="card-sm p-1 flex mb-4">
+      <button id="gate-tab-login" class="seg-btn active" onclick="toggleGateAuth('login')">Sign In</button>
+      <button id="gate-tab-register" class="seg-btn" onclick="toggleGateAuth('register')">Create Account</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="gate-form-login" class="space-y-3.5" onsubmit="handleGateLogin(event)">
+      <div>
+        <label class="lbl">Username or Email</label>
+        <input class="field" id="gate-login-user" placeholder="e.g. panda_admin" required autocomplete="username"/>
+      </div>
+      <div>
+        <label class="lbl">Password</label>
+        <input class="field" id="gate-login-pass" type="password" placeholder="••••••••" required autocomplete="current-password"/>
+      </div>
+      <button type="submit" class="btn-lime mt-1" id="gate-btn-login">Sign In</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="gate-form-register" class="space-y-3 hidden" onsubmit="handleGateRegister(event)">
+      <div>
+        <label class="lbl">Choose Username *</label>
+        <input class="field" id="gate-reg-user" placeholder="e.g. frozen_express" required/>
+      </div>
+      <div>
+        <label class="lbl">Email Address *</label>
+        <input class="field" id="gate-reg-email" type="email" placeholder="e.g. contact@pandas.com" required/>
+      </div>
+      <div>
+        <label class="lbl">Phone / WhatsApp Number</label>
+        <input class="field" id="gate-reg-phone" placeholder="e.g. +92 300 1234567"/>
+      </div>
+      <div>
+        <label class="lbl">Full Name</label>
+        <input class="field" id="gate-reg-fullname" placeholder="e.g. Muhammad Bilal"/>
+      </div>
+      <div>
+        <label class="lbl">Wholesale Business Name</label>
+        <input class="field" id="gate-reg-biz" placeholder="e.g. PANDA'S Wholesale Traders"/>
+      </div>
+      <div>
+        <label class="lbl">Password (min 4 characters) *</label>
+        <input class="field" id="gate-reg-pass" type="password" placeholder="••••••••" required/>
+      </div>
+      <button type="submit" class="btn-lime mt-1" id="gate-btn-register">Create My Business Account</button>
+    </form>
+
+    <div class="mt-5 text-center text-[10.5px] text-muted">
+      All Rights Reserved by X Panda
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MAIN APPLICATION (LOADS POST-LOGIN) ═══════════════════ -->
+<div id="app-wrapper" class="hidden">
+
+<!-- TOP HEADER & RIGHT NAVBAR -->
+<header class="sticky top-0 z-50" style="background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid #161616">
+  <div class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+    <!-- Brand + 3D Logo -->
+    <div class="flex items-center gap-2.5">
+      <img src="/static/logo.jpg" alt="PANDA'S 3D Logo" class="panda-logo-img" onerror="this.src='https://placehold.co/100x100/111/c9f227?text=P'"/>
+      <div>
+        <div class="text-[15px] font-black text-offwhite tracking-tight leading-none flex items-center gap-1.5">
+          <span>PANDA'S</span>
+          <span class="badge b-lime py-0.5 px-1.5 text-[9px]">ERP</span>
+        </div>
+        <div class="text-[9.5px] text-muted font-bold tracking-wider uppercase mt-0.5">Wholesale Distribution System</div>
+      </div>
+    </div>
+
+    <!-- Right Side Header Navbar -->
+    <div class="flex items-center gap-1.5 relative">
+      <!-- Audit Statement Button -->
+      <button onclick="openPeriodReportModal()" class="btn-icon p-2 text-chrome hover:text-lime" title="Generate Financial Period Audit Report">
+        <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Notification Bell -->
+      <div class="relative">
+        <button id="btn-notifications" onclick="toggleNotifications()" class="btn-icon relative p-2" title="Stock Alerts">
+          <i data-lucide="bell" class="w-4 h-4"></i>
+          <span id="notif-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-danger text-[9px] font-black text-white flex items-center justify-center">0</span>
+        </button>
+        <!-- Notifications Dropdown -->
+        <div id="notif-menu" class="pop-menu p-2.5" style="width:280px">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-border">
+            <span class="text-[11px] font-bold text-silver uppercase tracking-wider">Inventory Alerts</span>
+            <span id="notif-count-text" class="text-[10px] text-muted">0 alerts</span>
+          </div>
+          <div id="notif-list" class="space-y-1.5 max-h-60 overflow-y-auto">
+            <div class="text-[11px] text-muted text-center py-4">No active stock alerts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Restock Shortcut Button -->
+      <button onclick="switchTab('stock')" class="btn-icon lime p-2" title="Record Stock Purchase">
+        <i data-lucide="package-plus" class="w-4 h-4"></i>
+      </button>
+
+      <!-- User Profile & Account Menu -->
+      <div class="relative">
+        <button id="btn-profile" onclick="toggleProfileMenu()" class="btn-icon p-1.5 gap-1.5 pl-2" title="User Account">
+          <div class="w-5 h-5 rounded-full bg-inner border border-border flex items-center justify-center text-[10px] font-black text-lime" id="user-avatar-letter">A</div>
+          <span class="text-[11px] font-bold text-chrome max-w-[75px] truncate" id="user-display-name">Admin</span>
+          <i data-lucide="chevron-down" class="w-3 h-3 text-muted"></i>
+        </button>
+
+        <!-- Profile Dropdown -->
+        <div id="profile-menu" class="pop-menu">
+          <div class="p-3 border-b border-border bg-inner">
+            <div class="text-[13px] font-black text-offwhite truncate" id="menu-biz-name">PANDA'S Wholesale</div>
+            <div class="text-[11px] text-muted truncate" id="menu-user-fullname">Admin User</div>
+          </div>
+          <div class="p-1.5 space-y-0.5 text-[12px]">
+            <button onclick="openProfileSettingsModal()" class="w-full text-left px-3 py-2 rounded-lg hover:bg-inner flex items-center gap-2 text-chrome">
+              <i data-lucide="user-cog" class="w-3.5 h-3.5"></i>
+              <span>Profile &amp; Business Settings</span>
+            </button>
+            <button onclick="openPeriodReportModal()" class="w-full text-left px-3 py-2 rounded-lg hover:bg-inner flex items-center gap-2 text-chrome">
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+              <span>Audit &amp; Period Statements</span>
+            </button>
+            <button onclick="performAppLogout()" class="w-full text-left px-3 py-2 rounded-lg hover:bg-danger/10 flex items-center gap-2 text-danger font-semibold">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              <span>Logout Account</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 pt-4 pb-28 min-h-screen">
+
+<!-- ═══════════════════ DASHBOARD ═══════════════════ -->
+<div id="tab-dashboard" class="tab-panel active">
+  <div class="mb-4 flex items-center justify-between">
+    <div>
+      <div class="sec-title">Dashboard</div>
+    </div>
+    <div id="hdr-date" class="text-[11px] text-muted text-right"></div>
+  </div>
+
+  <!-- Timeframe Filter Pills -->
+  <div class="overflow-x-auto pb-1 mb-4 flex items-center gap-1.5">
+    <button class="filter-pill active" data-period="all_time" onclick="setDashboardPeriod('all_time')">All Time</button>
+    <button class="filter-pill" data-period="today" onclick="setDashboardPeriod('today')">Today</button>
+    <button class="filter-pill" data-period="this_week" onclick="setDashboardPeriod('this_week')">This Week</button>
+    <button class="filter-pill" data-period="this_month" onclick="setDashboardPeriod('this_month')">This Month</button>
+    <button class="filter-pill" data-period="last_month" onclick="setDashboardPeriod('last_month')">Last Month</button>
+    <button class="filter-pill" data-period="this_year" onclick="setDashboardPeriod('this_year')">This Year</button>
+    <button class="filter-pill" data-period="custom" onclick="openPeriodReportModal()">Custom Date Range…</button>
+  </div>
+
+  <!-- KPI Grid -->
+  <div class="grid grid-cols-2 gap-3 mb-3">
+    <div class="stat-card col-span-2">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[10px] font-bold text-silver uppercase tracking-widest" id="d-sales-lbl">Total Sales Revenue</span>
+        <div class="stat-icon" style="background:rgba(201,242,39,.06)"><i data-lucide="trending-up" class="w-4 h-4 text-lime"></i></div>
+      </div>
+      <div id="d-sales" class="text-[28px] font-black text-lime tracking-tight">—</div>
+      <div class="text-[10.5px] text-muted" id="d-period-hint"></div>
+    </div>
+    <div class="stat-card">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[10px] font-bold text-silver uppercase tracking-wider">Stock Purchases</span>
+        <div class="stat-icon" style="background:rgba(96,165,250,.06)"><i data-lucide="package" class="w-3.5 h-3.5 text-info"></i></div>
+      </div>
+      <div id="d-purchase" class="text-[18px] font-black text-info">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[10px] font-bold text-silver uppercase tracking-wider">Expenses</span>
+        <div class="stat-icon" style="background:rgba(240,48,48,.06)"><i data-lucide="receipt" class="w-3.5 h-3.5 text-danger"></i></div>
+      </div>
+      <div id="d-expenses" class="text-[18px] font-black text-danger">—</div>
+    </div>
+  </div>
+
+  <!-- Net Profit -->
+  <div class="stat-card mb-3">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-[10px] font-bold text-silver uppercase tracking-widest">Net Business Profit</span>
+      <div class="stat-icon" style="background:rgba(187,187,187,.05)"><i data-lucide="bar-chart-2" class="w-4 h-4 text-chrome"></i></div>
+    </div>
+    <div id="d-profit" class="text-[28px] font-black tracking-tight">—</div>
+  </div>
+
+  <!-- Quick Counts -->
+  <div class="grid grid-cols-3 gap-2 mb-3">
+    <div class="card-sm p-3 text-center"><div id="d-cnt-p" class="text-[19px] font-black text-offwhite">—</div><div class="text-[10px] text-muted mt-0.5">Products</div></div>
+    <div class="card-sm p-3 text-center"><div id="d-cnt-c" class="text-[19px] font-black text-offwhite">—</div><div class="text-[10px] text-muted mt-0.5">Clients</div></div>
+    <div class="card-sm p-3 text-center"><div id="d-cnt-s" class="text-[19px] font-black text-offwhite">—</div><div class="text-[10px] text-muted mt-0.5">Invoices</div></div>
+  </div>
+
+  <!-- Recent Sales -->
+  <div class="card p-4">
+    <div class="flex items-center justify-between mb-4">
+      <div class="text-[13px] font-bold text-offwhite">Recent Invoices &amp; Orders</div>
+      <button onclick="switchTab('sales')" class="text-[11px] text-lime font-bold">View Invoices</button>
+    </div>
+    <div id="d-recent"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PRODUCTS ═══════════════════ -->
+<div id="tab-products" class="tab-panel">
+  <div class="mb-4">
+    <div class="sec-title">Product Catalog</div>
+  </div>
+
+  <div class="card p-4 mb-4">
+    <div class="text-[13px] font-bold text-offwhite mb-4">Register New Product</div>
+    <form id="form-product" class="space-y-3">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2">
+          <label class="lbl">Product Name *</label>
+          <input class="field" id="p-name" placeholder="e.g. Frozen Boneless Chicken Breast" required/>
+        </div>
+        <div>
+          <label class="lbl">SKU Code</label>
+          <div class="flex gap-1.5">
+            <input class="field flex-1" id="p-sku" placeholder="PND-FRZ-001"/>
+            <button type="button" onclick="autoSKU()" class="btn-ghost" style="width:auto;padding:10px 12px;font-size:11px;flex-shrink:0">Auto</button>
+          </div>
+        </div>
+        <div>
+          <label class="lbl">Category *</label>
+          <select class="field" id="p-cat">
+            <option value="">Select Category…</option>
+            <option>Frozen Foods</option><option>Spices</option><option>Dry Goods</option>
+            <option>Dairy</option><option>Beverages</option><option>Condiments</option>
+            <option>Oils &amp; Ghee</option><option>Pulses</option><option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Unit of Measurement (UOM) *</label>
+          <select class="field" id="p-unit">
+            <option value="">Select Unit…</option>
+            <option value="kg">kg (Kilogram)</option>
+            <option value="bag">bag (Bags / Boray)</option>
+            <option value="pcs">pcs (Pieces)</option>
+            <option value="carton">carton (Cartons)</option>
+            <option value="box">box (Boxes)</option>
+            <option value="pack">pack (Packs)</option>
+            <option value="litre">litre (Litres)</option>
+            <option value="tin">tin (Tins / Cans)</option>
+            <option value="bottle">bottle (Bottles)</option>
+            <option value="dozen">dozen (Dozens)</option>
+            <option value="g">g (Grams)</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Brand / Manufacturer</label>
+          <input class="field" id="p-brand" placeholder="e.g. National, K&amp;N's, Shan"/>
+        </div>
+        <div>
+          <label class="lbl">Batch / Lot Number</label>
+          <input class="field" id="p-batch" placeholder="e.g. BATCH-2026-A"/>
+        </div>
+        <div>
+          <label class="lbl">Expiry Date</label>
+          <input class="field" id="p-expiry" type="date"/>
+        </div>
+        <div>
+          <label class="lbl">Storage Condition / Location</label>
+          <input class="field" id="p-storage" placeholder="e.g. Cold Room #1, Rack B4"/>
+        </div>
+        <div>
+          <label class="lbl">Low Stock Alert Threshold</label>
+          <input class="field" id="p-thresh" type="number" min="0" step="0.01" placeholder="e.g. 10"/>
+        </div>
+        <div class="col-span-2">
+          <label class="lbl">Description / Quality Notes</label>
+          <input class="field" id="p-desc" placeholder="Quality grade, freezing specs, variant…"/>
+        </div>
+      </div>
+      <button type="submit" class="btn-lime">Register Product</button>
+    </form>
+  </div>
+
+  <div class="card p-4">
+    <div class="flex items-center justify-between mb-3">
+      <div class="text-[13px] font-bold text-offwhite">Registered Products</div>
+      <div id="p-count" class="badge b-silver">0 products</div>
+    </div>
+    <div class="srch-wrap mb-3">
+      <i data-lucide="search" class="si w-3.5 h-3.5"></i>
+      <input class="field" id="p-search" placeholder="Search by name, SKU, category, batch…" oninput="filterList('products-list',this.value)"/>
+    </div>
+    <div id="products-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ STOCK / PURCHASES ═══════════════════ -->
+<div id="tab-stock" class="tab-panel">
+  <div class="mb-4">
+    <div class="sec-title">Stock &amp; Purchases</div>
+  </div>
+
+  <div class="card p-4 mb-4">
+    <div class="text-[13px] font-bold text-offwhite mb-4">Record Stock Purchase</div>
+    <form id="form-stock" class="space-y-3">
+      <div>
+        <label class="lbl">Select Product *</label>
+        <select class="field" id="st-product" required onchange="onStockProductChange(this.value)">
+          <option value="">Select product to purchase…</option>
+        </select>
+      </div>
+
+      <!-- Current Stock On Hand Box -->
+      <div id="st-on-hand" class="hidden stock-on-hand-box">
+        <div>
+          <div class="text-[10.5px] text-muted uppercase font-bold tracking-wider">Current Stock On Hand</div>
+          <div id="st-on-hand-val" class="text-[15px] font-black text-lime mt-0.5">—</div>
+          <div id="st-on-hand-sub" class="text-[10px] text-muted mt-0.5">Purchased: 0 &bull; Sold: 0</div>
+        </div>
+        <div id="st-on-hand-meta" class="text-right text-[11px] text-chrome"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl" id="st-qty-lbl">Quantity to Add *</label>
+          <input class="field" id="st-qty" type="number" step="0.01" min="0.01" placeholder="0.00" required oninput="calcStockPreview()"/>
+        </div>
+        <div>
+          <label class="lbl">Total Purchase Cost (PKR) *</label>
+          <input class="field" id="st-cost" type="number" step="0.01" min="0" placeholder="0.00" required oninput="calcStockPreview()"/>
+        </div>
+      </div>
+
+      <!-- Live Cost / Unit & Stock Result Preview -->
+      <div id="st-preview-box" class="hidden card-sm p-3 border border-border">
+        <div class="flex items-center justify-between text-[12px]">
+          <span class="text-muted">Cost Rate: <strong id="st-calc-rate" class="text-info font-bold">—</strong></span>
+          <span class="text-muted">Resulting Stock: <strong id="st-calc-newstock" class="text-lime font-bold">—</strong></span>
+        </div>
+      </div>
+
+      <div>
+        <label class="lbl">Supplier / Vendor</label>
+        <input class="field" id="st-supplier" placeholder="e.g. Al-Rehman Cold Chain, Prime Spices Traders"/>
+      </div>
+      <div>
+        <label class="lbl">Purchase Date</label>
+        <input class="field" id="st-date" type="date" required/>
+      </div>
+      <div>
+        <label class="lbl">Notes</label>
+        <input class="field" id="st-notes" placeholder="Batch number, delivery receipt, vehicle no…"/>
+      </div>
+      <button type="submit" class="btn-lime">Confirm &amp; Add Stock</button>
+    </form>
+  </div>
+
+  <!-- Inventory Levels per Product -->
+  <div class="card p-4 mb-3">
+    <div class="flex items-center justify-between mb-3">
+      <div class="text-[13px] font-bold text-offwhite">Current Stock Levels</div>
+    </div>
+    <div id="stock-levels"></div>
+  </div>
+
+  <!-- Purchase History -->
+  <div class="card p-4">
+    <div class="flex items-center justify-between mb-3">
+      <div class="text-[13px] font-bold text-offwhite">Purchase History</div>
+      <div id="st-count" class="badge b-silver">0 entries</div>
+    </div>
+    <div class="srch-wrap mb-3">
+      <i data-lucide="search" class="si w-3.5 h-3.5"></i>
+      <input class="field" id="st-search" placeholder="Search by product or supplier…" oninput="filterList('stock-list',this.value)"/>
+    </div>
+    <div id="stock-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ SALES (MULTI-ITEM CART & INVOICE) ═══════════════════ -->
+<div id="tab-sales" class="tab-panel">
+  <div class="mb-4">
+    <div class="sec-title">Sales &amp; Invoices</div>
+  </div>
+
+  <!-- New Sale Form with Multi-Item Cart -->
+  <div class="card p-4 mb-4">
+    <div class="flex items-center justify-between mb-4">
+      <div class="text-[13px] font-bold text-offwhite">Create Customer Invoice</div>
+    </div>
+
+    <form id="form-sale" class="space-y-4" onsubmit="submitSaleOrder(event)">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2">
+          <label class="lbl">Client / Restaurant Name *</label>
+          <input class="field" id="sl-client" placeholder="e.g. Al-Madina Restaurant, Pearl Continental" required/>
+        </div>
+        <div>
+          <label class="lbl">Sale Date</label>
+          <input class="field" id="sl-date" type="date" required/>
+        </div>
+        <div>
+          <label class="lbl">Payment Status</label>
+          <select class="field" id="sl-status">
+            <option value="Paid">Paid</option>
+            <option value="Pending">Pending (Credit / Udhaar)</option>
+            <option value="Partial">Partial Payment</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dynamic Items Container -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="lbl" style="margin-bottom:0">Order Items (Products)</label>
+          <span class="text-[11px] text-muted" id="cart-item-count">1 Item in Order</span>
+        </div>
+
+        <div id="cart-items-container" class="space-y-2.5"></div>
+
+        <button type="button" onclick="addCartRow()" class="btn-ghost mt-2.5 flex items-center justify-center gap-2 py-2 text-[12px]">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span>Add Another Product to Invoice</span>
+        </button>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="card-sm p-3.5 border border-border">
+        <div class="flex items-center justify-between text-[12px] text-muted mb-1.5">
+          <span>Items Count:</span>
+          <span id="cart-summary-qty" class="text-offwhite font-bold">1 item</span>
+        </div>
+        <div class="flex items-center justify-between text-[15px] pt-1.5 border-t border-border">
+          <span class="font-bold text-offwhite">Invoice Grand Total:</span>
+          <span id="cart-grand-total" class="font-black text-lime text-[18px]">PKR 0</span>
+        </div>
+      </div>
+
+      <div>
+        <label class="lbl">Invoice Notes / Terms</label>
+        <input class="field" id="sl-notes" placeholder="Delivery vehicle, payment terms, order po ref…"/>
+      </div>
+
+      <button type="submit" class="btn-lime" id="sl-submit">Confirm &amp; Generate Invoice</button>
+    </form>
+  </div>
+
+  <!-- Segment Switcher for Sales History -->
+  <div class="card-sm p-1 flex mb-3">
+    <button class="seg-btn active" id="seg-sales-inv" onclick="switchSalesView('invoices')">Invoices</button>
+    <button class="seg-btn" id="seg-sales-all" onclick="switchSalesView('items')">Itemized Records</button>
+  </div>
+
+  <!-- Invoices View -->
+  <div id="sales-invoices-panel" class="card p-4">
+    <div class="flex items-center justify-between mb-3">
+      <div class="text-[13px] font-bold text-offwhite">Customer Invoices</div>
+      <div id="inv-count" class="badge b-silver">0 invoices</div>
+    </div>
+    <div class="srch-wrap mb-3">
+      <i data-lucide="search" class="si w-3.5 h-3.5"></i>
+      <input class="field" id="inv-search" placeholder="Search by client, invoice #, products…" oninput="filterList('invoices-list',this.value)"/>
+    </div>
+    <div id="invoices-list"></div>
+  </div>
+
+  <!-- Itemized View -->
+  <div id="sales-items-panel" class="card p-4" style="display:none">
+    <div class="flex items-center justify-between mb-3">
+      <div class="text-[13px] font-bold text-offwhite">Individual Item Sales</div>
+      <div id="sl-count" class="badge b-silver">0 sales</div>
+    </div>
+    <div class="srch-wrap mb-3">
+      <i data-lucide="search" class="si w-3.5 h-3.5"></i>
+      <input class="field" id="sl-search" placeholder="Search itemized sales…" oninput="filterList('sales-list',this.value)"/>
+    </div>
+    <div id="sales-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EXPENSES ═══════════════════ -->
+<div id="tab-expenses" class="tab-panel">
+  <div class="mb-4">
+    <div class="sec-title">Expenses</div>
+  </div>
+
+  <div class="card p-4 mb-4">
+    <div class="text-[13px] font-bold text-offwhite mb-4">Log Expense</div>
+    <form id="form-expense" class="space-y-3">
+      <div>
+        <label class="lbl">Expense Title *</label>
+        <input class="field" id="ex-title" placeholder="e.g. Cold storage electricity, Delivery fuel" required/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Amount (PKR) *</label>
+          <input class="field" id="ex-amount" type="number" step="0.01" min="0.01" placeholder="0.00" required/>
+        </div>
+        <div>
+          <label class="lbl">Category</label>
+          <select class="field" id="ex-cat">
+            <option value="">Select Category…</option>
+            <option>Transport &amp; Fuel</option>
+            <option>Electricity &amp; Utilities</option>
+            <option>Salaries &amp; Labor</option>
+            <option>Warehouse Rent</option>
+            <option>Packaging &amp; Ice</option>
+            <option>Maintenance &amp; Repairs</option>
+            <option>Marketing</option>
+            <option>Taxes &amp; Fees</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Date</label><input class="field" id="ex-date" type="date" required/></div>
+        <div>
+          <label class="lbl">Payment Method</label>
+          <select class="field" id="ex-method">
+            <option>Cash</option><option>Bank Transfer</option><option>Cheque</option>
+            <option>Online</option><option>Credit</option>
+          </select>
+        </div>
+      </div>
+      <div><label class="lbl">Notes</label><input class="field" id="ex-notes" placeholder="Receipt no, payee name…"/></div>
+      <button type="submit" class="btn-lime">Log Expense</button>
+    </form>
+  </div>
+
+  <div class="card p-4">
+    <div class="flex items-center justify-between mb-3">
+      <div class="text-[13px] font-bold text-offwhite">Expense Log</div>
+      <div id="ex-count" class="badge b-silver">0 entries</div>
+    </div>
+    <div class="srch-wrap mb-3">
+      <i data-lucide="search" class="si w-3.5 h-3.5"></i>
+      <input class="field" id="ex-search" placeholder="Search by title or category…" oninput="filterList('expenses-list',this.value)"/>
+    </div>
+    <div id="expenses-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ANALYTICS ═══════════════════ -->
+<div id="tab-analytics" class="tab-panel">
+  <div class="mb-4">
+    <div class="sec-title">Analytics</div>
+  </div>
+
+  <!-- Analytics KPIs -->
+  <div class="grid grid-cols-3 gap-2 mb-4" id="an-kpis">
+    <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Total Sales</div><div class="text-[13px] font-black text-lime" id="an-tot-rev">—</div></div>
+    <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Net Profit</div><div class="text-[13px] font-black text-chrome" id="an-tot-prof">—</div></div>
+    <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Best Month</div><div class="text-[13px] font-black text-chrome" id="an-best-mo">—</div></div>
+  </div>
+
+  <!-- Segment Selector -->
+  <div class="card-sm p-1 flex mb-4">
+    <button class="seg-btn active" id="seg-rev" onclick="switchSeg('rev')">Revenue &amp; Costs</button>
+    <button class="seg-btn" id="seg-prod" onclick="switchSeg('prod')">Products</button>
+    <button class="seg-btn" id="seg-cli" onclick="switchSeg('cli')">Clients</button>
+  </div>
+
+  <!-- Revenue Segment -->
+  <div id="panel-rev">
+    <div class="card p-4 mb-3">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-[12px] font-bold text-chrome">Monthly Revenue vs Costs</div>
+        <div class="flex items-center gap-3 text-[10px] text-muted">
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm inline-block" style="background:#c9f227"></span>Revenue</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm inline-block opacity-60" style="background:#f03030"></span>Costs</span>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:210px">
+        <canvas id="chart-bar"></canvas>
+        <div id="chart-bar-empty" class="hidden absolute inset-0 flex items-center justify-center text-center p-4">
+          <div class="text-[12px] text-muted">No monthly sales data yet. Record sales to view chart.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card p-4 mb-3">
+      <div class="text-[12px] font-bold text-chrome mb-2">Net Profit Trend</div>
+      <div class="chart-wrap" style="height:170px">
+        <canvas id="chart-line"></canvas>
+        <div id="chart-line-empty" class="hidden absolute inset-0 flex items-center justify-center text-center p-4">
+          <div class="text-[12px] text-muted">No profit trend data yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Segment -->
+  <div id="panel-prod" style="display:none">
+    <div class="card p-4 mb-3">
+      <div class="text-[12px] font-bold text-chrome mb-2">Revenue Share by Product</div>
+      <div class="chart-wrap" style="height:240px">
+        <canvas id="chart-donut"></canvas>
+        <div id="chart-donut-empty" class="hidden absolute inset-0 flex items-center justify-center text-center p-4">
+          <div class="text-[12px] text-muted">No product sales recorded yet.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card p-4 mb-3">
+      <div class="text-[12px] font-bold text-chrome mb-3">Product Sales Performance</div>
+      <div id="an-prod-list"></div>
+    </div>
+  </div>
+
+  <!-- Clients Segment -->
+  <div id="panel-cli" style="display:none">
+    <div class="card p-4 mb-3">
+      <div class="text-[12px] font-bold text-chrome mb-2">Top Clients by Revenue</div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chart-hbar"></canvas>
+        <div id="chart-hbar-empty" class="hidden absolute inset-0 flex items-center justify-center text-center p-4">
+          <div class="text-[12px] text-muted">No client sales recorded yet.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card p-4 mb-3">
+      <div class="text-[12px] font-bold text-chrome mb-3">Client Leaderboard</div>
+      <div id="an-cli-list"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="fixed bottom-0 left-0 right-0 z-50" style="background:rgba(8,8,8,.97);backdrop-filter:blur(20px);border-top:1px solid #161616">
+  <div class="max-w-2xl mx-auto h-16 flex items-center px-1">
+    <button class="nav-btn active" id="nav-dashboard" onclick="switchTab('dashboard')"><div class="ni"><i data-lucide="layout-dashboard" class="w-4 h-4"></i></div><span>Dashboard</span></button>
+    <button class="nav-btn" id="nav-products" onclick="switchTab('products')"><div class="ni"><i data-lucide="tag" class="w-4 h-4"></i></div><span>Products</span></button>
+    <button class="nav-btn" id="nav-stock" onclick="switchTab('stock')"><div class="ni"><i data-lucide="package" class="w-4 h-4"></i></div><span>Purchases</span></button>
+    <button class="nav-btn" id="nav-sales" onclick="switchTab('sales')"><div class="ni"><i data-lucide="handshake" class="w-4 h-4"></i></div><span>Sales</span></button>
+    <button class="nav-btn" id="nav-expenses" onclick="switchTab('expenses')"><div class="ni"><i data-lucide="receipt" class="w-4 h-4"></i></div><span>Expenses</span></button>
+    <button class="nav-btn" id="nav-analytics" onclick="switchTab('analytics')"><div class="ni"><i data-lucide="bar-chart-2" class="w-4 h-4"></i></div><span>Analytics</span></button>
+  </div>
+</nav>
+
+<!-- ═══════════════════ MODALS & PANELS ═══════════════════ -->
+
+<!-- INVOICE RECEIPT MODAL (CRISP A4 PDF & WHATSAPP) -->
+<div class="overlay" id="invoice-overlay">
+  <div class="backdrop" onclick="closeInvoice()"></div>
+  <div class="sheet" style="max-width:720px">
+    <div class="handle"></div>
+    <div class="flex items-center justify-between mb-3">
+      <div class="text-[14px] font-bold text-silver">Customer Invoice Receipt</div>
+      <button onclick="closeInvoice()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <!-- Quick Action Share Buttons -->
+    <div class="grid grid-cols-3 gap-2 mb-3">
+      <button onclick="downloadCrispInvoicePDF()" class="btn-icon lime py-2 px-3 gap-1.5 text-[11.5px] font-bold w-full justify-center">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+        <span>Download PDF</span>
+      </button>
+      <button onclick="shareInvoiceWhatsApp()" class="btn-icon py-2 px-3 gap-1.5 text-[11.5px] font-bold w-full justify-center text-ok border-ok/30 hover:bg-ok/10">
+        <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+        <span>WhatsApp</span>
+      </button>
+      <button onclick="window.print()" class="btn-icon py-2 px-3 gap-1.5 text-[11.5px] font-bold w-full justify-center text-chrome">
+        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+        <span>Print Receipt</span>
+      </button>
+    </div>
+
+    <!-- Printable White Sheet Container specifically engineered for crisp A4 PDF export -->
+    <div class="overflow-x-auto">
+      <div id="crisp-invoice-pdf" class="print-doc-container" style="min-width:620px">
+        <!-- Rendered Dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PERIOD SUMMARY & FINANCIAL AUDIT REPORT MODAL (PDF) -->
+<div class="overlay" id="period-report-overlay">
+  <div class="backdrop" onclick="closePeriodReportModal()"></div>
+  <div class="sheet" style="max-width:760px">
+    <div class="handle"></div>
+    <div class="flex items-center justify-between mb-3">
+      <div>
+        <div class="text-[15px] font-black text-offwhite">Financial Audit &amp; Period Statement</div>
+      </div>
+      <button onclick="closePeriodReportModal()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <!-- Date Range Picker & Presets -->
+    <div class="card-sm p-3.5 mb-4 space-y-3">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <span class="text-[11px] font-bold text-silver uppercase mr-1">Quick Presets:</span>
+        <button class="filter-pill" onclick="setReportPreset('this_month')">This Month</button>
+        <button class="filter-pill" onclick="setReportPreset('last_month')">Last Month</button>
+        <button class="filter-pill" onclick="setReportPreset('this_year')">This Year</button>
+        <button class="filter-pill" onclick="setReportPreset('all_time')">All Time</button>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl text-[10px]">Start Date</label>
+          <input class="field" type="date" id="rep-start-date"/>
+        </div>
+        <div>
+          <label class="lbl text-[10px]">End Date</label>
+          <input class="field" type="date" id="rep-end-date"/>
+        </div>
+      </div>
+      <button onclick="generatePeriodAuditReport()" class="btn-lime py-2 text-[12.5px] flex items-center justify-center gap-2">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+        <span>Generate Audit Statement</span>
+      </button>
+    </div>
+
+    <!-- Actions for Report -->
+    <div class="grid grid-cols-2 gap-2 mb-3">
+      <button onclick="downloadAuditReportPDF()" class="btn-icon lime py-2 px-3 gap-1.5 text-[11.5px] font-bold w-full justify-center">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+        <span>Download Audit Report PDF</span>
+      </button>
+      <button onclick="window.print()" class="btn-icon py-2 px-3 gap-1.5 text-[11.5px] font-bold w-full justify-center text-chrome">
+        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+        <span>Print Audit Report</span>
+      </button>
+    </div>
+
+    <!-- Printable Report Container -->
+    <div class="overflow-x-auto">
+      <div id="crisp-audit-report-pdf" class="print-doc-container" style="min-width:660px">
+        <div class="text-center py-10 text-gray-500 text-[12px]">Select a date range and click "Generate Audit Statement" to view statement.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="overlay" id="edit-overlay">
+  <div class="backdrop" onclick="closeEdit()"></div>
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="flex items-center justify-between mb-4">
+      <div class="text-[15px] font-black text-offwhite" id="edit-title">Edit Record</div>
+      <button onclick="closeEdit()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div id="edit-body" class="space-y-3"></div>
+    <div class="grid grid-cols-2 gap-3 mt-5">
+      <button class="btn-ghost" onclick="closeEdit()">Cancel</button>
+      <button class="btn-lime" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- INFO MODAL -->
+<div class="overlay" id="info-overlay">
+  <div class="backdrop" onclick="closeInfo()"></div>
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="flex items-center justify-between mb-4">
+      <div class="text-[15px] font-black text-offwhite" id="info-title">Details</div>
+      <button onclick="closeInfo()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div id="info-body"></div>
+  </div>
+</div>
+
+<!-- REAL PROFILE & BUSINESS SETTINGS MODAL -->
+<div class="overlay" id="profile-settings-overlay">
+  <div class="backdrop" onclick="closeProfileSettingsModal()"></div>
+  <div class="sheet" style="max-width:500px">
+    <div class="handle"></div>
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <div class="text-[16px] font-black text-offwhite">Account &amp; Business Profile</div>
+      </div>
+      <button onclick="closeProfileSettingsModal()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <!-- Tabs inside Settings -->
+    <div class="card-sm p-1 flex mb-4">
+      <button id="set-tab-biz" class="seg-btn active" onclick="switchSettingsTab('biz')">Business Profile</button>
+      <button id="set-tab-sec" class="seg-btn" onclick="switchSettingsTab('sec')">Security &amp; Password</button>
+    </div>
+
+    <!-- Business Profile Form -->
+    <form id="form-profile-biz" class="space-y-3" onsubmit="saveProfileSettings(event)">
+      <div>
+        <label class="lbl">Business Name (Printed on Invoices)</label>
+        <input class="field" id="prof-biz-name" required/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Owner / Executive Name</label>
+          <input class="field" id="prof-full-name"/>
+        </div>
+        <div>
+          <label class="lbl">Account Email Address</label>
+          <input class="field" id="prof-email" type="email" placeholder="e.g. owner@pandas.com"/>
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Warehouse / Office Address</label>
+        <input class="field" id="prof-address" placeholder="e.g. Plot 45, Industrial Cold Zone, Karachi"/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">NTN / Tax ID #</label>
+          <input class="field" id="prof-tax-id" placeholder="e.g. 7482910-1"/>
+        </div>
+        <div>
+          <label class="lbl">Phone / WhatsApp</label>
+          <input class="field" id="prof-phone" placeholder="e.g. +92 300 0000000"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Currency</label>
+          <select class="field" id="prof-currency">
+            <option value="PKR">PKR (₨)</option>
+            <option value="USD">USD ($)</option>
+            <option value="AED">AED (د.إ)</option>
+            <option value="SAR">SAR (﷼)</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Role / Title</label>
+          <input class="field" id="prof-role" placeholder="e.g. Managing Director"/>
+        </div>
+      </div>
+      <div class="pt-2 flex items-center gap-2">
+        <button type="submit" class="btn-lime flex-1">Save Profile Details</button>
+        <a href="/api/admin/backup-db" class="btn-ghost text-[11px] py-2.5 px-3 flex items-center justify-center gap-1.5 text-chrome hover:text-lime" title="Download SQLite database backup">
+          <i data-lucide="database-backup" class="w-3.5 h-3.5"></i>
+          <span>Backup DB</span>
+        </a>
+      </div>
+    </form>
+
+    <!-- Change Password Form -->
+    <form id="form-profile-sec" class="space-y-3 hidden" onsubmit="changeAccountPassword(event)">
+      <div>
+        <label class="lbl">Current Password</label>
+        <input class="field" type="password" id="prof-old-pass" required/>
+      </div>
+      <div>
+        <label class="lbl">New Password (min 4 characters)</label>
+        <input class="field" type="password" id="prof-new-pass" required/>
+      </div>
+      <button type="submit" class="btn-lime mt-2">Update Password</button>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="max-w-2xl mx-auto px-4 pb-32 pt-4 text-center">
+  <div class="text-[10px] text-muted">PANDA'S &mdash; Wholesale Distribution System</div>
+  <div class="text-[10px] mt-1" style="color:#2a2a2a">&copy; 2025 All Rights Reserved by X Panda</div>
+</div>
+
+</div><!-- /app-wrapper -->
+
+<script>
+// ─── SERVICE WORKER REGISTRATION (PWA & APK CACHING) ─────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/static/sw.js').catch(() => {});
+  });
+}
+
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const PALETTE = ['#c9f227','#60a5fa','#f03030','#a78bfa','#fb923c','#2dd4bf','#f472b6','#facc15','#34d399','#e879f9'];
+const TABS = ['dashboard','products','stock','sales','expenses','analytics'];
+const CAT_CODES = { 'Frozen Foods':'FRZ','Spices':'SPC','Dry Goods':'DRY','Dairy':'DAI','Beverages':'BEV','Condiments':'CON','Oils & Ghee':'OIL','Pulses':'PLS','Other':'OTH' };
+const charts = {};
+
+// Default Chart.js Options for Dark Theme & Responsiveness
+const chartBase = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#161616',
+      borderColor: '#2e2e2e',
+      borderWidth: 1,
+      titleColor: '#edecea',
+      bodyColor: '#888888',
+      padding: 10,
+      cornerRadius: 8
+    }
+  },
+  scales: {
+    x: { grid: { color: '#1a1a1a' }, ticks: { color: '#666666', font: { size: 10 } } },
+    y: { grid: { color: '#1a1a1a' }, ticks: { color: '#666666', font: { size: 10 } } }
+  }
+};
+
+function destroyChart(name) {
+  if (charts && charts[name]) {
+    try { charts[name].destroy(); } catch(e) {}
+    delete charts[name];
+  }
+}
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const S = {
+  currentUser: null,
+  products: [],
+  currentTab: 'dashboard',
+  currentSeg: 'rev',
+  salesView: 'invoices',
+  dashboardPeriod: 'all_time',
+  editCtx: null,
+  activeInvoiceData: null,
+  activeReportData: null,
+  cartRows: []
+};
+
+// ─── UTILITIES ────────────────────────────────────────────────────────────────
+const fmt = n => (S.currentUser?.currency || 'PKR') + '\u00a0' + Number(n||0).toLocaleString('en-PK',{minimumFractionDigits:0,maximumFractionDigits:0});
+const fmtD = n => Number(n||0).toLocaleString('en-PK',{minimumFractionDigits:2,maximumFractionDigits:2});
+const today = () => new Date().toISOString().split('T')[0];
+const esc = s => String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+function fmtDate(d) {
+  if (!d) return '';
+  const p = String(d).split('-');
+  if (p.length < 3) return d;
+  const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${parseInt(p[2])} ${M[parseInt(p[1])-1]} ${p[0]}`;
+}
+async function api(method, path, body = null) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(path, opts);
+  const d = await r.json();
+  if (r.status === 401 && d.auth_required) {
+    showAuthGate();
+    throw new Error('Authentication required');
+  }
+  if (!r.ok) throw new Error(d.error || 'Request failed');
+  return d;
+}
+function toast(msg, type = 'ok') {
+  const t = document.createElement('div');
+  t.className = `toast t-${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3300);
+}
+function statusBadge(s) {
+  const m = { Paid:'b-ok', Pending:'b-amber', Partial:'b-info' };
+  return `<span class="badge ${m[s]||'b-silver'}">${esc(s)}</span>`;
+}
+function emptyState(icon, title, sub) {
+  return `<div class="empty"><div class="empty-ico"><i data-lucide="${icon}" class="w-5 h-5"></i></div><strong>${esc(title)}</strong><p>${esc(sub)}</p></div>`;
+}
+
+// ─── AUTHENTICATION GATE (REAL MANDATORY LOGIN) ────────────────────────────────
+function showAuthGate() {
+  document.getElementById('auth-gate-screen').style.display = 'flex';
+  document.getElementById('app-wrapper').classList.add('hidden');
+}
+
+function hideAuthGate() {
+  document.getElementById('auth-gate-screen').style.display = 'none';
+  document.getElementById('app-wrapper').classList.remove('hidden');
+}
+
+function toggleGateAuth(tab) {
+  document.getElementById('gate-tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('gate-tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('gate-form-login').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('gate-form-register').classList.toggle('hidden', tab !== 'register');
+}
+
+async function handleGateLogin(e) {
+  e.preventDefault();
+  const username = document.getElementById('gate-login-user').value.trim();
+  const password = document.getElementById('gate-login-pass').value.trim();
+  try {
+    const res = await api('POST', '/api/auth/login', { username, password });
+    toast(`Welcome back, ${res.user.full_name || res.user.username}!`);
+    await onSuccessfulLogin();
+  } catch(err) { toast(err.message, 'err'); }
+}
+
+async function handleGateRegister(e) {
+  e.preventDefault();
+  const username = document.getElementById('gate-reg-user').value.trim();
+  const email = document.getElementById('gate-reg-email').value.trim();
+  const full_name = document.getElementById('gate-reg-fullname').value.trim();
+  const business_name = document.getElementById('gate-reg-biz').value.trim();
+  const phone = document.getElementById('gate-reg-phone').value.trim();
+  const password = document.getElementById('gate-reg-pass').value.trim();
+
+  try {
+    await api('POST', '/api/auth/register', { username, email, full_name, business_name, phone, password });
+    toast(`Business account created for ${username}!`);
+    await onSuccessfulLogin();
+  } catch(err) { toast(err.message, 'err'); }
+}
+
+function fillDemoAndLogin() {
+  document.getElementById('gate-login-user').value = 'panda_admin';
+  document.getElementById('gate-login-pass').value = 'panda123';
+  document.getElementById('gate-btn-login').click();
+}
+
+async function onSuccessfulLogin() {
+  hideAuthGate();
+  await checkUserSession();
+  switchTab('dashboard');
+}
+
+async function performAppLogout() {
+  closeAllDropdowns();
+  try {
+    await api('POST', '/api/auth/logout');
+    toast('Logged out');
+    S.currentUser = null;
+    showAuthGate();
+  } catch(e) { showAuthGate(); }
+}
+
+async function checkUserSession() {
+  try {
+    const d = await api('GET', '/api/auth/me');
+    if (d.logged_in && d.user) {
+      S.currentUser = d.user;
+      hideAuthGate();
+      updateUserUIElements();
+      return true;
+    } else {
+      showAuthGate();
+      return false;
+    }
+  } catch(e) {
+    showAuthGate();
+    return false;
+  }
+}
+
+function updateUserUIElements() {
+  const u = S.currentUser;
+  if (!u) return;
+  document.getElementById('user-display-name').textContent = u.username;
+  document.getElementById('user-avatar-letter').textContent = (u.username[0] || 'A').toUpperCase();
+  document.getElementById('menu-biz-name').textContent = u.business_name || "PANDA'S Wholesale";
+  document.getElementById('menu-user-fullname').textContent = u.full_name || u.username;
+
+  // Fill profile form
+  document.getElementById('prof-biz-name').value = u.business_name || '';
+  document.getElementById('prof-full-name').value = u.full_name || '';
+  document.getElementById('prof-email').value = u.email || '';
+  document.getElementById('prof-address').value = u.address || '';
+  document.getElementById('prof-tax-id').value = u.tax_id || '';
+  document.getElementById('prof-phone').value = u.phone || '';
+  document.getElementById('prof-currency').value = u.currency || 'PKR';
+  document.getElementById('prof-role').value = u.role || '';
+}
+
+// ─── PROFILE & SETTINGS MODAL ─────────────────────────────────────────────────
+function openProfileSettingsModal() {
+  closeAllDropdowns();
+  switchSettingsTab('biz');
+  document.getElementById('profile-settings-overlay').classList.add('open');
+}
+
+function closeProfileSettingsModal() {
+  document.getElementById('profile-settings-overlay').classList.remove('open');
+}
+
+function switchSettingsTab(tab) {
+  document.getElementById('set-tab-biz').classList.toggle('active', tab === 'biz');
+  document.getElementById('set-tab-sec').classList.toggle('active', tab === 'sec');
+  document.getElementById('form-profile-biz').classList.toggle('hidden', tab !== 'biz');
+  document.getElementById('form-profile-sec').classList.toggle('hidden', tab !== 'sec');
+}
+
+async function saveProfileSettings(e) {
+  e.preventDefault();
+  try {
+    await api('PUT', '/api/auth/profile', {
+      business_name: document.getElementById('prof-biz-name').value.trim(),
+      full_name: document.getElementById('prof-full-name').value.trim(),
+      email: document.getElementById('prof-email').value.trim(),
+      address: document.getElementById('prof-address').value.trim(),
+      tax_id: document.getElementById('prof-tax-id').value.trim(),
+      phone: document.getElementById('prof-phone').value.trim(),
+      currency: document.getElementById('prof-currency').value,
+      role: document.getElementById('prof-role').value.trim()
+    });
+    toast('Profile & Business details updated');
+    closeProfileSettingsModal();
+    await checkUserSession();
+    loadDashboard();
+  } catch(err) { toast(err.message, 'err'); }
+}
+
+async function changeAccountPassword(e) {
+  e.preventDefault();
+  const old_password = document.getElementById('prof-old-pass').value.trim();
+  const new_password = document.getElementById('prof-new-pass').value.trim();
+  try {
+    await api('PUT', '/api/auth/change-password', { old_password, new_password });
+    toast('Password changed successfully');
+    e.target.reset();
+    closeProfileSettingsModal();
+  } catch(err) { toast(err.message, 'err'); }
+}
+
+// ─── TOP NAVBAR: NOTIFICATIONS & DROPDOWNS ────────────────────────────────────
+function toggleNotifications() {
+  const m = document.getElementById('notif-menu');
+  const isOpen = m.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) {
+    m.classList.add('open');
+    loadNotifications();
+  }
+}
+
+function toggleProfileMenu() {
+  const m = document.getElementById('profile-menu');
+  const isOpen = m.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) m.classList.add('open');
+}
+
+function closeAllDropdowns() {
+  document.getElementById('notif-menu')?.classList.remove('open');
+  document.getElementById('profile-menu')?.classList.remove('open');
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#btn-notifications') && !e.target.closest('#notif-menu') &&
+      !e.target.closest('#btn-profile') && !e.target.closest('#profile-menu')) {
+    closeAllDropdowns();
+  }
+});
+
+async function loadNotifications() {
+  try {
+    const res = await api('GET', '/api/notifications');
+    const badge = document.getElementById('notif-badge');
+    const list = document.getElementById('notif-list');
+    const cntText = document.getElementById('notif-count-text');
+
+    if (res.count > 0) {
+      badge.classList.remove('hidden');
+      badge.textContent = res.count;
+      cntText.textContent = `${res.count} alert${res.count>1?'s':''}`;
+      list.innerHTML = res.alerts.map(a => `
+        <div class="card-xs p-2 text-[11px] flex items-center justify-between gap-2 border-${a.severity==='danger'?'danger/30':'amber/30'}">
+          <div>
+            <strong class="text-offwhite block">${esc(a.product_name)}</strong>
+            <span class="text-${a.severity==='danger'?'danger':'amber'}">${esc(a.message)}</span>
+          </div>
+          <button onclick="quickRestock(${a.product_id})" class="btn-icon lime py-1 px-2 text-[10px] font-bold flex-shrink-0">
+            Restock
+          </button>
+        </div>
+      `).join('');
+    } else {
+      badge.classList.add('hidden');
+      cntText.textContent = 'All stocked up';
+      list.innerHTML = `<div class="text-[11px] text-muted text-center py-4">No out-of-stock items</div>`;
+    }
+  } catch(e) {}
+}
+
+function quickRestock(productId) {
+  closeAllDropdowns();
+  closeInfo();
+  switchTab('stock');
+  setTimeout(() => {
+    const sel = document.getElementById('st-product');
+    if (sel) {
+      sel.value = productId;
+      onStockProductChange(productId);
+      document.getElementById('st-qty').focus();
+    }
+  }, 250);
+}
+
+// ─── DASHBOARD & TIMEFRAME STATS FILTERS ──────────────────────────────────────
+function setDashboardPeriod(period) {
+  S.dashboardPeriod = period;
+  document.querySelectorAll('.filter-pill[data-period]').forEach(p => {
+    p.classList.toggle('active', p.dataset.period === period);
+  });
+  loadDashboard();
+}
+
+async function loadDashboard() {
+  try {
+    const p = S.dashboardPeriod;
+    const d = await api('GET', `/api/dashboard?period=${p}`);
+
+    document.getElementById('d-sales').textContent = fmt(d.total_sales);
+    document.getElementById('d-purchase').textContent = fmt(d.total_purchase_cost);
+    document.getElementById('d-expenses').textContent = fmt(d.total_expenses);
+
+    const profitEl = document.getElementById('d-profit');
+    profitEl.textContent = (d.net_profit < 0 ? '−' : '') + fmt(Math.abs(d.net_profit));
+    profitEl.classList.toggle('text-lime', d.net_profit >= 0);
+    profitEl.classList.toggle('text-danger', d.net_profit < 0);
+
+    document.getElementById('d-cnt-p').textContent = d.product_count;
+    document.getElementById('d-cnt-c').textContent = d.client_count;
+    document.getElementById('d-cnt-s').textContent = d.sale_count;
+
+    const periodLabels = {
+      all_time: 'All-Time Financials',
+      today: "Today's Live Snapshot",
+      this_week: "This Week's Snapshot",
+      this_month: "This Month's Velocity",
+      last_month: "Last Month's Performance",
+      this_year: "This Year's Financials"
+    };
+    document.getElementById('d-sales-lbl').textContent = periodLabels[p] || 'Total Sales Revenue';
+    document.getElementById('d-period-hint').textContent = d.filter_applied ? `Filtered: ${fmtDate(d.start_date)} to ${fmtDate(d.end_date)}` : 'Cumulative all-time data';
+
+    const el = document.getElementById('d-recent');
+    if (!d.recent_sales?.length) {
+      el.innerHTML = emptyState('handshake','No transactions yet','Record your first sale to see it here');
+    } else {
+      el.innerHTML = d.recent_sales.map((s,i) => `
+        <div class="card-xs p-3 mb-2 slide-in" style="animation-delay:${i*20}ms">
+          <div class="flex items-center justify-between">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2">
+                <span class="text-[13px] font-bold text-offwhite truncate cl-link" onclick="openClientInfo('${esc(s.client_name)}')">${esc(s.client_name)}</span>
+                ${s.invoice_no ? `<span class="badge b-silver" style="font-family:monospace">${esc(s.invoice_no)}</span>` : ''}
+              </div>
+              <div class="text-[11px] text-muted mt-0.5">
+                <span class="cl-link" onclick="openProductInfo(${s.product_id})">${esc(s.product_name)}</span>
+                &bull; <strong class="text-chrome">${fmtD(s.quantity_sold)} ${esc(s.unit)}</strong> &bull; ${fmtDate(s.sale_date)}
+              </div>
+            </div>
+            <div class="flex flex-col items-end gap-1 ml-3 flex-shrink-0">
+              <span class="text-[13px] font-black text-lime">${fmt(s.total_amount)}</span>
+              ${statusBadge(s.payment_status)}
+            </div>
+          </div>
+        </div>`).join('');
+    }
+    loadNotifications();
+    lucide.createIcons();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+// ─── PERIOD SUMMARY & FINANCIAL AUDIT REPORT ──────────────────────────────────
+function openPeriodReportModal() {
+  closeAllDropdowns();
+  setReportPreset('this_month');
+  document.getElementById('period-report-overlay').classList.add('open');
+}
+
+function closePeriodReportModal() {
+  document.getElementById('period-report-overlay').classList.remove('open');
+}
+
+function setReportPreset(preset) {
+  const t = new Date();
+  let s, e;
+  if (preset === 'this_month') {
+    s = new Date(t.getFullYear(), t.getMonth(), 1).toISOString().split('T')[0];
+    e = t.toISOString().split('T')[0];
+  } else if (preset === 'last_month') {
+    s = new Date(t.getFullYear(), t.getMonth()-1, 1).toISOString().split('T')[0];
+    e = new Date(t.getFullYear(), t.getMonth(), 0).toISOString().split('T')[0];
+  } else if (preset === 'this_year') {
+    s = new Date(t.getFullYear(), 0, 1).toISOString().split('T')[0];
+    e = t.toISOString().split('T')[0];
+  } else if (preset === 'all_time') {
+    s = '2020-01-01';
+    e = t.toISOString().split('T')[0];
+  }
+  document.getElementById('rep-start-date').value = s;
+  document.getElementById('rep-end-date').value = e;
+  generatePeriodAuditReport();
+}
+
+async function generatePeriodAuditReport() {
+  const start_date = document.getElementById('rep-start-date').value;
+  const end_date = document.getElementById('rep-end-date').value;
+  const container = document.getElementById('crisp-audit-report-pdf');
+
+  if (!start_date || !end_date) {
+    toast('Select both start date and end date', 'warn');
+    return;
+  }
+
+  container.innerHTML = `<div class="text-center py-12 text-gray-500 text-[13px]">Generating financial audit statement…</div>`;
+
+  try {
+    const d = await api('GET', `/api/reports/period-summary?start_date=${start_date}&end_date=${end_date}`);
+    S.activeReportData = d;
+    const u = d.user;
+    const sm = d.summary;
+
+    container.innerHTML = `
+      <!-- Report Header -->
+      <div style="border-bottom:2px solid #111827;padding-bottom:18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <h1 style="font-size:24px;font-weight:900;color:#111827;letter-spacing:-0.5px;margin:0">${esc(u.business_name || "PANDA'S Wholesale Distribution System")}</h1>
+          <div style="font-size:12px;font-weight:700;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-top:2px">Financial Period Statement &amp; Inventory Audit</div>
+          ${u.address ? `<div style="font-size:11px;color:#6b7280;margin-top:4px">${esc(u.address)}</div>` : ''}
+          ${u.tax_id ? `<div style="font-size:11px;color:#6b7280">NTN / Tax ID: ${esc(u.tax_id)} &bull; Phone: ${esc(u.phone)}</div>` : ''}
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;font-weight:700;color:#111827">STATEMENT PERIOD</div>
+          <div style="font-size:13px;font-weight:900;color:#2563eb">${fmtDate(d.period.start_date)} — ${fmtDate(d.period.end_date)}</div>
+          <div style="font-size:10px;color:#9ca3af;margin-top:4px">Generated: ${esc(d.period.generated_at)}</div>
+        </div>
+      </div>
+
+      <!-- Executive Financial Summary Boxes -->
+      <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;margin-bottom:24px">
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase">Sales Revenue</div>
+          <div style="font-size:18px;font-weight:900;color:#16a34a;margin-top:4px">${fmt(sm.total_sales)}</div>
+          <div style="font-size:10px;color:#6b7280">${sm.distinct_invoices} Invoices Issued</div>
+        </div>
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase">Purchases</div>
+          <div style="font-size:18px;font-weight:900;color:#2563eb;margin-top:4px">${fmt(sm.total_purchases)}</div>
+          <div style="font-size:10px;color:#6b7280">${sm.purchases_count} Stock Entries</div>
+        </div>
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase">Expenses</div>
+          <div style="font-size:18px;font-weight:900;color:#dc2626;margin-top:4px">${fmt(sm.total_expenses)}</div>
+          <div style="font-size:10px;color:#6b7280">${sm.expenses_count} Expense Logs</div>
+        </div>
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase">Net Profit</div>
+          <div style="font-size:18px;font-weight:900;color:${sm.net_profit>=0?'#16a34a':'#dc2626'};margin-top:4px">${fmt(sm.net_profit)}</div>
+          <div style="font-size:10px;color:#6b7280">Net Margin: ${sm.total_sales>0 ? ((sm.net_profit/sm.total_sales)*100).toFixed(1) : 0}%</div>
+        </div>
+      </div>
+
+      <!-- Section: Product Performance Table -->
+      <h3 style="font-size:13px;font-weight:800;color:#111827;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Product Sales Breakdown</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:24px">
+        <thead>
+          <tr style="text-align:left;font-size:10px;font-weight:700;color:#4b5563;border-bottom:2px solid #e5e7eb">
+            <th style="padding:6px 0">Product Name</th>
+            <th style="padding:6px">Category</th>
+            <th style="padding:6px;text-align:right">Units Sold</th>
+            <th style="padding:6px;text-align:right">Orders</th>
+            <th style="padding:6px 0;text-align:right">Revenue (PKR)</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${d.product_breakdown.length ? d.product_breakdown.map(p => `
+            <tr>
+              <td style="padding:8px 0;font-weight:700;color:#111827">${esc(p.name)}</td>
+              <td style="padding:8px;color:#6b7280">${esc(p.category)}</td>
+              <td style="padding:8px;text-align:right;font-weight:600">${fmtD(p.units_sold)} ${esc(p.unit)}</td>
+              <td style="padding:8px;text-align:right;color:#6b7280">${p.order_count}</td>
+              <td style="padding:8px 0;text-align:right;font-weight:800;color:#111827">${fmt(p.total_revenue)}</td>
+            </tr>
+          `).join('') : '<tr><td colspan="5" style="text-align:center;padding:12px;color:#9ca3af">No product sales in this period</td></tr>'}
+        </tbody>
+      </table>
+
+      <!-- Section: Purchases Log -->
+      <h3 style="font-size:13px;font-weight:800;color:#111827;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Stock Purchases During Period</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:24px">
+        <thead>
+          <tr style="text-align:left;font-size:10px;font-weight:700;color:#4b5563;border-bottom:2px solid #e5e7eb">
+            <th style="padding:6px 0">Date</th>
+            <th style="padding:6px">Product</th>
+            <th style="padding:6px">Supplier</th>
+            <th style="padding:6px;text-align:right">Quantity</th>
+            <th style="padding:6px 0;text-align:right">Cost (PKR)</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${d.purchases_log.length ? d.purchases_log.slice(0, 15).map(pl => `
+            <tr>
+              <td style="padding:6px 0;color:#6b7280">${fmtDate(pl.purchase_date)}</td>
+              <td style="padding:6px;font-weight:600;color:#111827">${esc(pl.product_name)}</td>
+              <td style="padding:6px;color:#6b7280">${esc(pl.supplier||'—')}</td>
+              <td style="padding:6px;text-align:right">${fmtD(pl.quantity)} ${esc(pl.unit)}</td>
+              <td style="padding:6px 0;text-align:right;font-weight:700;color:#111827">${fmt(pl.total_cost)}</td>
+            </tr>
+          `).join('') : '<tr><td colspan="5" style="text-align:center;padding:12px;color:#9ca3af">No purchases recorded in this period</td></tr>'}
+        </tbody>
+      </table>
+
+      <!-- Footer & Disclaimer -->
+      <div style="border-top:1px solid #e5e7eb;padding-top:14px;display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">
+        <div>Certified Official Wholesale Statement &bull; PANDA'S ERP System</div>
+        <div>All Rights Reserved by X Panda &bull; Page 1 of 1</div>
+      </div>
+    `;
+    lucide.createIcons();
+  } catch(err) { container.innerHTML = `<div class="text-center py-8 text-red-600">${esc(err.message)}</div>`; }
+}
+
+function downloadAuditReportPDF() {
+  if (!S.activeReportData) { toast('Please generate statement first', 'warn'); return; }
+  const start = S.activeReportData.period.start_date;
+  const end = S.activeReportData.period.end_date;
+  const filename = `Audit-Statement-${start}-to-${end}.pdf`;
+  const link = document.createElement('a');
+  link.href = `/api/reports/period-summary/pdf?start_date=${encodeURIComponent(start)}&end_date=${encodeURIComponent(end)}`;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  toast('Downloading official vector Audit Statement PDF…');
+}
+
+// ─── HIGH-QUALITY INVOICE PDF & WHATSAPP SHARING ──────────────────────────────
+async function openInvoiceModal(invId) {
+  const printArea = document.getElementById('crisp-invoice-pdf');
+  printArea.innerHTML = `<div class="text-center py-10 text-gray-500">Loading invoice details…</div>`;
+  document.getElementById('invoice-overlay').classList.add('open');
+
+  try {
+    const inv = await api('GET', `/api/invoice/${encodeURIComponent(invId)}`);
+    S.activeInvoiceData = inv;
+
+    printArea.innerHTML = `
+      <!-- Corporate Header -->
+      <div style="border-bottom:2px solid #111827;padding-bottom:16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="display:flex;align-items:center;gap:12px">
+          <img src="/static/logo.jpg" alt="PANDA'S Logo" style="width:48px;height:48px;border-radius:10px;object-fit:cover;border:1px solid #111827" onerror="this.style.display='none'"/>
+          <div>
+            <h1 style="font-size:22px;font-weight:900;color:#111827;margin:0;letter-spacing:-0.5px">${esc(inv.business_name || "PANDA'S Wholesale Distribution System")}</h1>
+            <div style="font-size:11px;font-weight:700;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-top:2px">Commercial Tax &amp; Delivery Invoice</div>
+            ${inv.business_address ? `<div style="font-size:11px;color:#6b7280;margin-top:3px">${esc(inv.business_address)}</div>` : ''}
+            ${inv.business_phone ? `<div style="font-size:11px;color:#6b7280">Phone: ${esc(inv.business_phone)}${inv.tax_id ? ` &bull; NTN: ${esc(inv.tax_id)}` : ''}</div>` : ''}
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:16px;font-weight:900;color:#111827;font-family:monospace">${esc(inv.invoice_no)}</div>
+          <div style="font-size:12px;font-weight:600;color:#4b5563;margin-top:3px">Date: ${fmtDate(inv.sale_date)}</div>
+          <div style="margin-top:6px"><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:#f3f4f6;color:#111827;border:1px solid #d1d5db">${esc(inv.payment_status)}</span></div>
+        </div>
+      </div>
+
+      <!-- Bill To Box -->
+      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:20px">
+        <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px">Customer / Billed To:</div>
+        <div style="font-size:16px;font-weight:800;color:#111827;margin-top:2px">${esc(inv.client_name)}</div>
+        ${inv.notes ? `<div style="font-size:11px;color:#4b5563;margin-top:4px"><strong>Instructions / Terms:</strong> ${esc(inv.notes)}</div>` : ''}
+      </div>
+
+      <!-- Itemized Table -->
+      <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px">
+        <thead>
+          <tr style="text-align:left;font-size:10px;font-weight:700;color:#4b5563;border-bottom:2px solid #e5e7eb">
+            <th style="padding:8px 0;width:30px">#</th>
+            <th style="padding:8px">Item Description</th>
+            <th style="padding:8px;text-align:right">Quantity</th>
+            <th style="padding:8px;text-align:right">Rate / Unit</th>
+            <th style="padding:8px 0;text-align:right">Total (PKR)</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${inv.items.map((it, idx) => `
+            <tr>
+              <td style="padding:10px 0;color:#6b7280">${idx + 1}</td>
+              <td style="padding:10px">
+                <div style="font-weight:800;color:#111827">${esc(it.product_name)}</div>
+                ${it.sku ? `<div style="font-size:10px;color:#6b7280;font-family:monospace">SKU: ${esc(it.sku)}</div>` : ''}
+                ${it.batch_no ? `<div style="font-size:10px;color:#6b7280">Batch: ${esc(it.batch_no)}</div>` : ''}
+              </td>
+              <td style="padding:10px;text-align:right;font-weight:700;color:#111827">${fmtD(it.quantity_sold)} ${esc(it.unit)}</td>
+              <td style="padding:10px;text-align:right;color:#4b5563">${fmt(it.unit_price)}</td>
+              <td style="padding:10px 0;text-align:right;font-weight:900;color:#111827">${fmt(it.total_amount)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+
+      <!-- Grand Total -->
+      <div style="border-top:2px solid #111827;padding-top:14px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:11px;color:#6b7280">
+          Total Line Items: <strong style="color:#111827">${inv.item_count}</strong>
+        </div>
+        <div style="text-align:right">
+          <span style="font-size:12px;font-weight:700;color:#4b5563;margin-right:8px">GRAND TOTAL:</span>
+          <span style="font-size:22px;font-weight:900;color:#111827">${fmt(inv.grand_total)}</span>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="border-top:1px solid #e5e7eb;margin-top:28px;padding-top:12px;text-align:center;font-size:10px;color:#9ca3af">
+        Thank you for your business! &bull; PANDA'S Wholesale Distribution System &bull; &copy; 2025 All Rights Reserved by X Panda
+      </div>
+    `;
+    lucide.createIcons();
+  } catch(e) { printArea.innerHTML = `<div class="text-center py-8 text-red-600">${esc(e.message)}</div>`; }
+}
+
+function closeInvoice() {
+  document.getElementById('invoice-overlay').classList.remove('open');
+  S.activeInvoiceData = null;
+}
+
+function downloadCrispInvoicePDF() {
+  if (!S.activeInvoiceData) return;
+  const inv = S.activeInvoiceData;
+  const filename = `${inv.invoice_no || 'Invoice'}.pdf`;
+  const link = document.createElement('a');
+  link.href = `/api/invoice/${encodeURIComponent(inv.invoice_no)}/pdf`;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  toast('Downloading official vector A4 invoice PDF…');
+}
+
+async function shareInvoiceWhatsApp() {
+  if (!S.activeInvoiceData) return;
+  const inv = S.activeInvoiceData;
+  const invNo = inv.invoice_no || 'PND-INV-1001';
+  const pdfUrl = `${window.location.origin}/invoice/${encodeURIComponent(invNo)}/pdf`;
+
+  toast('Preparing official PDF invoice for WhatsApp…');
+
+  let pdfBlob = null;
+  try {
+    const res = await fetch(`/api/invoice/${encodeURIComponent(invNo)}/pdf`);
+    if (res.ok) {
+      pdfBlob = await res.blob();
+    }
+  } catch(e) {
+    console.warn('Could not fetch PDF blob:', e);
+  }
+
+  // 1. If mobile device supports sharing binary files (Android Chrome, iOS Safari)
+  if (pdfBlob && navigator.canShare) {
+    try {
+      const pdfFile = new File([pdfBlob], `${invNo}.pdf`, { type: 'application/pdf' });
+      if (navigator.canShare({ files: [pdfFile] })) {
+        await navigator.share({
+          files: [pdfFile],
+          title: `Invoice ${invNo}`,
+          text: `*${inv.business_name || "PANDA'S Wholesale"}*\nCommercial Invoice: ${invNo}\nCustomer: ${inv.client_name}\nTotal: ${fmt(inv.grand_total)}\nStatus: ${inv.payment_status}`
+        });
+        toast('Invoice PDF shared to WhatsApp!');
+        return;
+      }
+    } catch(err) {
+      if (err.name === 'AbortError') return;
+      console.warn('Web Share fallback:', err);
+    }
+  }
+
+  // 2. Desktop / WhatsApp Web workflow:
+  // Trigger direct download of the actual PDF file so user has it on disk
+  if (pdfBlob) {
+    const blobUrl = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = `${invNo}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 3000);
+  }
+
+  // Open WhatsApp with clean pre-filled message and direct PDF view/download link
+  const itemsText = inv.items.map((it, i) => `${i+1}. *${it.product_name}* — ${it.quantity_sold} ${it.unit} @ ${inv.currency} ${it.unit_price} = ${inv.currency} ${it.total_amount}`).join('\n');
+  const message =
+`*${inv.business_name || "PANDA'S Wholesale Distribution System"}*
+📄 *TAX INVOICE:* ${invNo}
+👤 *Customer:* ${inv.client_name}
+📅 *Date:* ${fmtDate(inv.sale_date)}
+💰 *Grand Total:* ${fmt(inv.grand_total)}
+✅ *Payment Status:* ${inv.payment_status}
+-----------------------------------------
+*ORDERED ITEMS:*
+${itemsText}
+-----------------------------------------
+📥 *Direct PDF Invoice Link:*
+${pdfUrl}
+
+*(The official vector PDF has also been downloaded to your downloads folder — you can drag & drop it directly into this WhatsApp chat!)*`;
+
+  const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
+  toast('WhatsApp opened & PDF file downloaded to your device!');
+}
+
+// ─── TABS ROUTING & LOADERS ───────────────────────────────────────────────────
+function switchTab(tab) {
+  TABS.forEach(t => {
+    document.getElementById(`tab-${t}`).classList.remove('active');
+    document.getElementById(`nav-${t}`)?.classList.remove('active');
+  });
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  document.getElementById(`nav-${tab}`)?.classList.add('active');
+  S.currentTab = tab;
+  closeAllDropdowns();
+  if (tab==='dashboard') loadDashboard();
+  if (tab==='products')  loadProducts();
+  if (tab==='stock')     loadStockTab();
+  if (tab==='sales')     loadSalesTab();
+  if (tab==='expenses')  loadExpenses();
+  if (tab==='analytics') loadAnalytics();
+}
+
+function switchSeg(seg) {
+  S.currentSeg = seg;
+  ['rev','prod','cli'].forEach(s => {
+    document.getElementById(`panel-${s}`).style.display = s===seg ? '' : 'none';
+    document.getElementById(`seg-${s}`).classList.toggle('active', s===seg);
+  });
+}
+
+function filterList(id, q) {
+  const lq = q.toLowerCase().trim();
+  document.querySelectorAll(`#${id} [data-search]`).forEach(el => {
+    el.style.display = !lq || el.dataset.search.toLowerCase().includes(lq) ? '' : 'none';
+  });
+}
+
+// ─── PRODUCTS ─────────────────────────────────────────────────────────────────
+async function loadProducts() {
+  try {
+    S.products = await api('GET', '/api/products');
+    const el = document.getElementById('products-list');
+    document.getElementById('p-count').textContent = `${S.products.length} items`;
+    if (!S.products.length) {
+      el.innerHTML = emptyState('tag','No products registered','Use the form above to add your first product');
+      lucide.createIcons(); return;
+    }
+    el.innerHTML = S.products.map((p, i) => `
+      <div class="card-xs p-3 mb-2 slide-in" data-search="${esc(p.name)} ${esc(p.sku||'')} ${esc(p.category)} ${esc(p.batch_no||'')} ${esc(p.storage_loc||'')}" style="animation-delay:${i*20}ms">
+        <div class="flex items-start justify-between">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 flex-wrap mb-1">
+              <span class="text-[13px] font-bold text-offwhite cl-link" onclick="openProductInfo(${p.id})">${esc(p.name)}</span>
+              ${p.sku ? `<span class="badge b-silver font-mono">${esc(p.sku)}</span>` : ''}
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="badge b-silver">${esc(p.category)}</span>
+              <span class="badge b-lime font-bold">${esc(p.unit)}</span>
+              ${p.batch_no ? `<span class="text-[10.5px] text-muted">&bull; Lot: ${esc(p.batch_no)}</span>` : ''}
+              ${p.expiry_date ? `<span class="text-[10.5px] text-amber">&bull; Exp: ${fmtDate(p.expiry_date)}</span>` : ''}
+              ${p.storage_loc ? `<span class="text-[10.5px] text-info">&bull; Loc: ${esc(p.storage_loc)}</span>` : ''}
+            </div>
+            ${p.description ? `<div class="text-[10.5px] text-muted mt-1.5 line-clamp-1">${esc(p.description)}</div>` : ''}
+          </div>
+          <div class="flex items-center gap-1.5 ml-2 flex-shrink-0">
+            <button class="btn-icon lime" onclick="quickRestock(${p.id})" title="Restock item"><i data-lucide="package-plus" class="w-3.5 h-3.5"></i></button>
+            <button class="btn-icon lime" onclick='openEditModal("product",${JSON.stringify(p)})'><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+            <button class="btn-icon red" onclick="delProduct(${p.id})"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>
+        </div>
+      </div>`).join('');
+    lucide.createIcons();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function autoSKU() {
+  const cat = document.getElementById('p-cat').value;
+  const code = CAT_CODES[cat] || 'GEN';
+  document.getElementById('p-sku').value = `PND-${code}-${String(Math.floor(Math.random()*900)+100)}`;
+}
+
+document.getElementById('form-product').addEventListener('submit', async e => {
+  e.preventDefault();
+  const cat = document.getElementById('p-cat').value;
+  const unit = document.getElementById('p-unit').value;
+  if (!cat)  { toast('Please select a category','warn'); return; }
+  if (!unit) { toast('Please select a unit of measurement','warn'); return; }
+  try {
+    await api('POST','/api/products',{
+      name: document.getElementById('p-name').value.trim(),
+      sku: document.getElementById('p-sku').value.trim(),
+      category: cat, unit,
+      brand: document.getElementById('p-brand').value.trim(),
+      batch_no: document.getElementById('p-batch').value.trim(),
+      expiry_date: document.getElementById('p-expiry').value,
+      storage_loc: document.getElementById('p-storage').value.trim(),
+      low_stock_threshold: document.getElementById('p-thresh').value||0,
+      description: document.getElementById('p-desc').value.trim(),
+    });
+    toast('Product registered successfully');
+    e.target.reset();
+    await loadProducts();
+    refreshAllProductSelects();
+  } catch(err) { toast(err.message,'err'); }
+});
+
+async function delProduct(id) {
+  if (!confirm('Delete this product? This cannot be undone.')) return;
+  try { await api('DELETE',`/api/products/${id}`); toast('Product removed'); loadProducts(); refreshAllProductSelects(); }
+  catch(err) { toast(err.message,'err'); }
+}
+
+// ─── STOCK / PURCHASES ────────────────────────────────────────────────────────
+async function loadStockTab() {
+  await refreshStockProductDropdown();
+  loadStock();
+  loadStockLevels();
+}
+
+async function refreshStockProductDropdown() {
+  S.products = await api('GET','/api/products');
+  const sel = document.getElementById('st-product');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Select product to purchase…</option>' +
+    S.products.map(p => `<option value="${p.id}" ${p.id==cur?'selected':''}>${esc(p.name)} (${esc(p.unit)})${p.storage_loc?` — ${esc(p.storage_loc)}`:''}</option>`).join('');
+}
+
+async function onStockProductChange(pid) {
+  const box = document.getElementById('st-on-hand');
+  const qtyLbl = document.getElementById('st-qty-lbl');
+  document.getElementById('st-preview-box').classList.add('hidden');
+
+  if (!pid) {
+    box.classList.add('hidden');
+    qtyLbl.textContent = 'Quantity to Add *';
+    return;
+  }
+
+  try {
+    const d = await api('GET', `/api/stock/available/${pid}`);
+    box.classList.remove('hidden');
+    document.getElementById('st-on-hand-val').textContent = `${fmtD(d.available)} ${d.unit}`;
+    document.getElementById('st-on-hand-sub').textContent = `Total Purchased: ${fmtD(d.total_purchased)} ${d.unit} | Total Sold: ${fmtD(d.total_sold)} ${d.unit}`;
+    document.getElementById('st-on-hand-meta').innerHTML = `
+      <div>${esc(d.sku||'')}</div>
+      <div class="text-muted text-[10px]">${esc(d.storage_loc||d.category)}</div>
+    `;
+    qtyLbl.textContent = `Quantity to Add (${d.unit}) *`;
+    calcStockPreview();
+  } catch(e) { box.classList.add('hidden'); }
+}
+
+function calcStockPreview() {
+  const pid = document.getElementById('st-product').value;
+  if (!pid) return;
+  const prod = S.products.find(p => p.id == pid);
+  const unit = prod ? prod.unit : 'unit';
+
+  const q = parseFloat(document.getElementById('st-qty').value)||0;
+  const c = parseFloat(document.getElementById('st-cost').value)||0;
+  const prevBox = document.getElementById('st-preview-box');
+
+  if (q > 0) {
+    prevBox.classList.remove('hidden');
+    const rate = c > 0 ? (c / q) : 0;
+    document.getElementById('st-calc-rate').textContent = rate > 0 ? `${fmt(rate)} per ${unit}` : '—';
+    const curStockStr = document.getElementById('st-on-hand-val').textContent;
+    const curStock = parseFloat(curStockStr)||0;
+    document.getElementById('st-calc-newstock').textContent = `${fmtD(curStock + q)} ${unit}`;
+  } else {
+    prevBox.classList.add('hidden');
+  }
+}
+
+async function loadStock() {
+  try {
+    const entries = await api('GET','/api/stock');
+    const el = document.getElementById('stock-list');
+    document.getElementById('st-count').textContent = `${entries.length} entries`;
+    if (!entries.length) { el.innerHTML = emptyState('package','No purchases recorded','Add a stock purchase entry above'); lucide.createIcons(); return; }
+    el.innerHTML = entries.map((e,i) => {
+      const cpu = e.quantity > 0 ? e.total_cost/e.quantity : 0;
+      return `
+      <div class="card-xs p-3 mb-2 slide-in" data-search="${esc(e.product_name)} ${esc(e.supplier||'')}" style="animation-delay:${i*20}ms">
+        <div class="flex items-start justify-between">
+          <div class="min-w-0 flex-1">
+            <div class="text-[13px] font-bold text-offwhite cl-link" onclick="openProductInfo(${e.product_id})">${esc(e.product_name)}</div>
+            <div class="text-[11px] text-muted mt-0.5">
+              <strong class="text-chrome">${fmtD(e.quantity)} ${esc(e.unit)}</strong>${e.supplier?` &bull; ${esc(e.supplier)}`:''} &bull; ${fmtDate(e.purchase_date)}
+            </div>
+            <div class="flex items-center gap-3 mt-1.5">
+              <span class="text-[11.5px] text-info font-bold">${fmt(e.total_cost)}</span>
+              <span class="text-[10.5px] text-muted">(${fmt(cpu)} per ${esc(e.unit)})</span>
+            </div>
+            ${e.notes?`<div class="text-[10px] text-muted mt-1">${esc(e.notes)}</div>`:''}
+          </div>
+          <div class="flex gap-1.5 ml-2 flex-shrink-0">
+            <button class="btn-icon lime" onclick='openEditModal("stock",${JSON.stringify(e)})'><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+            <button class="btn-icon red" onclick="delStock(${e.id})"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>
+        </div>
+      </div>`; }).join('');
+    lucide.createIcons();
+  } catch(err) { toast(err.message,'err'); }
+}
+
+async function loadStockLevels() {
+  try {
+    const levels = await api('GET','/api/stock/levels');
+    const el = document.getElementById('stock-levels');
+    if (!levels.length) { el.innerHTML = `<div class="text-[12px] text-muted text-center py-4">No products registered yet</div>`; return; }
+    el.innerHTML = levels.map((l,i) => {
+      const pct = l.total_purchased > 0 ? Math.max(Math.min((l.current_stock/l.total_purchased)*100,100),0) : 0;
+      const color = pct > 50 ? '#c9f227' : pct > 20 ? '#f59e0b' : '#f03030';
+      return `
+      <div class="card-xs p-3 mb-2 slide-in" style="animation-delay:${i*20}ms">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-[13px] font-bold text-offwhite cl-link" onclick="openProductInfo(${l.id})">${esc(l.name)}</span>
+            ${l.is_low_stock?`<span class="pulse-dot pulse-amber" title="Low Stock"></span>`:''}
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[13px] font-black" style="color:${l.current_stock>0?color:'#f03030'}">
+              ${fmtD(l.current_stock)} <span class="text-[10px] font-normal text-muted">${esc(l.unit)}</span>
+            </span>
+            ${l.current_stock<=0?`
+              <button onclick="quickRestock(${l.id})" class="btn-icon lime py-0.5 px-2 text-[10px] font-bold">Restock</button>
+            `:''}
+          </div>
+        </div>
+        <div class="stock-track"><div class="stock-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="grid grid-cols-3 gap-2 text-center mt-2.5 text-[11px]">
+          <div><div class="text-[10px] text-muted">Purchased</div><div class="font-bold text-chrome">${fmtD(l.total_purchased)} ${esc(l.unit)}</div></div>
+          <div class="border-x border-border"><div class="text-[10px] text-muted">Sold</div><div class="font-bold text-chrome">${fmtD(l.total_sold)} ${esc(l.unit)}</div></div>
+          <div><div class="text-[10px] text-muted">Avg Cost / ${esc(l.unit)}</div><div class="font-bold text-info">${l.avg_cost_per_unit>0?fmt(l.avg_cost_per_unit):'—'}</div></div>
+        </div>
+      </div>`; }).join('');
+    lucide.createIcons();
+  } catch(err) { toast(err.message,'err'); }
+}
+
+document.getElementById('form-stock').addEventListener('submit', async e => {
+  e.preventDefault();
+  const product_id = document.getElementById('st-product').value;
+  if (!product_id) { toast('Select a product to purchase','warn'); return; }
+  try {
+    await api('POST','/api/stock',{
+      product_id, quantity: document.getElementById('st-qty').value,
+      total_cost: document.getElementById('st-cost').value,
+      supplier: document.getElementById('st-supplier').value.trim(),
+      purchase_date: document.getElementById('st-date').value,
+      notes: document.getElementById('st-notes').value.trim(),
+    });
+    toast('Stock purchase recorded');
+    e.target.reset();
+    document.getElementById('st-date').value = today();
+    document.getElementById('st-on-hand').classList.add('hidden');
+    document.getElementById('st-preview-box').classList.add('hidden');
+    document.getElementById('st-qty-lbl').textContent = 'Quantity to Add *';
+    loadStock(); loadStockLevels(); loadNotifications();
+  } catch(err) { toast(err.message,'err'); }
+});
+
+async function delStock(id) {
+  if (!confirm('Remove this purchase entry?')) return;
+  try { await api('DELETE',`/api/stock/${id}`); toast('Entry removed'); loadStock(); loadStockLevels(); loadNotifications(); }
+  catch(err) { toast(err.message,'err'); }
+}
+
+// ─── SALES & MULTI-ITEM CART ──────────────────────────────────────────────────
+async function loadSalesTab() {
+  S.products = await api('GET','/api/products');
+  if (S.cartRows.length === 0) addCartRow();
+  loadInvoices();
+  loadItemizedSales();
+}
+
+function switchSalesView(view) {
+  S.salesView = view;
+  document.getElementById('sales-invoices-panel').style.display = view === 'invoices' ? '' : 'none';
+  document.getElementById('sales-items-panel').style.display = view === 'items' ? '' : 'none';
+  document.getElementById('seg-sales-inv').classList.toggle('active', view === 'invoices');
+  document.getElementById('seg-sales-all').classList.toggle('active', view === 'items');
+}
+
+function addCartRow() {
+  const rowId = 'cart-row-' + Date.now() + '-' + Math.floor(Math.random()*1000);
+  const rowObj = { id: rowId, product_id: '', qty: 0, unit_price: 0, total_amount: 0, unit: 'unit', available: 0 };
+  S.cartRows.push(rowObj);
+  renderCartRows();
+}
+
+function removeCartRow(rowId) {
+  if (S.cartRows.length <= 1) {
+    toast('Order must have at least one product item','warn');
+    return;
+  }
+  S.cartRows = S.cartRows.filter(r => r.id !== rowId);
+  renderCartRows();
+}
+
+function renderCartRows() {
+  const container = document.getElementById('cart-items-container');
+  container.innerHTML = '';
+
+  const optsHtml = '<option value="">Select product to sell…</option>' +
+    S.products.map(p => `<option value="${p.id}">${esc(p.name)} (${esc(p.unit)})</option>`).join('');
+
+  S.cartRows.forEach((row, idx) => {
+    const div = document.createElement('div');
+    div.className = 'cart-row slide-in';
+    div.id = row.id;
+    div.innerHTML = `
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-[11px] font-bold text-silver uppercase tracking-wider">Item #${idx + 1}</span>
+        ${S.cartRows.length > 1 ? `
+          <button type="button" onclick="removeCartRow('${row.id}')" class="btn-icon red p-1 text-[11px]">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        ` : ''}
+      </div>
+
+      <div class="space-y-2.5">
+        <div>
+          <select class="field cart-prod-sel" data-row-id="${row.id}" onchange="onCartProductChange('${row.id}', this.value)" required>
+            ${optsHtml}
+          </select>
+        </div>
+
+        <div id="${row.id}-avail-box" class="hidden text-[11.5px] p-2 rounded-lg flex items-center justify-between"></div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="lbl text-[10px]" id="${row.id}-qty-lbl">Quantity (${esc(row.unit)}) *</label>
+            <input class="field cart-qty-inp" type="number" step="0.01" min="0.01" placeholder="0.00"
+                   data-row-id="${row.id}" value="${row.qty > 0 ? row.qty : ''}" required oninput="onCartQtyInput('${row.id}', this.value)"/>
+          </div>
+          <div>
+            <label class="lbl text-[10px]" id="${row.id}-rate-lbl">Rate / ${esc(row.unit)} (PKR)</label>
+            <input class="field cart-rate-inp" type="number" step="0.01" min="0" placeholder="0.00"
+                   data-row-id="${row.id}" value="${row.unit_price > 0 ? row.unit_price : ''}" oninput="onCartRateInput('${row.id}', this.value)"/>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[12px] pt-1">
+          <span class="text-muted">Item Subtotal:</span>
+          <span class="font-black text-lime" id="${row.id}-subtotal">${fmt(row.total_amount)}</span>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+
+    if (row.product_id) {
+      div.querySelector('.cart-prod-sel').value = row.product_id;
+      updateRowAvailabilityUI(row.id, row.available, row.unit, row.product_id);
+    }
+  });
+
+  document.getElementById('cart-item-count').textContent = `${S.cartRows.length} Item${S.cartRows.length>1?'s':''} in Order`;
+  updateCartGrandTotal();
+  lucide.createIcons();
+}
+
+async function onCartProductChange(rowId, pid) {
+  const row = S.cartRows.find(r => r.id === rowId);
+  if (!row) return;
+
+  row.product_id = pid;
+  if (!pid) {
+    row.available = 0;
+    row.unit = 'unit';
+    document.getElementById(`${rowId}-avail-box`).classList.add('hidden');
+    document.getElementById(`${rowId}-qty-lbl`).textContent = 'Quantity *';
+    document.getElementById(`${rowId}-rate-lbl`).textContent = 'Rate (PKR)';
+    updateCartGrandTotal();
+    return;
+  }
+
+  try {
+    const d = await api('GET', `/api/stock/available/${pid}`);
+    row.available = d.available;
+    row.unit = d.unit;
+    updateRowAvailabilityUI(rowId, d.available, d.unit, pid);
+    document.getElementById(`${rowId}-qty-lbl`).textContent = `Quantity (${d.unit}) *`;
+    document.getElementById(`${rowId}-rate-lbl`).textContent = `Rate / ${d.unit} (PKR)`;
+    checkRowStockValidity(row);
+  } catch(e) {
+    document.getElementById(`${rowId}-avail-box`).classList.add('hidden');
+  }
+}
+
+function updateRowAvailabilityUI(rowId, avail, unit, pid) {
+  const box = document.getElementById(`${rowId}-avail-box`);
+  if (!box) return;
+  box.classList.remove('hidden');
+
+  if (avail <= 0) {
+    box.className = 'text-[11.5px] p-2 rounded-lg flex items-center justify-between b-danger';
+    box.innerHTML = `
+      <span><strong class="text-danger">Out of Stock:</strong> 0 ${esc(unit)} available</span>
+      <button type="button" onclick="quickRestock(${pid})" class="btn-icon lime py-0.5 px-2 text-[10.5px] font-bold">Restock Now</button>
+    `;
+  } else if (avail < 10) {
+    box.className = 'text-[11.5px] p-2 rounded-lg flex items-center justify-between b-amber';
+    box.innerHTML = `
+      <span><strong class="text-amber">Low Stock:</strong> ${fmtD(avail)} ${esc(unit)} left</span>
+      <span class="text-[10px] text-muted">In Stock</span>
+    `;
+  } else {
+    box.className = 'text-[11.5px] p-2 rounded-lg flex items-center justify-between b-ok';
+    box.innerHTML = `<span><strong class="text-ok">Available:</strong> ${fmtD(avail)} ${esc(unit)}</span><span class="text-[10px]">In Stock</span>`;
+  }
+}
+
+function onCartQtyInput(rowId, val) {
+  const row = S.cartRows.find(r => r.id === rowId);
+  if (!row) return;
+  row.qty = parseFloat(val)||0;
+  row.total_amount = row.qty * row.unit_price;
+  document.getElementById(`${rowId}-subtotal`).textContent = fmt(row.total_amount);
+  checkRowStockValidity(row);
+  updateCartGrandTotal();
+}
+
+function onCartRateInput(rowId, val) {
+  const row = S.cartRows.find(r => r.id === rowId);
+  if (!row) return;
+  row.unit_price = parseFloat(val)||0;
+  row.total_amount = row.qty * row.unit_price;
+  document.getElementById(`${rowId}-subtotal`).textContent = fmt(row.total_amount);
+  updateCartGrandTotal();
+}
+
+function checkRowStockValidity(row) {
+  const rowEl = document.getElementById(row.id);
+  if (!rowEl) return;
+  const qtyInp = rowEl.querySelector('.cart-qty-inp');
+
+  const totalQtyRequestedForProd = S.cartRows
+    .filter(r => r.product_id == row.product_id)
+    .reduce((sum, r) => sum + (r.qty || 0), 0);
+
+  if (row.product_id && totalQtyRequestedForProd > row.available) {
+    qtyInp.classList.add('err');
+  } else {
+    qtyInp.classList.remove('err');
+  }
+}
+
+function updateCartGrandTotal() {
+  let grandTotal = 0;
+  let totalQty = 0;
+  let hasStockError = false;
+
+  const prodUsage = {};
+  S.cartRows.forEach(r => {
+    grandTotal += (r.total_amount || 0);
+    totalQty += (r.qty || 0);
+    if (r.product_id) {
+      prodUsage[r.product_id] = (prodUsage[r.product_id] || 0) + (r.qty || 0);
+      if (prodUsage[r.product_id] > r.available || r.available <= 0) {
+        hasStockError = true;
+      }
+    }
+  });
+
+  document.getElementById('cart-summary-qty').textContent = `${S.cartRows.length} item${S.cartRows.length>1?'s':''} (${fmtD(totalQty)} total units)`;
+  document.getElementById('cart-grand-total').textContent = fmt(grandTotal);
+
+  const submitBtn = document.getElementById('sl-submit');
+  submitBtn.disabled = hasStockError;
+  if (hasStockError) {
+    submitBtn.textContent = 'Insufficient Stock on One or More Items';
+  } else {
+    submitBtn.textContent = `Confirm & Generate Invoice (${fmt(grandTotal)})`;
+  }
+}
+
+async function submitSaleOrder(e) {
+  e.preventDefault();
+
+  const client_name = document.getElementById('sl-client').value.trim();
+  const sale_date = document.getElementById('sl-date').value;
+  const payment_status = document.getElementById('sl-status').value;
+  const notes = document.getElementById('sl-notes').value.trim();
+
+  const items = [];
+  for (let i = 0; i < S.cartRows.length; i++) {
+    const row = S.cartRows[i];
+    if (!row.product_id) {
+      toast(`Please select a product for Item #${i+1}`,'warn'); return;
+    }
+    if (row.qty <= 0) {
+      toast(`Item #${i+1} quantity must be greater than 0`,'warn'); return;
+    }
+    items.push({
+      product_id: parseInt(row.product_id),
+      quantity_sold: row.qty,
+      unit_price: row.unit_price,
+      total_amount: row.total_amount
+    });
+  }
+
+  try {
+    const res = await api('POST','/api/sales',{
+      client_name, sale_date, payment_status, notes, items
+    });
+    toast(`Invoice ${res.invoice_no} created!`);
+
+    e.target.reset();
+    document.getElementById('sl-date').value = today();
+    S.cartRows = [];
+    addCartRow();
+
+    loadInvoices();
+    loadItemizedSales();
+    loadNotifications();
+
+    openInvoiceModal(res.invoice_no);
+  } catch(err) { toast(err.message,'err'); }
+}
+
+async function loadInvoices() {
+  try {
+    const invs = await api('GET', '/api/invoices');
+    const el = document.getElementById('invoices-list');
+    document.getElementById('inv-count').textContent = `${invs.length} invoices`;
+    if (!invs.length) {
+      el.innerHTML = emptyState('file-text','No invoices generated yet','Use the form above to create customer orders');
+      lucide.createIcons(); return;
+    }
+
+    el.innerHTML = invs.map((inv, i) => `
+      <div class="card-xs p-3.5 mb-2 slide-in" data-search="${esc(inv.client_name)} ${esc(inv.inv_id)} ${esc(inv.items_summary||'')}" style="animation-delay:${i*20}ms">
+        <div class="flex items-start justify-between">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 flex-wrap mb-1">
+              <span class="badge b-silver font-bold font-mono">${esc(inv.inv_id)}</span>
+              <span class="text-[13.5px] font-bold text-offwhite cl-link" onclick="openClientInfo('${esc(inv.client_name)}')">${esc(inv.client_name)}</span>
+              ${statusBadge(inv.payment_status)}
+            </div>
+            <div class="text-[11.5px] text-chrome line-clamp-1 mt-1">
+              ${esc(inv.items_summary||'')}
+            </div>
+            <div class="text-[10.5px] text-muted mt-1">
+              ${inv.item_count} Product${inv.item_count>1?'s':''} &bull; ${fmtDate(inv.sale_date)}
+              ${inv.notes?` &bull; <em>${esc(inv.notes)}</em>`:''}
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2 ml-3 flex-shrink-0">
+            <span class="text-[14px] font-black text-lime">${fmt(inv.grand_total)}</span>
+            <button onclick="openInvoiceModal('${esc(inv.inv_id)}')" class="btn-icon lime px-2.5 py-1 gap-1 text-[11px] font-bold">
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+              <span>Invoice</span>
+            </button>
+          </div>
+        </div>
+      </div>`).join('');
+    lucide.createIcons();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+async function loadItemizedSales() {
+  try {
+    const sales = await api('GET','/api/sales');
+    const el = document.getElementById('sales-list');
+    document.getElementById('sl-count').textContent = `${sales.length} items`;
+    if (!sales.length) { el.innerHTML = emptyState('handshake','No items sold yet',''); lucide.createIcons(); return; }
+    el.innerHTML = sales.map((s,i) => {
+      const ppu = s.quantity_sold > 0 ? s.total_amount/s.quantity_sold : 0;
+      return `
+      <div class="card-xs p-3 mb-2 slide-in" data-search="${esc(s.client_name)} ${esc(s.product_name)} ${esc(s.invoice_no||'')}" style="animation-delay:${i*20}ms">
+        <div class="flex items-start justify-between">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-[13px] font-bold text-offwhite cl-link" onclick="openClientInfo('${esc(s.client_name)}')">${esc(s.client_name)}</span>
+              ${s.invoice_no ? `<span class="badge b-silver font-mono">${esc(s.invoice_no)}</span>` : ''}
+              ${statusBadge(s.payment_status)}
+            </div>
+            <div class="text-[11px] text-muted mt-0.5">
+              <span class="cl-link" onclick="openProductInfo(${s.product_id})">${esc(s.product_name)}</span>
+              &bull; <strong class="text-chrome">${fmtD(s.quantity_sold)} ${esc(s.unit)}</strong> &bull; ${fmtDate(s.sale_date)}
+            </div>
+            <div class="flex items-center gap-3 mt-1.5">
+              <span class="text-[11.5px] text-lime font-bold">${fmt(s.total_amount)}</span>
+              <span class="text-[10.5px] text-muted">(${fmt(ppu)} per ${esc(s.unit)})</span>
+            </div>
+            ${s.notes?`<div class="text-[10px] text-muted mt-1">${esc(s.notes)}</div>`:''}
+          </div>
+          <div class="flex gap-1.5 ml-2 flex-shrink-0">
+            <button class="btn-icon lime" onclick='openEditModal("sale",${JSON.stringify(s)})'><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+            <button class="btn-icon red" onclick="delSale(${s.id})"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>
+        </div>
+      </div>`; }).join('');
+    lucide.createIcons();
+  } catch(err) { toast(err.message,'err'); }
+}
+
+async function delSale(id) {
+  if (!confirm('Remove this sale item record?')) return;
+  try { await api('DELETE',`/api/sales/${id}`); toast('Sale item removed'); loadInvoices(); loadItemizedSales(); loadNotifications(); }
+  catch(err) { toast(err.message,'err'); }
+}
+
+// ─── EXPENSES ─────────────────────────────────────────────────────────────────
+async function loadExpenses() {
+  try {
+    const expenses = await api('GET','/api/expenses');
+    const el = document.getElementById('expenses-list');
+    document.getElementById('ex-count').textContent = `${expenses.length} entries`;
+    if (!expenses.length) { el.innerHTML = emptyState('receipt','No expenses logged','Track your business operational costs above'); lucide.createIcons(); return; }
+    el.innerHTML = expenses.map((ex,i) => `
+      <div class="card-xs p-3 mb-2 slide-in" data-search="${esc(ex.title)} ${esc(ex.category||'')}" style="animation-delay:${i*20}ms">
+        <div class="flex items-start justify-between">
+          <div class="min-w-0 flex-1">
+            <div class="text-[13px] font-bold text-offwhite">${esc(ex.title)}</div>
+            <div class="flex items-center gap-2 mt-1 flex-wrap">
+              ${ex.category?`<span class="badge b-silver">${esc(ex.category)}</span>`:''}
+              <span class="text-[11px] text-muted">${fmtDate(ex.expense_date)}</span>
+              <span class="text-[11px] text-muted">${esc(ex.payment_method||'Cash')}</span>
+            </div>
+            ${ex.notes?`<div class="text-[10px] text-muted mt-1">${esc(ex.notes)}</div>`:''}
+          </div>
+          <div class="flex flex-col items-end gap-1.5 ml-2 flex-shrink-0">
+            <span class="text-[13px] font-black text-danger">${fmt(ex.amount)}</span>
+            <div class="flex gap-1.5">
+              <button class="btn-icon lime" onclick='openEditModal("expense",${JSON.stringify(ex)})'><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+              <button class="btn-icon red" onclick="delExpense(${ex.id})"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>`).join('');
+    lucide.createIcons();
+  } catch(err) { toast(err.message,'err'); }
+}
+
+document.getElementById('form-expense').addEventListener('submit', async e => {
+  e.preventDefault();
+  try {
+    await api('POST','/api/expenses',{
+      title: document.getElementById('ex-title').value.trim(),
+      amount: document.getElementById('ex-amount').value,
+      expense_date: document.getElementById('ex-date').value,
+      category: document.getElementById('ex-cat').value,
+      payment_method: document.getElementById('ex-method').value,
+      notes: document.getElementById('ex-notes').value.trim(),
+    });
+    toast('Expense logged successfully'); e.target.reset();
+    document.getElementById('ex-date').value = today();
+    loadExpenses();
+  } catch(err) { toast(err.message,'err'); }
+});
+
+async function delExpense(id) {
+  if (!confirm('Remove this expense entry?')) return;
+  try { await api('DELETE',`/api/expenses/${id}`); toast('Expense removed'); loadExpenses(); }
+  catch(err) { toast(err.message,'err'); }
+}
+
+// ─── ANALYTICS ────────────────────────────────────────────────────────────────
+async function loadAnalytics() {
+  try {
+    const d = await api('GET','/api/analytics');
+    const monthly = Array.isArray(d?.monthly) ? d.monthly : [];
+    const prodRev = Array.isArray(d?.product_revenue) ? d.product_revenue : [];
+    const cliRev = Array.isArray(d?.client_revenue) ? d.client_revenue : [];
+
+    const totalRev = monthly.reduce((s,m) => s + (m.revenue||0), 0);
+    const totalProfit = monthly.reduce((s,m) => s + (m.profit||0), 0);
+    const bestMonth = monthly.length ? monthly.reduce((a,b) => (b.revenue||0) > (a.revenue||0) ? b : a) : null;
+
+    document.getElementById('an-tot-rev').textContent = fmt(totalRev);
+    const profEl = document.getElementById('an-tot-prof');
+    profEl.textContent = (totalProfit < 0 ? '−' : '') + fmt(Math.abs(totalProfit));
+    profEl.className = `text-[13px] font-black ${totalProfit >= 0 ? 'text-lime' : 'text-danger'}`;
+    document.getElementById('an-best-mo').textContent = bestMonth?.label || '—';
+
+    // 1. Bar Chart
+    destroyChart('bar');
+    const barEmpty = document.getElementById('chart-bar-empty');
+    const barCanvas = document.getElementById('chart-bar');
+    if (monthly.length > 0) {
+      barEmpty.classList.add('hidden');
+      barCanvas.style.display = 'block';
+      const bCtx = barCanvas.getContext('2d');
+      charts['bar'] = new Chart(bCtx, {
+        type: 'bar',
+        data: {
+          labels: monthly.map(m => m.label || m.month),
+          datasets: [
+            { label:'Revenue', data: monthly.map(m => m.revenue||0), backgroundColor:'rgba(201,242,39,.7)', borderRadius:4, barPercentage:.55 },
+            { label:'Total Costs', data: monthly.map(m => (m.expenses||0) + (m.purchases||0)), backgroundColor:'rgba(240,48,48,.45)', borderRadius:4, barPercentage:.55 }
+          ]
+        },
+        options: { ...chartBase, plugins: { ...chartBase.plugins, legend: { display:true, position:'top', labels:{ color:'#555', boxWidth:10, padding:10, font:{size:10} } } } }
+      });
+    } else {
+      barEmpty.classList.remove('hidden');
+      barCanvas.style.display = 'none';
+    }
+
+    // 2. Line Chart
+    destroyChart('line');
+    const lineEmpty = document.getElementById('chart-line-empty');
+    const lineCanvas = document.getElementById('chart-line');
+    if (monthly.length > 0) {
+      lineEmpty.classList.add('hidden');
+      lineCanvas.style.display = 'block';
+      const lCtx = lineCanvas.getContext('2d');
+      charts['line'] = new Chart(lCtx, {
+        type: 'line',
+        data: {
+          labels: monthly.map(m => m.label || m.month),
+          datasets: [{
+            label:'Net Profit', data: monthly.map(m => m.profit||0),
+            borderColor:'#c9f227', backgroundColor:'rgba(201,242,39,.06)',
+            tension:.35, fill:true, pointBackgroundColor:'#c9f227', pointRadius:4, borderWidth:2
+          }]
+        },
+        options: { ...chartBase }
+      });
+    } else {
+      lineEmpty.classList.remove('hidden');
+      lineCanvas.style.display = 'none';
+    }
+
+    // 3. Donut Chart
+    destroyChart('donut');
+    const donutEmpty = document.getElementById('chart-donut-empty');
+    const donutCanvas = document.getElementById('chart-donut');
+    if (prodRev.length > 0) {
+      donutEmpty.classList.add('hidden');
+      donutCanvas.style.display = 'block';
+      const dCtx = donutCanvas.getContext('2d');
+      charts['donut'] = new Chart(dCtx, {
+        type: 'doughnut',
+        data: {
+          labels: prodRev.map(p => p.name),
+          datasets: [{
+            data: prodRev.map(p => p.revenue||0),
+            backgroundColor: PALETTE.slice(0, prodRev.length),
+            borderColor:'#141414', borderWidth:2
+          }]
+        },
+        options: {
+          responsive:true, maintainAspectRatio:false, cutout:'60%',
+          plugins: {
+            legend: { position:'bottom', labels:{ color:'#555', boxWidth:10, padding:10, font:{size:10} } },
+            tooltip: { ...chartBase.plugins.tooltip, callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}` } }
+          },
+          onClick: (ev, els) => {
+            if (els.length && prodRev[els[0].index]) openProductInfo(prodRev[els[0].index].id);
+          }
+        }
+      });
+    } else {
+      donutEmpty.classList.remove('hidden');
+      donutCanvas.style.display = 'none';
+    }
+
+    // Products Table List
+    const prodListEl = document.getElementById('an-prod-list');
+    if (prodRev.length) {
+      const maxRev = Math.max(...prodRev.map(p => p.revenue||0), 1);
+      prodListEl.innerHTML = prodRev.map((p,i) => `
+        <div class="flex items-center gap-3 py-2.5 border-b border-border last:border-0">
+          <span class="text-[11px] font-black" style="color:${PALETTE[i]||'#555'};min-width:20px">#${i+1}</span>
+          <div class="flex-1 min-w-0">
+            <div class="text-[12.5px] font-bold text-offwhite truncate cl-link" onclick="openProductInfo(${p.id})">${esc(p.name)}</div>
+            <div class="p-track mt-1"><div class="p-pos" style="width:${Math.round(((p.revenue||0)/maxRev)*100)}%"></div></div>
+          </div>
+          <div class="text-right flex-shrink-0">
+            <div class="text-[12.5px] font-black text-lime">${fmt(p.revenue)}</div>
+            <div class="text-[10px] text-muted">${fmtD(p.units)} ${esc(p.unit)}</div>
+          </div>
+        </div>`).join('');
+    } else { prodListEl.innerHTML = `<div class="text-[12px] text-muted text-center py-4">No product sales yet</div>`; }
+
+    // 4. Horizontal Bar
+    destroyChart('hbar');
+    const hbarEmpty = document.getElementById('chart-hbar-empty');
+    const hbarCanvas = document.getElementById('chart-hbar');
+    if (cliRev.length > 0) {
+      hbarEmpty.classList.add('hidden');
+      hbarCanvas.style.display = 'block';
+      const hCtx = hbarCanvas.getContext('2d');
+      charts['hbar'] = new Chart(hCtx, {
+        type: 'bar',
+        data: {
+          labels: cliRev.map(c => c.client_name),
+          datasets: [{
+            label:'Revenue', data: cliRev.map(c => c.total||0),
+            backgroundColor: cliRev.map((_,i) => PALETTE[i%PALETTE.length]+'bb'),
+            borderRadius:4, barPercentage:.6
+          }]
+        },
+        options: {
+          ...chartBase, indexAxis:'y',
+          scales: {
+            x: { grid:{color:'#181818'}, ticks:{color:'#666',font:{size:10}, callback: v => (S.currentUser?.currency || 'PKR') + ' ' + (v >= 1e6 ? (v/1e6).toFixed(1) + 'M' : v >= 1e3 ? (v/1e3).toFixed(0) + 'k' : v)} },
+            y: { grid:{color:'transparent'}, ticks:{color:'#aaa',font:{size:10}} }
+          },
+          onClick: (ev, els) => {
+            if (els.length && cliRev[els[0].index]) openClientInfo(cliRev[els[0].index].client_name);
+          }
+        }
+      });
+    } else {
+      hbarEmpty.classList.remove('hidden');
+      hbarCanvas.style.display = 'none';
+    }
+
+    // Clients Table List
+    const cliListEl = document.getElementById('an-cli-list');
+    if (cliRev.length) {
+      cliListEl.innerHTML = cliRev.map((c,i) => `
+        <div class="flex items-center justify-between py-2.5 border-b border-border last:border-0">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="text-[11px] font-black text-muted min-w-[20px]">#${i+1}</span>
+            <div class="min-w-0">
+              <div class="text-[13px] font-bold text-offwhite truncate cl-link" onclick="openClientInfo('${esc(c.client_name)}')">${esc(c.client_name)}</div>
+              <div class="text-[11px] text-muted">${c.orders} orders &bull; Last: ${fmtDate(c.last_order)}</div>
+            </div>
+          </div>
+          <div class="text-right flex-shrink-0 ml-3">
+            <div class="text-[13px] font-black text-lime">${fmt(c.total)}</div>
+          </div>
+        </div>`).join('');
+    } else { cliListEl.innerHTML = `<div class="text-[12px] text-muted text-center py-4">No client records yet</div>`; }
+
+    lucide.createIcons();
+  } catch(err) {
+    console.error('Analytics Error:', err);
+    toast('Error loading analytics: ' + err.message, 'err');
+  }
+}
+
+// ─── EDIT MODAL ───────────────────────────────────────────────────────────────
+function openEditModal(type, data) {
+  S.editCtx = { type, id: data.id, data };
+  const opts = S.products.map(p => `<option value="${p.id}" ${p.id==data.product_id?'selected':''}>${esc(p.name)} (${esc(p.unit)})</option>`).join('');
+
+  const titles = { product:'Edit Product', stock:'Edit Stock Purchase', sale:'Edit Sale Record', expense:'Edit Expense' };
+  document.getElementById('edit-title').textContent = titles[type] || 'Edit Record';
+
+  let html = '';
+  if (type === 'product') {
+    html = `
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2"><label class="lbl">Name</label><input class="field" id="e-name" value="${esc(data.name)}"/></div>
+        <div><label class="lbl">SKU</label><input class="field" id="e-sku" value="${esc(data.sku||'')}"/></div>
+        <div><label class="lbl">Category</label><select class="field" id="e-cat">${['Frozen Foods','Spices','Dry Goods','Dairy','Beverages','Condiments','Oils & Ghee','Pulses','Other'].map(c=>`<option ${data.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
+        <div><label class="lbl">Unit</label><select class="field" id="e-unit">${['kg','bag','pcs','carton','box','pack','litre','tin','bottle','dozen','g'].map(u=>`<option ${data.unit===u?'selected':''}>${u}</option>`).join('')}</select></div>
+        <div><label class="lbl">Brand</label><input class="field" id="e-brand" value="${esc(data.brand||'')}"/></div>
+        <div><label class="lbl">Batch / Lot #</label><input class="field" id="e-batch" value="${esc(data.batch_no||'')}"/></div>
+        <div><label class="lbl">Expiry Date</label><input class="field" id="e-expiry" type="date" value="${data.expiry_date||''}"/></div>
+        <div><label class="lbl">Storage Location</label><input class="field" id="e-storage" value="${esc(data.storage_loc||'')}"/></div>
+        <div><label class="lbl">Low Stock Alert</label><input class="field" id="e-thresh" type="number" min="0" step="0.01" value="${data.low_stock_threshold||0}"/></div>
+        <div class="col-span-2"><label class="lbl">Description</label><textarea class="field" id="e-desc" rows="2">${esc(data.description||'')}</textarea></div>
+      </div>`;
+  } else if (type === 'stock') {
+    html = `
+      <div><label class="lbl">Product</label><select class="field" id="e-product">${opts}</select></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Quantity</label><input class="field" id="e-qty" type="number" step="0.01" min="0.01" value="${data.quantity}"/></div>
+        <div><label class="lbl">Total Cost (PKR)</label><input class="field" id="e-cost" type="number" step="0.01" min="0" value="${data.total_cost}"/></div>
+      </div>
+      <div><label class="lbl">Supplier</label><input class="field" id="e-supplier" value="${esc(data.supplier||'')}"/></div>
+      <div><label class="lbl">Date</label><input class="field" id="e-date" type="date" value="${data.purchase_date}"/></div>
+      <div><label class="lbl">Notes</label><input class="field" id="e-notes" value="${esc(data.notes||'')}"/></div>`;
+  } else if (type === 'sale') {
+    html = `
+      <div><label class="lbl">Client Name</label><input class="field" id="e-client" value="${esc(data.client_name)}"/></div>
+      <div><label class="lbl">Product</label><select class="field" id="e-product">${opts}</select></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Quantity Sold</label><input class="field" id="e-qty" type="number" step="0.01" min="0.01" value="${data.quantity_sold}"/></div>
+        <div><label class="lbl">Total Amount (PKR)</label><input class="field" id="e-amount" type="number" step="0.01" min="0" value="${data.total_amount}"/></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Date</label><input class="field" id="e-date" type="date" value="${data.sale_date}"/></div>
+        <div><label class="lbl">Payment Status</label><select class="field" id="e-status">${['Paid','Pending','Partial'].map(s=>`<option ${data.payment_status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+      </div>
+      <div><label class="lbl">Notes</label><input class="field" id="e-notes" value="${esc(data.notes||'')}"/></div>`;
+  } else if (type === 'expense') {
+    html = `
+      <div><label class="lbl">Title</label><input class="field" id="e-title" value="${esc(data.title)}"/></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Amount (PKR)</label><input class="field" id="e-amount" type="number" step="0.01" min="0.01" value="${data.amount}"/></div>
+        <div><label class="lbl">Category</label><select class="field" id="e-cat"><option value="">Select…</option>${['Transport & Fuel','Electricity & Utilities','Salaries & Labor','Warehouse Rent','Packaging & Ice','Maintenance & Repairs','Marketing','Taxes & Fees','Other'].map(c=>`<option ${data.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Date</label><input class="field" id="e-date" type="date" value="${data.expense_date}"/></div>
+        <div><label class="lbl">Payment Method</label><select class="field" id="e-method">${['Cash','Bank Transfer','Cheque','Online','Credit'].map(m=>`<option ${(data.payment_method||'Cash')===m?'selected':''}>${m}</option>`).join('')}</select></div>
+      </div>
+      <div><label class="lbl">Notes</label><input class="field" id="e-notes" value="${esc(data.notes||'')}"/></div>`;
+  }
+
+  document.getElementById('edit-body').innerHTML = html;
+  document.getElementById('edit-overlay').classList.add('open');
+  lucide.createIcons();
+}
+
+function closeEdit() { document.getElementById('edit-overlay').classList.remove('open'); S.editCtx = null; }
+
+async function saveEdit() {
+  if (!S.editCtx) return;
+  const { type, id } = S.editCtx;
+  const ep = { product:'products', stock:'stock', sale:'sales', expense:'expenses' }[type];
+  let body = {};
+  try {
+    if (type==='product') {
+      body = {
+        name: document.getElementById('e-name').value.trim(),
+        sku: document.getElementById('e-sku').value.trim(),
+        category: document.getElementById('e-cat').value,
+        unit: document.getElementById('e-unit').value,
+        brand: document.getElementById('e-brand').value.trim(),
+        batch_no: document.getElementById('e-batch').value.trim(),
+        expiry_date: document.getElementById('e-expiry').value,
+        storage_loc: document.getElementById('e-storage').value.trim(),
+        low_stock_threshold: parseFloat(document.getElementById('e-thresh').value)||0,
+        description: document.getElementById('e-desc').value.trim()
+      };
+    } else if (type==='stock') {
+      body = {
+        product_id: document.getElementById('e-product').value,
+        quantity: document.getElementById('e-qty').value,
+        total_cost: document.getElementById('e-cost').value,
+        supplier: document.getElementById('e-supplier').value,
+        purchase_date: document.getElementById('e-date').value,
+        notes: document.getElementById('e-notes').value
+      };
+    } else if (type==='sale') {
+      body = {
+        client_name: document.getElementById('e-client').value.trim(),
+        product_id: document.getElementById('e-product').value,
+        quantity_sold: document.getElementById('e-qty').value,
+        total_amount: document.getElementById('e-amount').value,
+        sale_date: document.getElementById('e-date').value,
+        payment_status: document.getElementById('e-status').value,
+        notes: document.getElementById('e-notes').value
+      };
+    } else if (type==='expense') {
+      body = {
+        title: document.getElementById('e-title').value.trim(),
+        amount: document.getElementById('e-amount').value,
+        expense_date: document.getElementById('e-date').value,
+        category: document.getElementById('e-cat').value,
+        payment_method: document.getElementById('e-method').value,
+        notes: document.getElementById('e-notes').value
+      };
+    }
+
+    await api('PUT', `/api/${ep}/${id}`, body);
+    toast('Changes saved successfully');
+    closeEdit();
+
+    if (type==='product') { loadProducts(); refreshAllProductSelects(); }
+    if (type==='stock')   { loadStock(); loadStockLevels(); }
+    if (type==='sale')    { loadInvoices(); loadItemizedSales(); }
+    if (type==='expense') { loadExpenses(); }
+    loadNotifications();
+  } catch(err) { toast(err.message,'err'); }
+}
+
+// ─── INFO MODAL ───────────────────────────────────────────────────────────────
+async function openClientInfo(name) {
+  document.getElementById('info-title').textContent = name;
+  document.getElementById('info-body').innerHTML = `<div class="text-center py-8 text-muted text-[12px]">Loading client history…</div>`;
+  document.getElementById('info-overlay').classList.add('open');
+
+  try {
+    const d = await api('GET', `/api/client/${encodeURIComponent(name)}`);
+    const s = d.summary || {};
+    document.getElementById('info-body').innerHTML = `
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Total Spent</div><div class="text-[16px] font-black text-lime">${fmt(s.total_spent||0)}</div></div>
+        <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Total Orders</div><div class="text-[16px] font-black text-offwhite">${s.order_count||0}</div></div>
+        <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">First Order</div><div class="text-[12px] font-bold text-chrome">${fmtDate(s.first_order)||'—'}</div></div>
+        <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Last Order</div><div class="text-[12px] font-bold text-chrome">${fmtDate(s.last_order)||'—'}</div></div>
+      </div>
+      <div class="text-[11px] font-bold text-silver uppercase tracking-wider mb-2.5">Purchased Items History</div>
+      ${(d.sales||[]).map(sl => `
+        <div class="card-xs p-2.5 mb-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[13px] font-bold text-offwhite">${esc(sl.product_name)}</div>
+              <div class="text-[11px] text-muted">${fmtD(sl.quantity_sold)} ${esc(sl.unit)} &bull; ${fmtDate(sl.sale_date)}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[13px] font-black text-lime">${fmt(sl.total_amount)}</div>
+              ${statusBadge(sl.payment_status)}
+            </div>
+          </div>
+        </div>`).join('')}
+      <button class="btn-ghost mt-3" onclick="closeInfo();switchTab('sales');setTimeout(()=>{const s=document.getElementById('inv-search');if(s){s.value='${esc(name)}';filterList('invoices-list','${esc(name)}');}},300)">Filter Invoices for This Client</button>`;
+  } catch(e) { document.getElementById('info-body').innerHTML = `<div class="text-center py-8 text-danger">${esc(e.message)}</div>`; }
+  lucide.createIcons();
+}
+
+async function openProductInfo(id) {
+  document.getElementById('info-title').textContent = 'Product Details';
+  document.getElementById('info-body').innerHTML = `<div class="text-center py-8 text-muted text-[12px]">Loading product analytics…</div>`;
+  document.getElementById('info-overlay').classList.add('open');
+
+  try {
+    const d = await api('GET', `/api/product/${id}/stats`);
+    const p = d.product;
+    const stockColor = d.current_stock > 0 ? '#c9f227' : '#f03030';
+    document.getElementById('info-title').textContent = p.name;
+    document.getElementById('info-body').innerHTML = `
+      <div class="flex items-center gap-2 mb-3 flex-wrap">
+        ${p.sku?`<span class="badge b-silver font-mono font-bold">${esc(p.sku)}</span>`:''}
+        <span class="badge b-silver">${esc(p.category)}</span>
+        <span class="badge b-lime">${esc(p.unit)}</span>
+        ${p.storage_loc?`<span class="badge b-info">Loc: ${esc(p.storage_loc)}</span>`:''}
+        ${p.batch_no?`<span class="badge b-silver">Lot: ${esc(p.batch_no)}</span>`:''}
+        ${p.expiry_date?`<span class="badge b-amber">Exp: ${fmtDate(p.expiry_date)}</span>`:''}
+      </div>
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Available Stock</div><div class="text-[16px] font-black" style="color:${stockColor}">${fmtD(d.current_stock)} <span class="text-[10.5px] font-normal text-muted">${esc(p.unit)}</span></div></div>
+        <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Total Sold</div><div class="text-[16px] font-black text-lime">${fmtD(d.total_sold)} ${esc(p.unit)}</div></div>
+        <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Total Revenue</div><div class="text-[14px] font-black text-lime">${fmt(d.total_revenue)}</div></div>
+        <div class="card-sm p-3 text-center"><div class="text-[10px] text-muted mb-1">Avg Buy Cost / ${esc(p.unit)}</div><div class="text-[13px] font-black text-info">${d.avg_cost_per_unit>0?fmt(d.avg_cost_per_unit):'—'}</div></div>
+      </div>
+      <div class="flex gap-2 mb-3">
+        <button onclick="quickRestock(${p.id})" class="btn-lime py-2 flex items-center justify-center gap-2 text-[12px]">
+          <i data-lucide="package-plus" class="w-3.5 h-3.5"></i>
+          <span>Restock This Product</span>
+        </button>
+      </div>
+      ${p.description?`<div class="text-[11.5px] text-muted mb-3 bg-inner p-2.5 rounded-lg">${esc(p.description)}</div>`:''}`;
+  } catch(e) { document.getElementById('info-body').innerHTML = `<div class="text-center py-8 text-danger">${esc(e.message)}</div>`; }
+  lucide.createIcons();
+}
+
+function closeInfo() { document.getElementById('info-overlay').classList.remove('open'); }
+
+function refreshAllProductSelects() {
+  refreshStockProductDropdown();
+  renderCartRows();
+}
+
+// ─── APPLICATION INITIALIZATION ───────────────────────────────────────────────
+async function init() {
+  const t = today();
+  ['st-date','sl-date','ex-date','rep-end-date'].forEach(id => { const el=document.getElementById(id); if(el) el.value=t; });
+  const now = new Date();
+  document.getElementById('hdr-date').innerHTML =
+    `<div>${now.toLocaleDateString('en-PK',{weekday:'short',day:'numeric',month:'short'})}</div><div class="text-[10px]">${now.getFullYear()}</div>`;
+
+  const isLoggedIn = await checkUserSession();
+  if (isLoggedIn) {
+    loadDashboard();
+    api('GET','/api/products').then(p => {
+      S.products = p;
+      addCartRow();
+    });
+    loadNotifications();
+  }
+  lucide.createIcons();
+}
+
+init();
+</script>
+</body>
+</html>
