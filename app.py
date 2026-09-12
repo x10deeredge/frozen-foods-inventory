@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session, make_response, send_file
+from flask import Flask, render_template, request, jsonify, session, make_response, send_file, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
@@ -199,6 +199,18 @@ def get_date_range_filter(period, start_date=None, end_date=None):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/manifest.json')
+def root_manifest():
+    return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
+
+
+@app.route('/sw.js')
+def root_sw():
+    response = send_from_directory('static', 'sw.js', mimetype='application/javascript')
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
 
 
 # ── REAL AUTHENTICATION & MULTI-USER ───────────────────────────────────────────

@@ -7,9 +7,9 @@
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <link rel="manifest" href="/static/manifest.json"/>
-  <link rel="icon" type="image/jpeg" href="/static/logo.jpg"/>
-  <link rel="apple-touch-icon" href="/static/logo.jpg"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="icon" type="image/png" href="/static/icon-192.png"/>
+  <link rel="apple-touch-icon" href="/static/icon-512.png"/>
   <title>PANDA'S — Wholesale Distribution System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
@@ -1046,7 +1046,7 @@
 // ─── SERVICE WORKER REGISTRATION (PWA & APK CACHING) ─────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/static/sw.js').catch(() => {});
+    navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
   });
 }
 

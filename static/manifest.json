@@ -1,18 +1,32 @@
-{
+﻿{
+  "id": "/",
   "name": "PANDA'S Wholesale Distribution System",
   "short_name": "PANDA'S ERP",
   "description": "B2B Wholesale Inventory, Multi-Product Sales, Expenses and Financial Analytics",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#080808",
   "theme_color": "#080808",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/static/logo.jpg",
-      "sizes": "192x192 512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "src": "/static/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
