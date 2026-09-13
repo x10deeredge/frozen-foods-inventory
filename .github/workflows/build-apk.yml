@@ -1,0 +1,76 @@
+name: Build PANDA'S ERP Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Native Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Gradle & Wrapper
+        run: |
+          sudo apt-get update && sudo apt-get install -y gradle
+          cd android
+          gradle wrapper --gradle-version 8.5
+          chmod +x gradlew
+
+      - name: Build Android APK
+        run: |
+          cd android
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Prepare APK Output
+        run: |
+          mkdir -p release-apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-apk/pandas-erp.apk
+          ls -lh release-apk/pandas-erp.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pandas-erp-apk
+          path: release-apk/pandas-erp.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/heads/main')
+        with:
+          tag_name: v1.0.0
+          name: "PANDA'S ERP Native Android APK v1.0.0"
+          body: |
+            ## PANDA'S Wholesale ERP — Official Native Android App
+            
+            This is the official, pure native Android APK build for **PANDA'S Wholesale Distribution System**.
+            
+            ### Features Included:
+            - Jet black, smoke gray and electric lime theme
+            - Real-time wholesale sales, inventory, and profit dashboard
+            - Multi-product invoices with crisp vector PDF generation
+            - Direct 1-click WhatsApp PDF sharing
+            - Native Android hardware back-button support
+            - High-performance hardware accelerated UI
+            - One-tap SQLite database backup
+            
+            ### Installation Instructions:
+            1. Download `pandas-erp.apk` below to your Android device.
+            2. Tap the file to install (Enable "Install unknown apps" if prompted).
+            3. Launch **PANDA'S ERP** from your app drawer!
+          files: release-apk/pandas-erp.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
