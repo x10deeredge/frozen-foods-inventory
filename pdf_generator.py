@@ -91,8 +91,8 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
         except Exception:
             logo_elem = None
 
-    biz_name = inv.get('business_name') or "PANDA'S Wholesale Distribution System"
-    biz_addr = inv.get('business_address') or "Main Cold Chain Complex, Sector 7, Wholesale Zone"
+    biz_name = inv.get('business_name') or inv.get('full_name') or "Commercial Wholesale Store"
+    biz_addr = inv.get('business_address') or ""
     biz_phone = inv.get('business_phone') or ""
     biz_tax = inv.get('tax_id') or ""
     currency = inv.get('currency') or "PKR"
@@ -104,10 +104,12 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
 
     biz_info = [
         Paragraph(biz_name.upper(), S['title']),
-        Paragraph("COMMERCIAL B2B SALES &amp; TAX INVOICE", S['sub']),
-        Paragraph(biz_addr, S['muted']),
-        Paragraph(contact_str if contact_str else "Next-Gen Cold Chain &amp; Distribution ERP", S['muted'])
+        Paragraph("COMMERCIAL SALES &amp; DELIVERY INVOICE", S['sub']),
     ]
+    if biz_addr:
+        biz_info.append(Paragraph(biz_addr, S['muted']))
+    if contact_str:
+        biz_info.append(Paragraph(contact_str, S['muted']))
 
     status = (inv.get('payment_status') or 'Paid').upper()
     status_fg = '#065f46' if status == 'PAID' else '#92400e'
@@ -152,12 +154,10 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
             [
                 Paragraph("<b>CUSTOMER / BILLED TO:</b>", ParagraphStyle('cb1', fontName='Helvetica-Bold', fontSize=8, textColor=colors.HexColor('#64748b'))),
                 Paragraph(f"<b>{client_name.upper()}</b>", ParagraphStyle('cb2', fontName='Helvetica-Bold', fontSize=12, leading=15, textColor=colors.HexColor('#0f172a'))),
-                Paragraph("Authorized B2B Account &bull; Wholesale Buyer", S['muted']),
             ],
             [
                 Paragraph("<b>DELIVERY &amp; DISPATCH DETAILS:</b>", ParagraphStyle('cb3', fontName='Helvetica-Bold', fontSize=8, textColor=colors.HexColor('#64748b'))),
-                Paragraph(f"<b>Dispatch Notes:</b> {notes}", S['muted']),
-                Paragraph(f"<b>Dispatch Mode:</b> Temperature-Controlled Refrig. Van", S['muted']),
+                Paragraph(f"<b>Notes / Terms:</b> {notes}" if notes else "Standard Wholesale Delivery", S['muted']),
             ]
         ]
     ], colWidths=[90 * mm, 92 * mm])
@@ -261,11 +261,11 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
             [
                 Paragraph("___________________________________", S['muted']),
                 Paragraph("<b>Received By / Customer Signature &amp; Stamp</b>", ParagraphStyle('s1', fontName='Helvetica-Bold', fontSize=8, textColor=colors.HexColor('#475569'))),
-                Paragraph("Confirmed in frozen condition &bull; Date: _________", S['muted']),
+                Paragraph("Date: ________________________", S['muted']),
             ],
             [
                 Paragraph("___________________________________", ParagraphStyle('s2', parent=S['muted'], alignment=2)),
-                Paragraph("<b>Authorized Signatory / Warehouse Officer</b>", ParagraphStyle('s3', fontName='Helvetica-Bold', fontSize=8, alignment=2, textColor=colors.HexColor('#475569'))),
+                Paragraph("<b>Authorized Signatory / Store Officer</b>", ParagraphStyle('s3', fontName='Helvetica-Bold', fontSize=8, alignment=2, textColor=colors.HexColor('#475569'))),
                 Paragraph(biz_name, ParagraphStyle('s4', parent=S['muted'], alignment=2)),
             ]
         ]
@@ -277,11 +277,11 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
     ]))
     story.append(KeepTogether(sig_table))
 
-    # 6. Corporate Enterprise Footer
+    # 6. Clean Corporate Footer
     story.append(Spacer(1, 8 * mm))
     story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor('#cbd5e1'), spaceAfter=6))
     story.append(Paragraph(
-        "Thank you for your business! &bull; PANDA'S Wholesale Distribution System &bull; All Rights Reserved by X Panda &bull; Computer Generated Tax Invoice",
+        "Thank you for your business! &bull; Computer-Generated Commercial Invoice &bull; Powered by PANDA'S Wholesale ERP",
         ParagraphStyle('Foot', fontName='Helvetica', fontSize=7.5, alignment=1, textColor=colors.HexColor('#94a3b8'))
     ))
 
@@ -478,7 +478,7 @@ def build_audit_report_pdf(rep, logo_path='static/logo.jpg'):
     story.append(Spacer(1, 8 * mm))
     story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor('#cbd5e1'), spaceAfter=6))
     story.append(Paragraph(
-        "PANDA'S Wholesale Distribution System &bull; Executive Statement &bull; All Rights Reserved by X Panda &bull; Strict B2B Confidentiality",
+        "Executive Financial Audit Statement &bull; Confidential &bull; Powered by PANDA'S Wholesale ERP",
         ParagraphStyle('Foot', fontName='Helvetica', fontSize=7.5, alignment=1, textColor=colors.HexColor('#94a3b8'))
     ))
 

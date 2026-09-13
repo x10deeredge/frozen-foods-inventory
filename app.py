@@ -265,7 +265,7 @@ def api_auth_register():
     password = data.get('password', '').strip()
     email = data.get('email', '').strip()
     full_name = data.get('full_name', '').strip()
-    business_name = data.get('business_name', '').strip() or "PANDA'S Wholesale Distribution System"
+    business_name = data.get('business_name', '').strip() or (full_name if full_name else f"{username.capitalize()} Wholesale Store")
     address = data.get('address', '').strip()
     phone = data.get('phone', '').strip()
 
@@ -333,7 +333,7 @@ def api_auth_profile():
 
     email = data.get('email', '').strip()
     full_name = data.get('full_name', '').strip()
-    business_name = data.get('business_name', '').strip() or "PANDA'S Wholesale Distribution System"
+    business_name = data.get('business_name', '').strip() or (full_name if full_name else 'Wholesale Store')
     address = data.get('address', '').strip()
     tax_id = data.get('tax_id', '').strip()
     phone = data.get('phone', '').strip()
@@ -658,7 +658,7 @@ def api_period_summary_pdf():
     conn.close()
 
     rep_data = {
-        'business_name': user['business_name'] if user else "PANDA'S Wholesale Distribution System",
+        'business_name': (user['business_name'] if user and user['business_name'] else '') or (user['full_name'] if user and user['full_name'] else '') or (user['username'] if user and user['username'] else 'Wholesale Store'),
         'currency': user['currency'] if user else 'PKR',
         'start_date': start_date,
         'end_date': end_date,
@@ -832,15 +832,15 @@ def get_invoice_data(inv_id, uid=None):
     c = conn.cursor()
 
     if uid:
-        user = conn.execute('SELECT full_name, business_name, address, tax_id, phone, currency FROM users WHERE id=?', (uid,)).fetchone()
+        user = conn.execute('SELECT username, full_name, business_name, address, tax_id, phone, currency FROM users WHERE id=?', (uid,)).fetchone()
     else:
         # Determine user from sales record for public sharing
         sale_owner = conn.execute('SELECT user_id FROM sales WHERE invoice_no=? OR id=? LIMIT 1', (inv_id, int(inv_id[4:]) if (inv_id.startswith('INV-') and inv_id[4:].isdigit()) else -1)).fetchone()
         owner_id = sale_owner['user_id'] if sale_owner else 1
-        user = conn.execute('SELECT full_name, business_name, address, tax_id, phone, currency FROM users WHERE id=?', (owner_id,)).fetchone()
+        user = conn.execute('SELECT username, full_name, business_name, address, tax_id, phone, currency FROM users WHERE id=?', (owner_id,)).fetchone()
         uid = owner_id
 
-    biz_name = user['business_name'] if user else "PANDA'S Wholesale Distribution System"
+    biz_name = (user['business_name'] if user and user['business_name'] else '') or (user['full_name'] if user and user['full_name'] else '') or (user['username'] if user and user['username'] else 'Wholesale Store')
     biz_phone = user['phone'] if user else ''
     biz_addr = user['address'] if user else ''
     biz_tax = user['tax_id'] if user else ''

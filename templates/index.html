@@ -81,12 +81,84 @@
     .b-amber{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
     .b-info{background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2)}
 
-    /* NAV */
-    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 1px;cursor:pointer;color:#555;transition:color .15s;border:none;background:none;font-family:'Inter',sans-serif}
-    .nav-btn .ni{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;transition:all .2s}
-    .nav-btn span{font-size:8.5px;font-weight:600;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
-    .nav-btn.active{color:#c9f227}
-    .nav-btn.active .ni{background:rgba(201,242,39,.1)}
+    /* ANIMATED LUXURY BOTTOM NAV */
+    .nav-btn {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 5px 1px;
+      cursor: pointer;
+      color: #666;
+      transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      background: none;
+      font-family: 'Inter', sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-btn .ni {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .nav-btn span {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      text-transform: capitalize;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.15;
+      transition: color .2s ease, font-weight .2s ease;
+    }
+    .nav-btn:hover { color: #aaa; }
+    .nav-btn:active .ni { transform: scale(0.92); }
+    .nav-btn.active { color: #c9f227; }
+    .nav-btn.active .ni {
+      background: rgba(201, 242, 39, 0.12);
+      transform: translateY(-2px);
+      box-shadow: 0 0 14px rgba(201, 242, 39, 0.25);
+    }
+    .nav-btn.active span {
+      font-weight: 700;
+      color: #c9f227;
+    }
+
+    /* SMOOTH TAB PANEL ANIMATION */
+    .tab-panel { display: none; }
+    .tab-panel.active {
+      display: block;
+      animation: tabSlideFade .25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes tabSlideFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CARD HOVER & TAP MICRO-INTERACTIONS */
+    .card, .card-sm {
+      transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .card:hover, .card-sm:hover {
+      border-color: rgba(255, 255, 255, 0.13);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    }
+
+    /* SPRING MODAL ANIMATION */
+    @keyframes sheetPop {
+      from { transform: translateY(28px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
 
     /* STAT CARD */
     .stat-card{background:#121212;border:1px solid #202020;border-radius:12px;padding:12px 14px;transition:border-color .2s}
@@ -111,7 +183,7 @@
     .overlay{display:none;position:fixed;inset:0;z-index:1000;flex-direction:column;justify-content:flex-end}
     .overlay.open{display:flex}
     .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(6px)}
-    .sheet{position:relative;background:#111;border:1px solid #222;border-radius:18px 18px 0 0;padding:18px 14px;max-width:640px;width:100%;margin:0 auto;max-height:88vh;overflow-y:auto;animation:sheetUp .28s cubic-bezier(.16,1,.3,1)}
+    .sheet{position:relative;background:#111;border:1px solid #222;border-radius:18px 18px 0 0;padding:18px 14px;max-width:640px;width:100%;margin:0 auto;max-height:88vh;overflow-y:auto;animation:sheetPop .28s cubic-bezier(.16,1,.3,1)}
     @keyframes sheetUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
     .sheet::-webkit-scrollbar{width:0}
     .handle{width:32px;height:3.5px;background:#282828;border-radius:4px;margin:0 auto 14px}
@@ -192,7 +264,7 @@
     <form id="gate-form-login" class="space-y-3.5" onsubmit="handleGateLogin(event)">
       <div>
         <label class="lbl">Username or Email</label>
-        <input class="field" id="gate-login-user" placeholder="e.g. panda_admin" required autocomplete="username"/>
+        <input class="field" id="gate-login-user" placeholder="Username or email" required autocomplete="username"/>
       </div>
       <div>
         <label class="lbl">Password</label>
@@ -205,23 +277,23 @@
     <form id="gate-form-register" class="space-y-3 hidden" onsubmit="handleGateRegister(event)">
       <div>
         <label class="lbl">Choose Username *</label>
-        <input class="field" id="gate-reg-user" placeholder="e.g. frozen_express" required/>
+        <input class="field" id="gate-reg-user" placeholder="Choose a username" required/>
       </div>
       <div>
         <label class="lbl">Email Address *</label>
-        <input class="field" id="gate-reg-email" type="email" placeholder="e.g. contact@pandas.com" required/>
+        <input class="field" id="gate-reg-email" type="email" placeholder="Email address (optional)" required/>
       </div>
       <div>
         <label class="lbl">Phone / WhatsApp Number</label>
-        <input class="field" id="gate-reg-phone" placeholder="e.g. +92 300 1234567"/>
+        <input class="field" id="gate-reg-phone" placeholder="Phone / WhatsApp"/>
       </div>
       <div>
         <label class="lbl">Full Name</label>
-        <input class="field" id="gate-reg-fullname" placeholder="e.g. Muhammad Bilal"/>
+        <input class="field" id="gate-reg-fullname" placeholder="Your full name"/>
       </div>
       <div>
         <label class="lbl">Wholesale Business Name</label>
-        <input class="field" id="gate-reg-biz" placeholder="e.g. PANDA'S Wholesale Traders"/>
+        <input class="field" id="gate-reg-biz" placeholder="Your business or store name"/>
       </div>
       <div>
         <label class="lbl">Password (min 4 characters) *</label>
@@ -231,7 +303,7 @@
     </form>
 
     <div class="mt-5 text-center text-[10.5px] text-muted">
-      All Rights Reserved by X Panda
+      PANDA'S Wholesale ERP &bull; Commercial Distribution System
     </div>
   </div>
 </div>
@@ -240,31 +312,32 @@
 <div id="app-wrapper" class="hidden">
 
 <!-- TOP HEADER & RIGHT NAVBAR -->
-<header class="sticky top-0 z-50" style="background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid #161616">
-  <div class="max-w-2xl mx-auto px-3 h-13 flex items-center justify-between">
+<header class="sticky top-0 z-50 transition-all duration-300" style="background:rgba(8,8,8,.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 4px 20px rgba(0,0,0,.5)">
+  <div class="max-w-2xl mx-auto px-3.5 sm:px-4 h-16 flex items-center justify-between">
     <!-- Brand + 3D Logo -->
-    <div class="flex items-center gap-2">
-      <img src="/static/icon-192.png" alt="PANDA'S 3D Logo" class="panda-logo-img" style="width:28px;height:28px;border-radius:7px" onerror="this.src='/static/logo.jpg'"/>
+    <div class="flex items-center gap-2.5 group cursor-pointer" onclick="switchTab('dashboard')">
+      <div class="relative">
+        <img src="/static/icon-192.png" alt="PANDA'S 3D Logo" class="panda-logo-img w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border border-lime/40 shadow-lg shadow-lime/10 transition-transform duration-300 group-hover:scale-105" onerror="this.src='/static/logo.jpg'"/>
+        <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-ok border-2 border-[#080808]"></div>
+      </div>
       <div>
-        <div class="text-[13.5px] font-black text-offwhite tracking-tight leading-none flex items-center gap-1">
+        <div class="text-[15px] sm:text-[16.5px] font-black text-offwhite tracking-tight leading-none flex items-center gap-1.5">
           <span>PANDA'S</span>
-          <span class="badge b-lime py-0.5 px-1 text-[8px]">ERP</span>
+          <span class="badge b-lime py-0.5 px-1.5 text-[8.5px] font-black tracking-wider">ERP</span>
         </div>
-        <div class="hidden sm:block text-[9px] text-muted font-bold tracking-wider uppercase mt-0.5">Wholesale Distribution System</div>
+        <div class="text-[9.5px] text-muted font-bold tracking-wider uppercase mt-1 transition-colors group-hover:text-chrome">Wholesale Distribution System</div>
       </div>
     </div>
 
     <!-- Right Side Header Navbar -->
     <div class="flex items-center gap-1 relative">
       <!-- Audit Statement Button -->
-      <button onclick="openPeriodReportModal()" class="btn-icon p-1.5 text-chrome hover:text-lime" title="Generate Financial Period Audit Report">
-        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+      <button onclick="openPeriodReportModal()" class="btn-icon p-2 text-chrome hover:text-lime active:scale-95 transition-all" title="Financial Audit & Period Statements"><i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
       </button>
 
       <!-- Notification Bell -->
       <div class="relative">
-        <button id="btn-notifications" onclick="toggleNotifications()" class="btn-icon relative p-1.5" title="Stock Alerts">
-          <i data-lucide="bell" class="w-3.5 h-3.5"></i>
+        <button id="btn-notifications" onclick="toggleNotifications()" class="btn-icon relative p-2 active:scale-95 transition-all" title="Inventory Alerts"><i data-lucide="bell" class="w-4 h-4"></i>
           <span id="notif-badge" class="hidden absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-danger text-[8.5px] font-black text-white flex items-center justify-center">0</span>
         </button>
         <!-- Notifications Dropdown -->
@@ -280,16 +353,12 @@
       </div>
 
       <!-- Quick Restock Shortcut Button -->
-      <button onclick="switchTab('stock')" class="btn-icon lime p-1.5" title="Record Stock Purchase">
-        <i data-lucide="package-plus" class="w-3.5 h-3.5"></i>
+      <button onclick="switchTab('stock')" class="btn-icon lime p-2 active:scale-95 transition-all shadow-sm shadow-lime/20" title="Record Stock Purchase"><i data-lucide="package-plus" class="w-4 h-4"></i>
       </button>
 
       <!-- User Profile & Account Menu -->
       <div class="relative">
-        <button id="btn-profile" onclick="toggleProfileMenu()" class="btn-icon p-1 gap-1" title="User Account">
-          <div class="w-5 h-5 rounded-full bg-inner border border-border flex items-center justify-center text-[9px] font-black text-lime" id="user-avatar-letter">A</div>
-          <span class="hidden sm:inline text-[10.5px] font-bold text-chrome max-w-[65px] truncate" id="user-display-name">Admin</span>
-          <i data-lucide="chevron-down" class="w-2.5 h-2.5 text-muted"></i>
+        <button id="btn-profile" onclick="toggleProfileMenu()" class="btn-icon p-1.5 sm:p-2 gap-1.5 hover:border-white/20 active:scale-95 transition-all" title="User Account"><div class="w-6 h-6 rounded-full bg-inner border border-lime/40 flex items-center justify-center text-[10px] font-black text-lime" id="user-avatar-letter">A</div><span class="hidden sm:inline text-[11px] font-bold text-chrome max-w-[80px] truncate" id="user-display-name">Admin</span><i data-lucide="chevron-down" class="w-3 h-3 text-muted"></i>
         </button>
 
         <!-- Profile Dropdown -->
@@ -404,12 +473,12 @@
       <div class="grid grid-cols-2 gap-3">
         <div class="col-span-2">
           <label class="lbl">Product Name *</label>
-          <input class="field" id="p-name" placeholder="e.g. Frozen Boneless Chicken Breast" required/>
+          <input class="field" id="p-name" placeholder="Product name (e.g. Chicken Nuggets 1kg)" required/>
         </div>
         <div>
           <label class="lbl">SKU Code</label>
           <div class="flex gap-1.5">
-            <input class="field flex-1" id="p-sku" placeholder="PND-FRZ-001"/>
+            <input class="field flex-1" id="p-sku" placeholder="SKU / Code (optional)"/>
             <button type="button" onclick="autoSKU()" class="btn-ghost" style="width:auto;padding:10px 12px;font-size:11px;flex-shrink:0">Auto</button>
           </div>
         </div>
@@ -441,11 +510,11 @@
         </div>
         <div>
           <label class="lbl">Brand / Manufacturer</label>
-          <input class="field" id="p-brand" placeholder="e.g. National, K&amp;N's, Shan"/>
+          <input class="field" id="p-brand" placeholder="Brand name (optional)"/>
         </div>
         <div>
           <label class="lbl">Batch / Lot Number</label>
-          <input class="field" id="p-batch" placeholder="e.g. BATCH-2026-A"/>
+          <input class="field" id="p-batch" placeholder="Batch # (optional)"/>
         </div>
         <div>
           <label class="lbl">Expiry Date</label>
@@ -453,15 +522,15 @@
         </div>
         <div>
           <label class="lbl">Storage Condition / Location</label>
-          <input class="field" id="p-storage" placeholder="e.g. Cold Room #1, Rack B4"/>
+          <input class="field" id="p-storage" placeholder="Storage location (e.g. Freezer #1)"/>
         </div>
         <div>
           <label class="lbl">Low Stock Alert Threshold</label>
-          <input class="field" id="p-thresh" type="number" min="0" step="0.01" placeholder="e.g. 10"/>
+          <input class="field" id="p-thresh" type="number" min="0" step="0.01" placeholder="e.g. 5"/>
         </div>
         <div class="col-span-2">
           <label class="lbl">Description / Quality Notes</label>
-          <input class="field" id="p-desc" placeholder="Quality grade, freezing specs, variant…"/>
+          <input class="field" id="p-desc" placeholder="Product description or notes (optional)"/>
         </div>
       </div>
       <button type="submit" class="btn-lime">Register Product</button>
@@ -475,7 +544,7 @@
     </div>
     <div class="srch-wrap mb-3">
       <i data-lucide="search" class="si w-3.5 h-3.5"></i>
-      <input class="field" id="p-search" placeholder="Search by name, SKU, category, batch…" oninput="filterList('products-list',this.value)"/>
+      <input class="field" id="p-search" placeholder="Search products..." oninput="filterList('products-list',this.value)"/>
     </div>
     <div id="products-list"></div>
   </div>
@@ -528,7 +597,7 @@
 
       <div>
         <label class="lbl">Supplier / Vendor</label>
-        <input class="field" id="st-supplier" placeholder="e.g. Al-Rehman Cold Chain, Prime Spices Traders"/>
+        <input class="field" id="st-supplier" placeholder="Supplier / Distributor name"/>
       </div>
       <div>
         <label class="lbl">Purchase Date</label>
@@ -536,7 +605,7 @@
       </div>
       <div>
         <label class="lbl">Notes</label>
-        <input class="field" id="st-notes" placeholder="Batch number, delivery receipt, vehicle no…"/>
+        <input class="field" id="st-notes" placeholder="Purchase notes or receipt # (optional)"/>
       </div>
       <button type="submit" class="btn-lime">Confirm &amp; Add Stock</button>
     </form>
@@ -558,7 +627,7 @@
     </div>
     <div class="srch-wrap mb-3">
       <i data-lucide="search" class="si w-3.5 h-3.5"></i>
-      <input class="field" id="st-search" placeholder="Search by product or supplier…" oninput="filterList('stock-list',this.value)"/>
+      <input class="field" id="st-search" placeholder="Search purchases..." oninput="filterList('stock-list',this.value)"/>
     </div>
     <div id="stock-list"></div>
   </div>
@@ -580,7 +649,7 @@
       <div class="grid grid-cols-2 gap-3">
         <div class="col-span-2">
           <label class="lbl">Client / Restaurant Name *</label>
-          <input class="field" id="sl-client" placeholder="e.g. Al-Madina Restaurant, Pearl Continental" required/>
+          <input class="field" id="sl-client" placeholder="Customer / Store name" required/>
         </div>
         <div>
           <label class="lbl">Sale Date</label>
@@ -625,7 +694,7 @@
 
       <div>
         <label class="lbl">Invoice Notes / Terms</label>
-        <input class="field" id="sl-notes" placeholder="Delivery vehicle, payment terms, order po ref…"/>
+        <input class="field" id="sl-notes" placeholder="Special instructions or notes (optional)"/>
       </div>
 
       <button type="submit" class="btn-lime" id="sl-submit">Confirm &amp; Generate Invoice</button>
@@ -646,7 +715,7 @@
     </div>
     <div class="srch-wrap mb-3">
       <i data-lucide="search" class="si w-3.5 h-3.5"></i>
-      <input class="field" id="inv-search" placeholder="Search by client, invoice #, products…" oninput="filterList('invoices-list',this.value)"/>
+      <input class="field" id="inv-search" placeholder="Search sales or invoices..." oninput="filterList('invoices-list',this.value)"/>
     </div>
     <div id="invoices-list"></div>
   </div>
@@ -659,7 +728,7 @@
     </div>
     <div class="srch-wrap mb-3">
       <i data-lucide="search" class="si w-3.5 h-3.5"></i>
-      <input class="field" id="sl-search" placeholder="Search itemized sales…" oninput="filterList('sales-list',this.value)"/>
+      <input class="field" id="sl-search" placeholder="Search sales items..." oninput="filterList('sales-list',this.value)"/>
     </div>
     <div id="sales-list"></div>
   </div>
@@ -676,7 +745,7 @@
     <form id="form-expense" class="space-y-3">
       <div>
         <label class="lbl">Expense Title *</label>
-        <input class="field" id="ex-title" placeholder="e.g. Cold storage electricity, Delivery fuel" required/>
+        <input class="field" id="ex-title" placeholder="Expense title (e.g. Electricity, Rent)" required/>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
@@ -709,7 +778,7 @@
           </select>
         </div>
       </div>
-      <div><label class="lbl">Notes</label><input class="field" id="ex-notes" placeholder="Receipt no, payee name…"/></div>
+      <div><label class="lbl">Notes</label><input class="field" id="ex-notes" placeholder="Receipt # or remarks (optional)"/></div>
       <button type="submit" class="btn-lime">Log Expense</button>
     </form>
   </div>
@@ -721,7 +790,7 @@
     </div>
     <div class="srch-wrap mb-3">
       <i data-lucide="search" class="si w-3.5 h-3.5"></i>
-      <input class="field" id="ex-search" placeholder="Search by title or category…" oninput="filterList('expenses-list',this.value)"/>
+      <input class="field" id="ex-search" placeholder="Search expenses..." oninput="filterList('expenses-list',this.value)"/>
     </div>
     <div id="expenses-list"></div>
   </div>
@@ -812,15 +881,15 @@
 
 </main>
 
-<!-- BOTTOM NAVIGATION -->
-<nav class="fixed bottom-0 left-0 right-0 z-50" style="background:rgba(8,8,8,.97);backdrop-filter:blur(20px);border-top:1px solid #161616;padding-bottom:env(safe-area-inset-bottom,0)">
-  <div class="max-w-2xl mx-auto h-14 flex items-center px-0.5">
-    <button class="nav-btn active" id="nav-dashboard" onclick="switchTab('dashboard')"><div class="ni"><i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i></div><span>Dashboard</span></button>
-    <button class="nav-btn" id="nav-products" onclick="switchTab('products')"><div class="ni"><i data-lucide="tag" class="w-3.5 h-3.5"></i></div><span>Products</span></button>
-    <button class="nav-btn" id="nav-stock" onclick="switchTab('stock')"><div class="ni"><i data-lucide="package" class="w-3.5 h-3.5"></i></div><span>Purchases</span></button>
-    <button class="nav-btn" id="nav-sales" onclick="switchTab('sales')"><div class="ni"><i data-lucide="handshake" class="w-3.5 h-3.5"></i></div><span>Sales</span></button>
-    <button class="nav-btn" id="nav-expenses" onclick="switchTab('expenses')"><div class="ni"><i data-lucide="receipt" class="w-3.5 h-3.5"></i></div><span>Expenses</span></button>
-    <button class="nav-btn" id="nav-analytics" onclick="switchTab('analytics')"><div class="ni"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i></div><span>Analytics</span></button>
+<!-- BOTTOM NAVIGATION (NO OVERLAP, SMOOTH ANIMATIONS) -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(8,8,8,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.08);padding-bottom:env(safe-area-inset-bottom,0);box-shadow:0 -4px 25px rgba(0,0,0,.6)">
+  <div class="max-w-2xl mx-auto h-15 flex items-center px-1">
+    <button class="nav-btn active" id="nav-dashboard" onclick="switchTab('dashboard')"><div class="ni"><i data-lucide="layout-dashboard" class="w-4 h-4"></i></div><span>Dashboard</span></button>
+    <button class="nav-btn" id="nav-products" onclick="switchTab('products')"><div class="ni"><i data-lucide="tag" class="w-4 h-4"></i></div><span>Products</span></button>
+    <button class="nav-btn" id="nav-stock" onclick="switchTab('stock')"><div class="ni"><i data-lucide="package" class="w-4 h-4"></i></div><span>Stock</span></button>
+    <button class="nav-btn" id="nav-sales" onclick="switchTab('sales')"><div class="ni"><i data-lucide="handshake" class="w-4 h-4"></i></div><span>Sales</span></button>
+    <button class="nav-btn" id="nav-expenses" onclick="switchTab('expenses')"><div class="ni"><i data-lucide="receipt" class="w-4 h-4"></i></div><span>Expenses</span></button>
+    <button class="nav-btn" id="nav-analytics" onclick="switchTab('analytics')"><div class="ni"><i data-lucide="bar-chart-2" class="w-4 h-4"></i></div><span>Reports</span></button>
   </div>
 </nav>
 
@@ -980,21 +1049,21 @@
         </div>
         <div>
           <label class="lbl">Account Email Address</label>
-          <input class="field" id="prof-email" type="email" placeholder="e.g. owner@pandas.com"/>
+          <input class="field" id="prof-email" type="email" placeholder="Email address"/>
         </div>
       </div>
       <div>
         <label class="lbl">Warehouse / Office Address</label>
-        <input class="field" id="prof-address" placeholder="e.g. Plot 45, Industrial Cold Zone, Karachi"/>
+        <input class="field" id="prof-address" placeholder="Shop / Warehouse address, City"/>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="lbl">NTN / Tax ID #</label>
-          <input class="field" id="prof-tax-id" placeholder="e.g. 7482910-1"/>
+          <input class="field" id="prof-tax-id" placeholder="Tax ID / NTN (optional)"/>
         </div>
         <div>
           <label class="lbl">Phone / WhatsApp</label>
-          <input class="field" id="prof-phone" placeholder="e.g. +92 300 0000000"/>
+          <input class="field" id="prof-phone" placeholder="Contact phone"/>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3">
@@ -1009,7 +1078,7 @@
         </div>
         <div>
           <label class="lbl">Role / Title</label>
-          <input class="field" id="prof-role" placeholder="e.g. Managing Director"/>
+          <input class="field" id="prof-role" placeholder="Role / Title"/>
         </div>
       </div>
       <div class="pt-2 flex items-center gap-2">
@@ -1630,8 +1699,8 @@ async function openInvoiceModal(invId) {
         <div style="display:flex;align-items:center;gap:12px">
           <img src="/static/logo.jpg" alt="PANDA'S Logo" style="width:48px;height:48px;border-radius:10px;object-fit:cover;border:1px solid #111827" onerror="this.style.display='none'"/>
           <div>
-            <h1 style="font-size:22px;font-weight:900;color:#111827;margin:0;letter-spacing:-0.5px">${esc(inv.business_name || "PANDA'S Wholesale Distribution System")}</h1>
-            <div style="font-size:11px;font-weight:700;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-top:2px">Commercial Tax &amp; Delivery Invoice</div>
+            <h1 style="font-size:22px;font-weight:900;color:#111827;margin:0;letter-spacing:-0.5px">${esc(inv.business_name || "Wholesale Store")}</h1>
+            <div style="font-size:11px;font-weight:700;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-top:2px">Commercial Sales &amp; Delivery Invoice</div>
             ${inv.business_address ? `<div style="font-size:11px;color:#6b7280;margin-top:3px">${esc(inv.business_address)}</div>` : ''}
             ${inv.business_phone ? `<div style="font-size:11px;color:#6b7280">Phone: ${esc(inv.business_phone)}${inv.tax_id ? ` &bull; NTN: ${esc(inv.tax_id)}` : ''}</div>` : ''}
           </div>
@@ -1691,7 +1760,7 @@ async function openInvoiceModal(invId) {
 
       <!-- Footer -->
       <div style="border-top:1px solid #e5e7eb;margin-top:28px;padding-top:12px;text-align:center;font-size:10px;color:#9ca3af">
-        Thank you for your business! &bull; PANDA'S Wholesale Distribution System &bull; &copy; 2025 All Rights Reserved by X Panda
+        Thank you for your business! &bull; Computer-Generated Commercial Invoice &bull; Powered by PANDA'S Wholesale ERP
       </div>
     `;
     lucide.createIcons();
