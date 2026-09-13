@@ -31,7 +31,7 @@ jobs:
       - name: Build Android APK
         run: |
           cd android
-          gradle assembleDebug --stacktrace
+          gradle assembleDebug --no-daemon --stacktrace
 
       - name: Prepare APK Output
         run: |
@@ -48,6 +48,7 @@ jobs:
 
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
+        continue-on-error: true
         if: startsWith(github.ref, 'refs/heads/main')
         with:
           tag_name: v1.0.0
