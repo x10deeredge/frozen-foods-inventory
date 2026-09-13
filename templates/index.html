@@ -1119,6 +1119,7 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
   });
+}
 // ─── NATIVE ANDROID BACK BUTTON BRIDGE ───────────────────────────────────────
 window.onAndroidBackPressed = function() {
   if (document.getElementById('invoice-overlay')?.classList.contains('open')) { closeInvoice(); return true; }
