@@ -68,6 +68,25 @@ def get_pdf_styles():
     }
 
 
+def get_safe_logo_path(logo_path=None):
+    """Safely resolves the logo image path relative to this script directory."""
+    if logo_path and os.path.isabs(logo_path) and os.path.exists(logo_path):
+        return logo_path
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates = []
+    if logo_path:
+        candidates.append(os.path.join(base_dir, logo_path))
+    candidates.extend([
+        os.path.join(base_dir, 'static', 'logo.jpg'),
+        os.path.join(base_dir, 'static', 'icon-512.png'),
+        os.path.join(base_dir, 'static', 'icon-192.png'),
+    ])
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return None
+
+
 def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
     """Generates an A4 commercial vector PDF for wholesale distribution invoices."""
     buffer = io.BytesIO()
@@ -85,9 +104,10 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
 
     # 1. Header (Logo + Business Info + Invoice Meta Box)
     logo_elem = None
-    if logo_path and os.path.exists(logo_path):
+    safe_logo = get_safe_logo_path(logo_path)
+    if safe_logo:
         try:
-            logo_elem = Image(logo_path, width=22 * mm, height=22 * mm)
+            logo_elem = Image(safe_logo, width=22 * mm, height=22 * mm)
         except Exception:
             logo_elem = None
 
@@ -305,9 +325,10 @@ def build_audit_report_pdf(rep, logo_path='static/logo.jpg'):
     story = []
 
     logo_elem = None
-    if logo_path and os.path.exists(logo_path):
+    safe_logo = get_safe_logo_path(logo_path)
+    if safe_logo:
         try:
-            logo_elem = Image(logo_path, width=20 * mm, height=20 * mm)
+            logo_elem = Image(safe_logo, width=20 * mm, height=20 * mm)
         except Exception:
             logo_elem = None
 
@@ -564,9 +585,10 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
 
     # 1. Header Banner
     logo_elem = None
-    if logo_path and os.path.exists(logo_path):
+    safe_logo = get_safe_logo_path(logo_path)
+    if safe_logo:
         try:
-            logo_elem = Image(logo_path, width=20 * mm, height=20 * mm)
+            logo_elem = Image(safe_logo, width=20 * mm, height=20 * mm)
         except Exception:
             logo_elem = None
 

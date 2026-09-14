@@ -1549,10 +1549,16 @@
             <input class="field font-mono" type="password" id="backup-auth-pass" placeholder="Enter password to unlock download"/>
             <div class="text-[10px] text-silver/60 mt-1" id="backup-auth-hint">Demo account password: <code class="text-lime font-mono">panda123</code></div>
           </div>
-          <button type="button" onclick="downloadAccountBackup(event)" id="btn-user-backup" class="btn-lime w-full py-2.5 font-bold text-[12px] flex items-center justify-center gap-1.5 shadow-sm">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            <span>Authorize &amp; Download PDF Store Statement</span>
-          </button>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="downloadAccountBackup(event)" id="btn-user-backup" class="btn-lime w-full py-2.5 font-bold text-[11.5px] flex items-center justify-center gap-1.5 shadow-sm">
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+              <span>Download PDF Statement</span>
+            </button>
+            <button type="button" onclick="downloadAccountCsvBackup(event)" id="btn-user-csv-backup" class="py-2.5 px-3 rounded-xl bg-[#1c2214] hover:bg-lime/20 text-lime border border-lime/30 font-bold text-[11.5px] flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-95 cursor-pointer">
+              <i data-lucide="table" class="w-3.5 h-3.5"></i>
+              <span>Download Excel (.csv)</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1918,6 +1924,67 @@ async function downloadAccountBackup(e) {
     window.URL.revokeObjectURL(url);
     toast('Official PDF store statement downloaded successfully!');
     if (passInput) passInput.value = '';
+  } catch(err) {
+    toast(err.message, 'err');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = origHtml;
+      lucide.createIcons();
+    }
+  }
+}
+
+async function downloadAccountCsvBackup(e) {
+  if (e) e.preventDefault();
+  const passInput = document.getElementById('backup-auth-pass');
+  const password = passInput ? passInput.value.trim() : '';
+  if (!password) {
+    toast('Please enter your account password to authorize CSV export', 'err');
+    if (passInput) passInput.focus();
+    return;
+  }
+
+  const btn = document.getElementById('btn-user-csv-backup');
+  const origHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin"></i> Generating Excel...';
+    lucide.createIcons();
+  }
+
+  try {
+    const res = await fetch('/api/user/export-backup-csv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    if (!res.ok) {
+      let errMsg = 'Failed to generate Excel export';
+      try {
+        const err = await res.json();
+        if (err && err.error) errMsg = err.error;
+      } catch (e) {
+        const text = await res.text().catch(() => '');
+        errMsg = (text && text.length < 120) ? text : `Server error (${res.status})`;
+      }
+      throw new Error(errMsg);
+    }
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const contentDisp = res.headers.get('Content-Disposition');
+    let filename = `PANDA_Store_Excel_Backup_${S.currentUser?.username || 'user'}.csv`;
+    if (contentDisp && contentDisp.includes('filename=')) {
+      filename = contentDisp.split('filename=')[1].replace(/["']/g, '').trim();
+    }
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+    toast('Excel (.csv) store data downloaded successfully!');
   } catch(err) {
     toast(err.message, 'err');
   } finally {
