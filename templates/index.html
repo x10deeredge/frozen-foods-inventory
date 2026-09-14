@@ -457,13 +457,6 @@
     </div>
     <div id="d-profit" class="text-[24px] font-black tracking-tight leading-tight">—</div>
   </div>
-      <div class="flex items-center gap-1.5 text-lime font-black text-[11.5px] flex-shrink-0 bg-lime/10 px-2.5 py-1.5 rounded-lg border border-lime/20 group-hover:bg-lime group-hover:text-black transition-all">
-        <span>Strategic Insights</span>
-        <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"></i>
-      </div>
-    </div>
-  </div>
-
   <!-- SLEEK COMPACT 5-ACTION COMMERCIAL BAR -->
   <div class="grid grid-cols-5 gap-1 sm:gap-1.5 mb-2.5">
     <button onclick="switchTab('sales')" class="py-2 px-1 rounded-xl bg-[#141414] hover:bg-lime/10 border border-lime/30 hover:border-lime flex flex-col sm:flex-row items-center justify-center gap-1 group active:scale-95 transition-all shadow-sm" title="Create New Sale Bill">
@@ -487,6 +480,13 @@
       <span class="text-[10px] sm:text-[11px] font-black text-lime transition-colors truncate">Insights</span>
     </button>
   </div>
+
+  <!-- Quick Counts (Clickable to switch tab) -->
+  <div class="grid grid-cols-3 gap-1.5 mb-2.5">
+    <div class="card-sm p-2 text-center cursor-pointer group hover:border-lime/40 hover:bg-inner transition-all active:scale-95" onclick="switchTab('products')" title="Click to view all products">
+      <div id="d-cnt-p" class="text-[16px] font-black text-offwhite group-hover:text-lime transition-colors">—</div>
+      <div class="text-[9.5px] text-muted group-hover:text-offwhite mt-0.5">Products &rarr;</div>
+    </div>
     <div class="card-sm p-2 text-center cursor-pointer group hover:border-lime/40 hover:bg-inner transition-all active:scale-95" onclick="switchTab('sales')" title="Click to view sales & clients">
       <div id="d-cnt-c" class="text-[16px] font-black text-offwhite group-hover:text-lime transition-colors">—</div>
       <div class="text-[9.5px] text-muted group-hover:text-offwhite mt-0.5">Clients &rarr;</div>
@@ -1501,14 +1501,14 @@
           <button type="submit" class="btn-lime w-full py-2.5 font-bold text-[12px]">Update Account Password</button>
         </form>
 
-        <!-- Dedicated Password-Protected User Backup Card -->
+        <!-- Dedicated Password-Protected User Backup Card (PDF Audit Statement) -->
         <div class="card-sm p-3.5 space-y-3 border border-lime/30 bg-[#12140d]">
           <div class="text-[12.5px] font-black text-offwhite flex items-center gap-1.5 border-b border-border/50 pb-2">
-            <i data-lucide="database" class="w-4 h-4 text-lime flex-shrink-0"></i>
-            <span>Export Account Data Backup (.json)</span>
+            <i data-lucide="file-text" class="w-4 h-4 text-lime flex-shrink-0"></i>
+            <span>Official Store Statement &amp; PDF Backup</span>
           </div>
           <div class="text-[11px] text-muted leading-relaxed">
-            Download a complete, private JSON backup containing <strong>strictly your own account's records</strong> (products, stock entries, invoices, and expenses). Enter your account password to authorize download.
+            Download a comprehensive, human-readable, printable <strong>PDF store audit statement</strong> containing your complete store records (products &amp; stock valuations, sales invoice ledger, stock inward history, and expenses). Enter your account password to authorize download.
           </div>
           <div>
             <label class="lbl">Confirm Password for Backup Authorization</label>
@@ -1516,7 +1516,7 @@
           </div>
           <button type="button" onclick="downloadAccountBackup(event)" id="btn-user-backup" class="btn-lime w-full py-2.5 font-bold text-[12px] flex items-center justify-center gap-1.5 shadow-sm">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            <span>Authorize &amp; Download My Data Backup</span>
+            <span>Authorize &amp; Download PDF Store Statement</span>
           </button>
         </div>
       </div>
@@ -1838,7 +1838,7 @@ async function downloadAccountBackup(e) {
   const origHtml = btn ? btn.innerHTML : '';
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin"></i> Authorizing & Exporting...';
+    btn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin"></i> Authorizing & Generating PDF...';
     lucide.createIcons();
   }
 
@@ -1850,14 +1850,14 @@ async function downloadAccountBackup(e) {
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: 'Backup authorization failed' }));
-      throw new Error(err.error || 'Failed to generate backup');
+      throw new Error(err.error || 'Failed to generate PDF store statement');
     }
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     const contentDisp = res.headers.get('Content-Disposition');
-    let filename = `PANDA_Backup_${S.currentUser?.username || 'user'}.json`;
+    let filename = `PANDA_Store_Statement_${S.currentUser?.username || 'user'}.pdf`;
     if (contentDisp && contentDisp.includes('filename=')) {
       filename = contentDisp.split('filename=')[1].replace(/["']/g, '').trim();
     }
@@ -1866,7 +1866,7 @@ async function downloadAccountBackup(e) {
     a.click();
     a.remove();
     window.URL.revokeObjectURL(url);
-    toast('Your private account data backup downloaded successfully!');
+    toast('Official PDF store statement downloaded successfully!');
     if (passInput) passInput.value = '';
   } catch(err) {
     toast(err.message, 'err');
@@ -3759,7 +3759,7 @@ function renderBICards() {
 function billVipClient(clientName) {
   switchTab('sales');
   setTimeout(() => {
-    const input = document.getElementById('s-client');
+    const input = document.getElementById('sl-client') || document.getElementById('s-client');
     if (input) {
       input.value = clientName;
       input.focus();

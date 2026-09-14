@@ -1752,35 +1752,47 @@ def api_user_export_backup():
     user_dict = dict(user)
     user_dict.pop('password_hash', None)
 
-    products = [dict(r) for r in conn.execute('SELECT * FROM products WHERE user_id=?', (uid,)).fetchall()]
-    stock_entries = [dict(r) for r in conn.execute('SELECT * FROM stock_entries WHERE user_id=?', (uid,)).fetchall()]
-    sales = [dict(r) for r in conn.execute('SELECT * FROM sales WHERE user_id=?', (uid,)).fetchall()]
-    expenses = [dict(r) for r in conn.execute('SELECT * FROM expenses WHERE user_id=?', (uid,)).fetchall()]
+    products = [dict(r) for r in conn.execute('''
+        SELECT p.*,
+            COALESCE((SELECT SUM(quantity) FROM stock_entries WHERE product_id=p.id AND user_id=?),0) -
+            COALESCE((SELECT SUM(quantity_sold) FROM sales WHERE product_id=p.id AND user_id=?),0) as available
+        FROM products p
+        WHERE p.user_id=?
+        ORDER BY p.name ASC
+    ''', (uid, uid, uid)).fetchall()]
+
+    stock_entries = [dict(r) for r in conn.execute('''
+        SELECT s.*, p.name as product_name, p.unit
+        FROM stock_entries s
+        LEFT JOIN products p ON s.product_id=p.id
+        WHERE s.user_id=?
+        ORDER BY s.purchase_date DESC, s.id DESC
+    ''', (uid,)).fetchall()]
+
+    sales = [dict(r) for r in conn.execute('''
+        SELECT sl.*, p.name as product_name, p.unit
+        FROM sales sl
+        LEFT JOIN products p ON sl.product_id=p.id
+        WHERE sl.user_id=?
+        ORDER BY sl.sale_date DESC, sl.id DESC
+    ''', (uid,)).fetchall()]
+
+    expenses = [dict(r) for r in conn.execute('''
+        SELECT * FROM expenses
+        WHERE user_id=?
+        ORDER BY expense_date DESC, id DESC
+    ''', (uid,)).fetchall()]
     conn.close()
 
-    backup_payload = {
-        'export_format': 'PANDA_ERP_USER_BACKUP',
-        'version': '2.5.0',
-        'exported_at': datetime.now().isoformat(),
-        'account_id': uid,
-        'username': user['username'],
-        'user_profile': user_dict,
-        'summary': {
-            'total_products': len(products),
-            'total_stock_entries': len(stock_entries),
-            'total_sales': len(sales),
-            'total_expenses': len(expenses)
-        },
-        'records': {
-            'products': products,
-            'stock_entries': stock_entries,
-            'sales': sales,
-            'expenses': expenses
-        }
-    }
-
-    filename = f"PANDA_Backup_{user['username']}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    response = make_response(json.dumps(backup_payload, indent=2, default=str))
-    response.headers['Content-Type'] = 'application/json'
-    response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
-    return response
+    try:
+        pdf_bytes = pdf_generator.build_user_backup_pdf(user_dict, products, stock_entries, sales, expenses)
+        safe_username = "".join(c for c in user_dict.get('username', 'user') if c.isalnum() or c in ('_', '-'))
+        filename = f"PANDA_Store_Statement_{safe_username}_{datetime.now().strftime('%Y%m%d')}.pdf"
+        return send_file(
+            io.BytesIO(pdf_bytes),
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=filename
+        )
+    except Exception as e:
+        return jsonify({'error': f'Failed to generate PDF backup statement: {str(e)}'}), 500
