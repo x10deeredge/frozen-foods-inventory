@@ -447,7 +447,7 @@
   <div class="stat-card mb-2.5 cursor-pointer group hover:border-lime/30 hover:bg-[#141414] transition-all active:scale-[0.99]" onclick="openPeriodReportModal()" title="Click to view full financial statements">
     <div class="flex items-center justify-between mb-2">
       <div>
-        <span class="text-[10px] font-bold text-silver uppercase tracking-wider">Net Business Profit (Munafa)</span>
+        <span class="text-[10px] font-bold text-silver uppercase tracking-wider">Net Operating Profit</span>
         <div class="text-[9px] text-muted mt-0.5">Total Sales minus Purchases and Expenses</div>
       </div>
       <div class="flex items-center gap-1.5">
@@ -458,11 +458,33 @@
     <div id="d-profit" class="text-[24px] font-black tracking-tight leading-tight">—</div>
   </div>
 
+  <!-- SMART BUSINESS INTELLIGENCE — LIVE STRATEGIC ADVISOR BANNER -->
+  <div class="card p-3.5 mb-2.5 border border-lime/40 bg-gradient-to-r from-[#14180d] to-[#121212] relative overflow-hidden shadow-lg shadow-lime/10 cursor-pointer hover:border-lime transition-all active:scale-[0.99] group" onclick="switchTab('analytics'); setTimeout(() => switchSeg('intel'), 120)">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-lime/15 text-lime flex items-center justify-center flex-shrink-0 border border-lime/30 group-hover:scale-110 transition-transform shadow-sm">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-[13.5px] font-black text-offwhite group-hover:text-lime transition-colors">Smart Business Intelligence</span>
+            <span class="badge b-lime text-[9px] font-black tracking-wide">Live Strategic Advisor</span>
+          </div>
+          <div id="d-bi-teaser" class="text-[11.5px] text-muted truncate mt-0.5 leading-snug">Analyzing inventory turnover, stockouts, and margin drivers…</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 text-lime font-black text-[11.5px] flex-shrink-0 bg-lime/10 px-2.5 py-1.5 rounded-lg border border-lime/20 group-hover:bg-lime group-hover:text-black transition-all">
+        <span>Strategic Insights</span>
+        <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"></i>
+      </div>
+    </div>
+  </div>
+
   <!-- 1-TAP QUICK ACTIONS HUB (SUPER EASY TO OPERATE) -->
   <div class="card p-3 mb-2.5 border border-border bg-[#101010]">
     <div class="flex items-center justify-between mb-2 px-1">
       <span class="text-[11px] font-black text-offwhite uppercase tracking-wider flex items-center gap-1.5">
-        <i data-lucide="zap" class="w-3.5 h-3.5 text-lime"></i> Quick Actions (Asaan Shortcuts)
+        <i data-lucide="zap" class="w-3.5 h-3.5 text-lime"></i> Quick Actions Hub
       </span>
       <span class="text-[9.5px] text-muted font-semibold">1-Tap Operations</span>
     </div>
@@ -1150,26 +1172,48 @@
 <!-- REAL PROFILE & BUSINESS SETTINGS MODAL -->
 <div class="overlay" id="profile-settings-overlay">
   <div class="backdrop" onclick="closeProfileSettingsModal()"></div>
-  <div class="sheet" style="max-width:500px">
+  <div class="sheet" style="max-width:560px;max-height:88vh;overflow-y:auto">
     <div class="handle"></div>
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-3.5">
       <div>
-        <div class="text-[16px] font-black text-offwhite">Account &amp; Business Profile</div>
+        <div class="text-[16px] font-black text-offwhite flex items-center gap-2">
+          <i data-lucide="settings" class="w-4 h-4 text-lime"></i>
+          <span>System &amp; Business Settings</span>
+        </div>
+        <div class="text-[10.5px] text-muted mt-0.5">Enterprise Commercial ERP &bull; Version 2.5.0</div>
       </div>
       <button onclick="closeProfileSettingsModal()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
 
-    <!-- Tabs inside Settings -->
-    <div class="card-sm p-1 grid grid-cols-3 gap-1 mb-4">
-      <button id="set-tab-biz" class="seg-btn active text-[11px]" onclick="switchSettingsTab('biz')">Business Info</button>
-      <button id="set-tab-inv" class="seg-btn text-[11px]" onclick="switchSettingsTab('inv')">Bank &amp; Terms</button>
-      <button id="set-tab-sec" class="seg-btn text-[11px]" onclick="switchSettingsTab('sec')">Security</button>
+    <!-- Navigation Tabs inside Settings (Responsive & Clean) -->
+    <div class="card-sm p-1 flex items-center gap-1 mb-4 overflow-x-auto" style="-webkit-overflow-scrolling:touch">
+      <button id="set-tab-biz" class="seg-btn active text-[11px] whitespace-nowrap" onclick="switchSettingsTab('biz')">
+        <i data-lucide="building-2" class="w-3 h-3 inline mr-1"></i>Business
+      </button>
+      <button id="set-tab-inv" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('inv')">
+        <i data-lucide="landmark" class="w-3 h-3 inline mr-1"></i>Bank &amp; Terms
+      </button>
+      <button id="set-tab-prefs" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('prefs')">
+        <i data-lucide="sliders" class="w-3 h-3 inline mr-1"></i>Preferences
+      </button>
+      <button id="set-tab-about" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('about')">
+        <i data-lucide="info" class="w-3 h-3 inline mr-1"></i>About Us
+      </button>
+      <button id="set-tab-contact" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('contact')">
+        <i data-lucide="mail" class="w-3 h-3 inline mr-1"></i>Contact
+      </button>
+      <button id="set-tab-legal" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('legal')">
+        <i data-lucide="shield-check" class="w-3 h-3 inline mr-1"></i>Privacy
+      </button>
+      <button id="set-tab-sec" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('sec')">
+        <i data-lucide="lock" class="w-3 h-3 inline mr-1"></i>Security
+      </button>
     </div>
 
-    <!-- Business Profile Form -->
+    <!-- 1. Business Profile Form -->
     <form id="form-profile-biz" class="space-y-3" onsubmit="saveProfileSettings(event)">
       <div>
-        <label class="lbl">Business Name (Printed on Invoices)</label>
+        <label class="lbl">Business / Store Name (Printed on Invoices)</label>
         <input class="field font-bold" id="prof-biz-name" required placeholder="e.g. Metro Trading Co."/>
       </div>
       <div class="grid grid-cols-2 gap-2.5">
@@ -1222,11 +1266,11 @@
       </div>
     </form>
 
-    <!-- Invoice & Banking Terms Form -->
+    <!-- 2. Invoice & Banking Terms Form -->
     <form id="form-profile-inv" class="space-y-3 hidden" onsubmit="saveProfileSettings(event)">
       <div class="p-2.5 rounded-xl bg-inner border border-border/80 text-[11px] text-muted leading-relaxed">
-        <div class="text-offwhite font-bold mb-0.5 flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5 text-lime"></i> Custom Invoice Settlement</div>
-        Enter your real bank account details or payment instructions below. These will automatically print on all generated PDF receipts and invoices.
+        <div class="text-offwhite font-bold mb-0.5 flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5 text-lime"></i> Custom Settlement Instructions</div>
+        Enter your real bank account details or payment instructions below. These will automatically print on all generated PDF receipts and invoices. Leave blank for clean universal terms.
       </div>
       <div>
         <label class="lbl">Bank Settlement Details</label>
@@ -1241,7 +1285,136 @@
       </div>
     </form>
 
-    <!-- Change Password Form -->
+    <!-- 3. System & App Preferences -->
+    <div id="panel-profile-prefs" class="space-y-3 hidden">
+      <div class="p-3 rounded-xl bg-inner border border-border/80 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-[12.5px] font-bold text-offwhite">Audio Feedback</div>
+            <div class="text-[10px] text-muted">Play confirmation sound on bill generation &amp; barcode scans</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="pref-audio" class="sr-only peer" checked onchange="togglePref('audio', this.checked)">
+            <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
+          </label>
+        </div>
+        <div class="border-t border-border/50 pt-2.5 flex items-center justify-between">
+          <div>
+            <div class="text-[12.5px] font-bold text-offwhite">Auto-Print Dialog</div>
+            <div class="text-[10px] text-muted">Automatically open browser print modal upon saving a sale</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="pref-autoprint" class="sr-only peer" onchange="togglePref('autoprint', this.checked)">
+            <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
+          </label>
+        </div>
+        <div class="border-t border-border/50 pt-2.5 flex items-center justify-between">
+          <div>
+            <div class="text-[12.5px] font-bold text-offwhite">Compact Grid Rows</div>
+            <div class="text-[10px] text-muted">Display high-density rows for rapid high-volume billing</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="pref-compact" class="sr-only peer" checked onchange="togglePref('compact', this.checked)">
+            <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
+          </label>
+        </div>
+      </div>
+      <div class="text-[11px] text-muted italic">Preferences are saved locally to your device.</div>
+    </div>
+
+    <!-- 4. Detailed About Us Section -->
+    <div id="panel-profile-about" class="space-y-3 hidden">
+      <div class="p-4 rounded-xl bg-inner border border-border/80 text-center">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-lime/10 border-2 border-lime/40 flex items-center justify-center mb-3 shadow-lg shadow-lime/10">
+          <i data-lucide="boxes" class="w-7 h-7 text-lime"></i>
+        </div>
+        <div class="text-[16px] font-black text-offwhite">PANDA Commercial ERP System</div>
+        <div class="text-[11.5px] text-lime font-bold mt-0.5">Version 2.5.0 &bull; Enterprise Edition</div>
+        <div class="text-[11px] text-muted mt-1 max-w-sm mx-auto">Unified Commercial Inventory, Invoicing, Financial Auditing &amp; Smart Business Intelligence Platform.</div>
+      </div>
+
+      <div class="card-sm p-3 space-y-2 text-[11.5px]">
+        <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
+          <span class="text-muted">Lead Developer &amp; Architect:</span>
+          <span class="font-black text-offwhite">Habib Naseer</span>
+        </div>
+        <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
+          <span class="text-muted">Official Email:</span>
+          <a href="mailto:x10deeredge@gmail.com" class="font-bold text-lime hover:underline font-mono text-[11px]">x10deeredge@gmail.com</a>
+        </div>
+        <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
+          <span class="text-muted">Application Target:</span>
+          <span class="font-bold text-silver">Retail &bull; Wholesale &bull; Distribution</span>
+        </div>
+        <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
+          <span class="text-muted">Mobile / App Store Support:</span>
+          <span class="font-bold text-ok">PWA + Native Android APK Ready</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-muted">Database Engine:</span>
+          <span class="font-bold text-silver">SQLite 3 WAL (Zero-Config / Private)</span>
+        </div>
+      </div>
+
+      <div class="text-[11px] text-muted leading-relaxed">
+        PANDA ERP is engineered for exceptional speed, zero data leakage, and offline-first reliability. Built from the ground up to meet App Store and Google Play compliance benchmarks.
+      </div>
+    </div>
+
+    <!-- 5. Contact & Support Section -->
+    <div id="panel-profile-contact" class="space-y-3 hidden">
+      <div class="p-3.5 rounded-xl bg-[#12140e] border border-lime/30 text-center">
+        <div class="w-10 h-10 mx-auto rounded-xl bg-lime/15 text-lime flex items-center justify-center mb-2">
+          <i data-lucide="headset" class="w-5 h-5"></i>
+        </div>
+        <div class="text-[14px] font-black text-offwhite">Official Technical Support</div>
+        <div class="text-[11px] text-muted mt-1">Have a feature request, bug report, or enterprise deployment question? Reach out directly.</div>
+      </div>
+
+      <div class="card-sm p-3.5 space-y-3">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="user" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="text-[12px] font-bold text-offwhite">Primary Contact</div>
+            <div class="text-[11px] text-muted">Habib Naseer &bull; Senior Systems Engineer</div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="mail" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="text-[12px] font-bold text-offwhite">Direct Email</div>
+            <a href="mailto:x10deeredge@gmail.com" class="text-[11.5px] text-lime font-mono hover:underline font-bold">x10deeredge@gmail.com</a>
+            <div class="text-[10px] text-muted mt-0.5">Response within 24 hours guaranteed</div>
+          </div>
+        </div>
+      </div>
+
+      <a href="mailto:x10deeredge@gmail.com?subject=Wholesale%20ERP%20Support%20Inquiry" class="btn-lime w-full py-3 flex items-center justify-center gap-2 font-bold text-[12.5px] shadow-lg shadow-lime/10">
+        <i data-lucide="send" class="w-4 h-4"></i>
+        <span>Send Email to Habib Naseer</span>
+      </a>
+    </div>
+
+    <!-- 6. Privacy Policy & Commercial License (App Store & Play Store Compliant) -->
+    <div id="panel-profile-legal" class="space-y-3 hidden">
+      <div class="p-3.5 rounded-xl bg-inner border border-border/80 space-y-2.5 text-[11px] text-muted leading-relaxed">
+        <div class="text-[13px] font-black text-offwhite flex items-center gap-1.5 mb-1">
+          <i data-lucide="shield" class="w-4 h-4 text-ok"></i>
+          <span>App Store Privacy &amp; Data Sovereignty</span>
+        </div>
+        <p><strong class="text-offwhite">100% Local Data Ownership:</strong> All store records, transactions, inventory levels, supplier contacts, and client names are maintained strictly within your private database instance. No data is harvested, analyzed, or shared with any third party.</p>
+        <p><strong class="text-offwhite">Zero Third-Party Telemetry:</strong> PANDA ERP does not include any third-party advertising SDKs, analytics tracking beacons, or telemetry scripts.</p>
+        <p><strong class="text-offwhite">Cryptographic Security:</strong> User credentials are protected using salted one-way hashing algorithms. Session security complies with standard commercial application guidelines.</p>
+        <p><strong class="text-offwhite">Data Portability:</strong> You can export full SQLite backups or printable audit statements anytime with a single click.</p>
+      </div>
+    </div>
+
+    <!-- 7. Change Password Form -->
     <form id="form-profile-sec" class="space-y-3 hidden" onsubmit="changeAccountPassword(event)">
       <div>
         <label class="lbl">Current Account Password</label>
@@ -1259,7 +1432,7 @@
 <!-- FOOTER -->
 <div class="max-w-2xl mx-auto px-4 pb-32 pt-4 text-center">
   <div class="text-[10px] text-muted">PANDA'S &mdash; Wholesale Distribution System</div>
-  <div class="text-[10px] mt-1" style="color:#2a2a2a">&copy; 2025 All Rights Reserved by X Panda</div>
+  <div class="text-[10px] mt-1" style="color:#2a2a2a">&copy; 2026 PANDA Wholesale ERP &bull; Developed by Habib Naseer (x10deeredge@gmail.com)</div>
 </div>
 
 </div><!-- /app-wrapper -->
@@ -1494,12 +1667,23 @@ function closeProfileSettingsModal() {
 }
 
 function switchSettingsTab(tab) {
-  document.getElementById('set-tab-biz').classList.toggle('active', tab === 'biz');
-  document.getElementById('set-tab-inv')?.classList.toggle('active', tab === 'inv');
-  document.getElementById('set-tab-sec').classList.toggle('active', tab === 'sec');
-  document.getElementById('form-profile-biz').classList.toggle('hidden', tab !== 'biz');
-  document.getElementById('form-profile-inv')?.classList.toggle('hidden', tab !== 'inv');
-  document.getElementById('form-profile-sec').classList.toggle('hidden', tab !== 'sec');
+  const tabs = ['biz', 'inv', 'prefs', 'about', 'contact', 'legal', 'sec'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(`set-tab-${t}`);
+    if (btn) btn.classList.toggle('active', t === tab);
+    
+    // Panel or form
+    const form = document.getElementById(`form-profile-${t}`);
+    if (form) form.classList.toggle('hidden', t !== tab);
+    const panel = document.getElementById(`panel-profile-${t}`);
+    if (panel) panel.classList.toggle('hidden', t !== tab);
+  });
+  lucide.createIcons();
+}
+
+function togglePref(prefName, isChecked) {
+  localStorage.setItem(`pref_${prefName}`, isChecked ? 'true' : 'false');
+  toast(`Preference updated: ${prefName} ${isChecked ? 'enabled' : 'disabled'}`);
 }
 
 async function saveProfileSettings(e) {

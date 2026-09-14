@@ -281,7 +281,7 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
     story.append(Spacer(1, 8 * mm))
     story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor('#cbd5e1'), spaceAfter=6))
     story.append(Paragraph(
-        "Thank you for your business! &bull; Computer-Generated Commercial Invoice &bull; Powered by PANDA'S Wholesale ERP",
+        "Thank you for your business! &bull; Computer-Generated Commercial Invoice &bull; Systems Architect: Habib Naseer &bull; Support: x10deeredge@gmail.com",
         ParagraphStyle('Foot', fontName='Helvetica', fontSize=7.5, alignment=1, textColor=colors.HexColor('#94a3b8'))
     ))
 
