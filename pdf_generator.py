@@ -229,11 +229,11 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
     summary_table = Table([
         [
             [
-                Paragraph("<b>PAYMENT INSTRUCTIONS &amp; SETTLEMENT:</b>", ParagraphStyle('p1', fontName='Helvetica-Bold', fontSize=8, textColor=colors.HexColor('#1e293b'))),
-                Paragraph("<b>Bank Transfer:</b> Meezan Bank Ltd &bull; <b>Title:</b> PANDA WHOLESALE TRADERS", S['muted']),
-                Paragraph("<b>IBAN:</b> PK64MEZN0001829472019482 &bull; <b>Branch:</b> Commercial Wholesale Area", S['muted']),
-                Spacer(1, 2 * mm),
-                Paragraph("<b>Cold Chain Notice:</b> Goods dispatched under strict HACCP -18°C temperature standards. Inspect packaging upon receipt.", ParagraphStyle('cc', parent=S['muted'], fontSize=7.5, textColor=colors.HexColor('#64748b')))
+                Paragraph("<b>PAYMENT TERMS &amp; SETTLEMENT:</b>", ParagraphStyle('p1', fontName='Helvetica-Bold', fontSize=8, textColor=colors.HexColor('#1e293b'))),
+                Paragraph("Payment is accepted via <b>Cash, Direct Bank Transfer, or Authorized Cheque</b> payable to the seller.", S['muted']),
+                Paragraph("Please quote the invoice number on electronic remittances. Payment due per agreed terms.", S['muted']),
+                Spacer(1, 1.5 * mm),
+                Paragraph("<b>Commercial Policy:</b> Please verify goods, quantities, and packaging upon delivery.", ParagraphStyle('cc', parent=S['muted'], fontSize=7.5, textColor=colors.HexColor('#64748b')))
             ],
             Table([
                 [Paragraph("Total Items / Lines:", S['tbl_body']), Paragraph(f"<b>{total_items} items ({total_qty:,.2f} units)</b>", S['tbl_body_r'])],

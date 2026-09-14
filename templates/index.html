@@ -409,46 +409,109 @@
     <button class="filter-pill" data-period="custom" onclick="openPeriodReportModal()">Custom Date Range…</button>
   </div>
 
-  <!-- KPI Grid -->
+  <!-- KPI Grid (Clickable Cards with Instant Tab Navigation) -->
   <div class="grid grid-cols-2 gap-2 mb-2.5">
-    <div class="stat-card col-span-2">
+    <div class="stat-card col-span-2 cursor-pointer group hover:border-lime/40 hover:bg-[#141414] transition-all active:scale-[0.99]" onclick="switchTab('sales')" title="Click to view all sales & invoices">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-[9.5px] font-bold text-silver uppercase tracking-wider" id="d-sales-lbl">Total Sales Revenue</span>
-        <div class="stat-icon" style="background:rgba(201,242,39,.06)"><i data-lucide="trending-up" class="w-3.5 h-3.5 text-lime"></i></div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-[10px] font-bold text-silver uppercase tracking-wider" id="d-sales-lbl">Total Sales Revenue</span>
+          <span class="text-[9.5px] text-muted group-hover:text-lime flex items-center gap-0.5 transition-colors">(View Sales <i data-lucide="arrow-right" class="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform"></i>)</span>
+        </div>
+        <div class="stat-icon" style="background:rgba(201,242,39,.08)"><i data-lucide="trending-up" class="w-4 h-4 text-lime"></i></div>
       </div>
-      <div id="d-sales" class="text-[22px] font-black text-lime tracking-tight leading-tight">—</div>
-      <div class="text-[10px] text-muted mt-0.5" id="d-period-hint"></div>
+      <div id="d-sales" class="text-[24px] font-black text-lime tracking-tight leading-tight">—</div>
+      <div class="text-[10px] text-muted mt-1 flex items-center justify-between">
+        <span id="d-period-hint"></span>
+        <span class="text-[9.5px] text-lime font-bold opacity-0 group-hover:opacity-100 transition-opacity">Open Sales &amp; Invoices &rarr;</span>
+      </div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card cursor-pointer group hover:border-info/40 hover:bg-[#141414] transition-all active:scale-[0.99]" onclick="switchTab('stock')" title="Click to view & record stock purchases">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-[9.5px] font-bold text-silver uppercase tracking-wider">Stock Purchases</span>
-        <div class="stat-icon" style="background:rgba(96,165,250,.06)"><i data-lucide="package" class="w-3 h-3 text-info"></i></div>
+        <span class="text-[10px] font-bold text-silver uppercase tracking-wider">Stock Purchases</span>
+        <div class="stat-icon" style="background:rgba(96,165,250,.08)"><i data-lucide="package" class="w-3.5 h-3.5 text-info"></i></div>
       </div>
-      <div id="d-purchase" class="text-[15px] font-black text-info leading-tight">—</div>
+      <div id="d-purchase" class="text-[16px] font-black text-info leading-tight">—</div>
+      <div class="text-[9px] text-muted mt-1 group-hover:text-info transition-colors flex items-center gap-0.5">Manage stock &rarr;</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card cursor-pointer group hover:border-danger/40 hover:bg-[#141414] transition-all active:scale-[0.99]" onclick="switchTab('expenses')" title="Click to view & record daily expenses">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-[9.5px] font-bold text-silver uppercase tracking-wider">Expenses</span>
-        <div class="stat-icon" style="background:rgba(240,48,48,.06)"><i data-lucide="receipt" class="w-3 h-3 text-danger"></i></div>
+        <span class="text-[10px] font-bold text-silver uppercase tracking-wider">Daily Expenses</span>
+        <div class="stat-icon" style="background:rgba(240,48,48,.08)"><i data-lucide="receipt" class="w-3.5 h-3.5 text-danger"></i></div>
       </div>
-      <div id="d-expenses" class="text-[15px] font-black text-danger leading-tight">—</div>
+      <div id="d-expenses" class="text-[16px] font-black text-danger leading-tight">—</div>
+      <div class="text-[9px] text-muted mt-1 group-hover:text-danger transition-colors flex items-center gap-0.5">Manage expenses &rarr;</div>
     </div>
   </div>
 
-  <!-- Net Profit -->
-  <div class="stat-card mb-2.5">
+  <!-- Net Profit (Clickable to open period report) -->
+  <div class="stat-card mb-2.5 cursor-pointer group hover:border-lime/30 hover:bg-[#141414] transition-all active:scale-[0.99]" onclick="openPeriodReportModal()" title="Click to view full financial statements">
     <div class="flex items-center justify-between mb-2">
-      <span class="text-[9.5px] font-bold text-silver uppercase tracking-wider">Net Business Profit</span>
-      <div class="stat-icon" style="background:rgba(187,187,187,.05)"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-chrome"></i></div>
+      <div>
+        <span class="text-[10px] font-bold text-silver uppercase tracking-wider">Net Business Profit (Munafa)</span>
+        <div class="text-[9px] text-muted mt-0.5">Total Sales minus Purchases and Expenses</div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="text-[10px] text-lime font-bold opacity-0 group-hover:opacity-100 transition-opacity">Full Audit &rarr;</span>
+        <div class="stat-icon" style="background:rgba(187,187,187,.08)"><i data-lucide="bar-chart-2" class="w-4 h-4 text-chrome"></i></div>
+      </div>
     </div>
-    <div id="d-profit" class="text-[22px] font-black tracking-tight leading-tight">—</div>
+    <div id="d-profit" class="text-[24px] font-black tracking-tight leading-tight">—</div>
   </div>
 
-  <!-- Quick Counts -->
+  <!-- 1-TAP QUICK ACTIONS HUB (SUPER EASY TO OPERATE) -->
+  <div class="card p-3 mb-2.5 border border-border bg-[#101010]">
+    <div class="flex items-center justify-between mb-2 px-1">
+      <span class="text-[11px] font-black text-offwhite uppercase tracking-wider flex items-center gap-1.5">
+        <i data-lucide="zap" class="w-3.5 h-3.5 text-lime"></i> Quick Actions (Asaan Shortcuts)
+      </span>
+      <span class="text-[9.5px] text-muted font-semibold">1-Tap Operations</span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <button onclick="switchTab('sales')" class="p-2.5 rounded-xl bg-[#161616] hover:bg-[#202020] border border-lime/30 hover:border-lime flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm">
+        <div class="w-9 h-9 rounded-lg bg-lime/10 text-lime flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
+          <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+        </div>
+        <span class="text-[12px] font-black text-offwhite group-hover:text-lime transition-colors">New Sale</span>
+        <span class="text-[9px] text-muted">Bill &amp; Invoice</span>
+      </button>
+      <button onclick="switchTab('stock')" class="p-2.5 rounded-xl bg-[#161616] hover:bg-[#202020] border border-info/30 hover:border-info flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm">
+        <div class="w-9 h-9 rounded-lg bg-info/10 text-info flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
+          <i data-lucide="package-plus" class="w-4 h-4"></i>
+        </div>
+        <span class="text-[12px] font-black text-offwhite group-hover:text-info transition-colors">Add Stock</span>
+        <span class="text-[9px] text-muted">Maal kharidein</span>
+      </button>
+      <button onclick="switchTab('products');setTimeout(()=>{document.getElementById('p-name')?.focus();window.scrollTo({top:0,behavior:'smooth'});},250)" class="p-2.5 rounded-xl bg-[#161616] hover:bg-[#202020] border border-white/10 hover:border-white/30 flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm">
+        <div class="w-9 h-9 rounded-lg bg-white/5 text-chrome flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+        </div>
+        <span class="text-[12px] font-black text-offwhite group-hover:text-white transition-colors">New Product</span>
+        <span class="text-[9px] text-muted">Naya item catalog</span>
+      </button>
+      <button onclick="switchTab('expenses');setTimeout(()=>{document.getElementById('ex-title')?.focus();window.scrollTo({top:0,behavior:'smooth'});},250)" class="p-2.5 rounded-xl bg-[#161616] hover:bg-[#202020] border border-danger/30 hover:border-danger flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm">
+        <div class="w-9 h-9 rounded-lg bg-danger/10 text-danger flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
+          <i data-lucide="receipt" class="w-4 h-4"></i>
+        </div>
+        <span class="text-[12px] font-black text-offwhite group-hover:text-danger transition-colors">Log Expense</span>
+        <span class="text-[9px] text-muted">Dukan ka kharcha</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Counts (Clickable to switch tab) -->
   <div class="grid grid-cols-3 gap-1.5 mb-2.5">
-    <div class="card-sm p-2 text-center"><div id="d-cnt-p" class="text-[15px] font-black text-offwhite">—</div><div class="text-[9.5px] text-muted mt-0.5">Products</div></div>
-    <div class="card-sm p-2 text-center"><div id="d-cnt-c" class="text-[15px] font-black text-offwhite">—</div><div class="text-[9.5px] text-muted mt-0.5">Clients</div></div>
-    <div class="card-sm p-2 text-center"><div id="d-cnt-s" class="text-[15px] font-black text-offwhite">—</div><div class="text-[9.5px] text-muted mt-0.5">Invoices</div></div>
+    <div class="card-sm p-2 text-center cursor-pointer group hover:border-lime/40 hover:bg-inner transition-all active:scale-95" onclick="switchTab('products')" title="Click to view all products">
+      <div id="d-cnt-p" class="text-[16px] font-black text-offwhite group-hover:text-lime transition-colors">—</div>
+      <div class="text-[9.5px] text-muted group-hover:text-offwhite mt-0.5">Products &rarr;</div>
+    </div>
+    <div class="card-sm p-2 text-center cursor-pointer group hover:border-lime/40 hover:bg-inner transition-all active:scale-95" onclick="switchTab('sales')" title="Click to view sales & clients">
+      <div id="d-cnt-c" class="text-[16px] font-black text-offwhite group-hover:text-lime transition-colors">—</div>
+      <div class="text-[9.5px] text-muted group-hover:text-offwhite mt-0.5">Clients &rarr;</div>
+    </div>
+    <div class="card-sm p-2 text-center cursor-pointer group hover:border-lime/40 hover:bg-inner transition-all active:scale-95" onclick="switchTab('sales')" title="Click to view invoices">
+      <div id="d-cnt-s" class="text-[16px] font-black text-offwhite group-hover:text-lime transition-colors">—</div>
+      <div class="text-[9.5px] text-muted group-hover:text-offwhite mt-0.5">Invoices &rarr;</div>
+    </div>
   </div>
 
   <!-- Recent Sales -->
@@ -486,9 +549,18 @@
           <label class="lbl">Category *</label>
           <select class="field" id="p-cat">
             <option value="">Select Category…</option>
-            <option>Frozen Foods</option><option>Spices</option><option>Dry Goods</option>
-            <option>Dairy</option><option>Beverages</option><option>Condiments</option>
-            <option>Oils &amp; Ghee</option><option>Pulses</option><option>Other</option>
+            <option>General Goods</option>
+            <option>Food &amp; Grocery</option>
+            <option>Beverages &amp; Drinks</option>
+            <option>Electronics &amp; Appliances</option>
+            <option>Garments &amp; Apparel</option>
+            <option>Hardware &amp; Tools</option>
+            <option>Pharmacy &amp; Health</option>
+            <option>Cosmetics &amp; Personal Care</option>
+            <option>Stationery &amp; Books</option>
+            <option>Packaging &amp; Materials</option>
+            <option>Perishables &amp; Frozen</option>
+            <option>Other Products</option>
           </select>
         </div>
         <div>
@@ -522,7 +594,7 @@
         </div>
         <div>
           <label class="lbl">Storage Condition / Location</label>
-          <input class="field" id="p-storage" placeholder="Storage location (e.g. Freezer #1)"/>
+          <input class="field" id="p-storage" placeholder="Location (e.g. Shelf A, Rack 2, Counter)"/>
         </div>
         <div>
           <label class="lbl">Low Stock Alert Threshold</label>
@@ -1892,48 +1964,125 @@ function filterList(id, q) {
   });
 }
 
-// ─── PRODUCTS ─────────────────────────────────────────────────────────────────
+// ─── PRODUCTS DIRECTORY & DEEP STOCK ANALYTICS ────────────────────────────────
 async function loadProducts() {
   try {
     S.products = await api('GET', '/api/products');
     const el = document.getElementById('products-list');
-    document.getElementById('p-count').textContent = `${S.products.length} items`;
+    document.getElementById('p-count').textContent = `${S.products.length} registered items`;
     if (!S.products.length) {
-      el.innerHTML = emptyState('tag','No products registered','Use the form above to add your first product');
+      el.innerHTML = emptyState('tag','No products registered yet','Use the form above to add your first product to catalog');
       lucide.createIcons(); return;
     }
-    el.innerHTML = S.products.map((p, i) => `
-      <div class="card-xs p-3 mb-2 slide-in" data-search="${esc(p.name)} ${esc(p.sku||'')} ${esc(p.category)} ${esc(p.batch_no||'')} ${esc(p.storage_loc||'')}" style="animation-delay:${i*20}ms">
-        <div class="flex items-start justify-between">
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2 flex-wrap mb-1">
-              <span class="text-[13px] font-bold text-offwhite cl-link" onclick="openProductInfo(${p.id})">${esc(p.name)}</span>
-              ${p.sku ? `<span class="badge b-silver font-mono">${esc(p.sku)}</span>` : ''}
+
+    // Determine high-selling threshold (e.g. top sold items)
+    const maxSold = Math.max(...S.products.map(p => Number(p.total_sold) || 0), 0);
+
+    el.innerHTML = S.products.map((p, i) => {
+      const stock = Number(p.current_stock) || 0;
+      const sold = Number(p.total_sold) || 0;
+      const rev = Number(p.total_revenue) || 0;
+      const restocks = Number(p.restock_count) || 0;
+      const thresh = Number(p.low_stock_threshold) || 0;
+
+      // Status Badging
+      let statusTag = '';
+      if (stock <= 0) {
+        statusTag = `<span class="badge b-danger font-bold flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Out of Stock</span>`;
+      } else if (thresh > 0 && stock <= thresh) {
+        statusTag = `<span class="badge b-amber font-bold flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Low Stock (${fmtD(stock)} left)</span>`;
+      } else {
+        statusTag = `<span class="badge b-ok font-bold flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> In Stock (${fmtD(stock)} ${esc(p.unit)})</span>`;
+      }
+
+      // High Selling / Best Seller Tag
+      const isBestSeller = (sold > 0 && (sold === maxSold || sold >= 15));
+      const bestSellerTag = isBestSeller ? `<span class="badge b-lime font-black flex items-center gap-1 shadow-sm"><i data-lucide="flame" class="w-3 h-3 text-lime"></i> High Selling</span>` : '';
+
+      return `
+        <div class="card-xs p-3.5 mb-2.5 slide-in border border-border hover:border-lime/40 transition-all rounded-xl" data-search="${esc(p.name)} ${esc(p.sku||'')} ${esc(p.category)} ${esc(p.batch_no||'')} ${esc(p.storage_loc||'')} ${isBestSeller?'high selling best':''}" style="animation-delay:${i*15}ms">
+          <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0 flex-1">
+              <!-- Title & Key Badges -->
+              <div class="flex items-center gap-1.5 flex-wrap mb-1.5">
+                <span class="text-[14px] font-black text-offwhite cl-link hover:text-lime transition-colors" onclick="openProductInfo(${p.id})" title="Click to view full product history">${esc(p.name)}</span>
+                ${p.sku ? `<span class="badge b-silver font-mono text-[9.5px]">${esc(p.sku)}</span>` : ''}
+                ${bestSellerTag}
+                ${statusTag}
+              </div>
+
+              <!-- Product Details Pill Row -->
+              <div class="flex items-center gap-1.5 flex-wrap text-[11px] text-muted mb-2.5">
+                <span class="badge b-silver">${esc(p.category)}</span>
+                <span class="badge b-lime font-bold">${esc(p.unit)}</span>
+                <span class="badge b-silver text-[9px]">Restocked: <strong class="text-offwhite">${restocks}x</strong></span>
+                ${p.storage_loc ? `<span class="text-[10.5px] text-info flex items-center gap-0.5"><i data-lucide="map-pin" class="w-2.5 h-2.5"></i> ${esc(p.storage_loc)}</span>` : ''}
+                ${p.batch_no ? `<span class="text-[10.5px] text-muted">&bull; Lot: ${esc(p.batch_no)}</span>` : ''}
+                ${p.expiry_date ? `<span class="text-[10.5px] text-amber">&bull; Exp: ${fmtDate(p.expiry_date)}</span>` : ''}
+              </div>
+
+              <!-- Deep Analytics Metrics Box -->
+              <div class="grid grid-cols-3 gap-1.5 p-2 rounded-lg bg-inner border border-border/80 text-center">
+                <div>
+                  <div class="text-[9px] text-muted uppercase font-bold tracking-wider">Available</div>
+                  <div class="text-[13px] font-black ${stock>0?'text-lime':'text-danger'}">${fmtD(stock)} <span class="text-[9.5px] text-muted font-normal">${esc(p.unit)}</span></div>
+                </div>
+                <div>
+                  <div class="text-[9px] text-muted uppercase font-bold tracking-wider">Total Sold</div>
+                  <div class="text-[13px] font-black text-offwhite">${fmtD(sold)} <span class="text-[9.5px] text-muted font-normal">${esc(p.unit)}</span></div>
+                </div>
+                <div>
+                  <div class="text-[9px] text-muted uppercase font-bold tracking-wider">Revenue</div>
+                  <div class="text-[13px] font-black text-lime">${fmt(rev)}</div>
+                </div>
+              </div>
+
+              ${p.description ? `<div class="text-[11px] text-muted mt-2 line-clamp-1 italic">${esc(p.description)}</div>` : ''}
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="badge b-silver">${esc(p.category)}</span>
-              <span class="badge b-lime font-bold">${esc(p.unit)}</span>
-              ${p.batch_no ? `<span class="text-[10.5px] text-muted">&bull; Lot: ${esc(p.batch_no)}</span>` : ''}
-              ${p.expiry_date ? `<span class="text-[10.5px] text-amber">&bull; Exp: ${fmtDate(p.expiry_date)}</span>` : ''}
-              ${p.storage_loc ? `<span class="text-[10.5px] text-info">&bull; Loc: ${esc(p.storage_loc)}</span>` : ''}
+
+            <!-- Action Controls -->
+            <div class="flex flex-col sm:flex-row items-center gap-1 ml-2 flex-shrink-0">
+              <button class="btn-icon lime p-2 active:scale-95" onclick="quickSellProduct(${p.id}, '${esc(p.name)}')" title="Sell this item now (Add to invoice)">
+                <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
+              </button>
+              <button class="btn-icon lime p-2 active:scale-95" onclick="quickRestock(${p.id})" title="Add stock / Buy more">
+                <i data-lucide="package-plus" class="w-3.5 h-3.5"></i>
+              </button>
+              <button class="btn-icon p-2 hover:text-white" onclick='openEditModal("product",${JSON.stringify(p)})' title="Edit product details">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+              </button>
+              <button class="btn-icon red p-2 active:scale-95" onclick="delProduct(${p.id})" title="Delete product">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
             </div>
-            ${p.description ? `<div class="text-[10.5px] text-muted mt-1.5 line-clamp-1">${esc(p.description)}</div>` : ''}
           </div>
-          <div class="flex items-center gap-1.5 ml-2 flex-shrink-0">
-            <button class="btn-icon lime" onclick="quickRestock(${p.id})" title="Restock item"><i data-lucide="package-plus" class="w-3.5 h-3.5"></i></button>
-            <button class="btn-icon lime" onclick='openEditModal("product",${JSON.stringify(p)})'><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
-            <button class="btn-icon red" onclick="delProduct(${p.id})"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-          </div>
-        </div>
-      </div>`).join('');
+        </div>`;
+    }).join('');
     lucide.createIcons();
   } catch(e) { toast(e.message,'err'); }
 }
 
+// 1-Click Quick Sell Handler: Switch to Sales, auto-add item to cart
+function quickSellProduct(productId, productName) {
+  switchTab('sales');
+  setTimeout(() => {
+    // Check if cart has rows or add one
+    if (!S.cart.length) addCartRow();
+    const lastRow = S.cart[S.cart.length - 1];
+    if (lastRow) {
+      updateCartItem(lastRow.id, 'product_id', productId);
+      // Focus quantity field
+      const qtyInput = document.querySelector(`[data-cart-row="${lastRow.id}"] input[type="number"]`);
+      if (qtyInput) qtyInput.focus();
+    }
+    toast(`Added "${productName}" to sale bill!`);
+  }, 150);
+}
+
 function autoSKU() {
   const cat = document.getElementById('p-cat').value;
-  const code = CAT_CODES[cat] || 'GEN';
-  document.getElementById('p-sku').value = `PND-${code}-${String(Math.floor(Math.random()*900)+100)}`;
+  const clean = (cat || 'ITEM').replace(/[^a-zA-Z]/g, '').slice(0, 3).toUpperCase() || 'SKU';
+  document.getElementById('p-sku').value = `${clean}-${String(Math.floor(Math.random()*900)+100)}`;
 }
 
 document.getElementById('form-product').addEventListener('submit', async e => {
@@ -2918,6 +3067,45 @@ async function init() {
   }
   lucide.createIcons();
 }
+
+
+// ─── KEYBOARD SHORTCUTS FOR POWER USERS ───────────────────────────────────────
+window.addEventListener('keydown', (e) => {
+  // Alt + S = New Sale
+  if (e.altKey && (e.key === 's' || e.key === 'S')) {
+    e.preventDefault();
+    switchTab('sales');
+  }
+  // Alt + B = Buy / Restock
+  if (e.altKey && (e.key === 'b' || e.key === 'B')) {
+    e.preventDefault();
+    switchTab('stock');
+  }
+  // Alt + P = Products Directory
+  if (e.altKey && (e.key === 'p' || e.key === 'P')) {
+    e.preventDefault();
+    switchTab('products');
+  }
+  // Alt + E = Expenses
+  if (e.altKey && (e.key === 'e' || e.key === 'E')) {
+    e.preventDefault();
+    switchTab('expenses');
+  }
+  // Alt + D = Dashboard
+  if (e.altKey && (e.key === 'd' || e.key === 'D')) {
+    e.preventDefault();
+    switchTab('dashboard');
+  }
+  // Esc = Close Modals
+  if (e.key === 'Escape') {
+    closeInvoice();
+    closePeriodReportModal();
+    closeProfileSettingsModal();
+    closeEdit();
+    closeInfo();
+    closeAllDropdowns();
+  }
+});
 
 init();
 </script>

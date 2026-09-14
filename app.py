@@ -1036,7 +1036,20 @@ def api_stock_levels():
 def api_get_products():
     uid = get_current_user_id()
     conn = get_db()
-    products = conn.execute('SELECT * FROM products WHERE user_id=? ORDER BY name ASC', (uid,)).fetchall()
+    products = conn.execute('''
+        SELECT p.*,
+            COALESCE((SELECT SUM(quantity) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id), 0) -
+            COALESCE((SELECT SUM(quantity_sold) FROM sales WHERE product_id=p.id AND user_id=p.user_id), 0) as current_stock,
+            COALESCE((SELECT SUM(quantity_sold) FROM sales WHERE product_id=p.id AND user_id=p.user_id), 0) as total_sold,
+            COALESCE((SELECT SUM(total_amount) FROM sales WHERE product_id=p.id AND user_id=p.user_id), 0) as total_revenue,
+            COALESCE((SELECT COUNT(*) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id), 0) as restock_count,
+            COALESCE((SELECT MAX(purchase_date) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id), '') as last_restocked,
+            COALESCE((SELECT SUM(total_cost)/NULLIF(SUM(quantity),0) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id), 0) as avg_cost,
+            COALESCE((SELECT SUM(total_amount)/NULLIF(SUM(quantity_sold),0) FROM sales WHERE product_id=p.id AND user_id=p.user_id), 0) as avg_price
+        FROM products p
+        WHERE p.user_id=?
+        ORDER BY p.name ASC
+    ''', (uid,)).fetchall()
     conn.close()
     return jsonify([dict(p) for p in products])
 
