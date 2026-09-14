@@ -230,8 +230,8 @@ def build_invoice_pdf(inv, logo_path='static/logo.jpg'):
         [
             [
                 Paragraph("<b>PAYMENT TERMS &amp; SETTLEMENT:</b>", ParagraphStyle('p1', fontName='Helvetica-Bold', fontSize=8, textColor=colors.HexColor('#1e293b'))),
-                Paragraph("Payment is accepted via <b>Cash, Direct Bank Transfer, or Authorized Cheque</b> payable to the seller.", S['muted']),
-                Paragraph("Please quote the invoice number on electronic remittances. Payment due per agreed terms.", S['muted']),
+                Paragraph(f"<b>Settlement:</b> {inv.get('bank_details')}" if inv.get('bank_details') else "Payment is accepted via <b>Cash, Direct Bank Transfer, or Authorized Cheque</b> payable to the seller.", S['muted']),
+                Paragraph(f"<b>Terms / Notes:</b> {inv.get('invoice_notes')}" if inv.get('invoice_notes') else "Please quote invoice number on electronic remittances. Payment due per agreed terms.", S['muted']),
                 Spacer(1, 1.5 * mm),
                 Paragraph("<b>Commercial Policy:</b> Please verify goods, quantities, and packaging upon delivery.", ParagraphStyle('cc', parent=S['muted'], fontSize=7.5, textColor=colors.HexColor('#64748b')))
             ],

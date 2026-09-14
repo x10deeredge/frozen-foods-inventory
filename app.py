@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 import io
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from functools import wraps
 import pdf_generator
 
@@ -102,6 +102,8 @@ def init_db():
         "ALTER TABLE users ADD COLUMN address TEXT DEFAULT ''",
         "ALTER TABLE users ADD COLUMN tax_id TEXT DEFAULT ''",
         "ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'Owner / Executive'",
+        "ALTER TABLE users ADD COLUMN bank_details TEXT DEFAULT ''",
+        "ALTER TABLE users ADD COLUMN invoice_notes TEXT DEFAULT ''",
         "ALTER TABLE products ADD COLUMN user_id INTEGER DEFAULT 1",
         "ALTER TABLE products ADD COLUMN sku TEXT DEFAULT ''",
         "ALTER TABLE products ADD COLUMN batch_no TEXT DEFAULT ''",
@@ -221,7 +223,7 @@ def api_auth_me():
         return jsonify({'logged_in': False, 'user': None})
 
     conn = get_db()
-    user = conn.execute('SELECT id, username, email, full_name, business_name, address, tax_id, phone, currency, role, created_at FROM users WHERE id=?', (uid,)).fetchone()
+    user = conn.execute('SELECT id, username, email, full_name, business_name, address, tax_id, phone, currency, role, bank_details, invoice_notes, created_at FROM users WHERE id=?', (uid,)).fetchone()
     conn.close()
     if user:
         return jsonify({'logged_in': True, 'user': dict(user)})
@@ -349,10 +351,13 @@ def api_auth_profile():
     else:
         email = None
 
+    bank_details = data.get('bank_details', '').strip()
+    invoice_notes = data.get('invoice_notes', '').strip()
+
     conn.execute('''
-        UPDATE users SET email=?, full_name=?, business_name=?, address=?, tax_id=?, phone=?, currency=?, role=?
+        UPDATE users SET email=?, full_name=?, business_name=?, address=?, tax_id=?, phone=?, currency=?, role=?, bank_details=?, invoice_notes=?
         WHERE id=?
-    ''', (email, full_name, business_name, address, tax_id, phone, currency, role, uid))
+    ''', (email, full_name, business_name, address, tax_id, phone, currency, role, bank_details, invoice_notes, uid))
     conn.commit()
     conn.close()
     return jsonify({'success': True})
@@ -837,7 +842,7 @@ def get_invoice_data(inv_id, uid=None):
         # Determine user from sales record for public sharing
         sale_owner = conn.execute('SELECT user_id FROM sales WHERE invoice_no=? OR id=? LIMIT 1', (inv_id, int(inv_id[4:]) if (inv_id.startswith('INV-') and inv_id[4:].isdigit()) else -1)).fetchone()
         owner_id = sale_owner['user_id'] if sale_owner else 1
-        user = conn.execute('SELECT username, full_name, business_name, address, tax_id, phone, currency FROM users WHERE id=?', (owner_id,)).fetchone()
+        user = conn.execute('SELECT username, full_name, business_name, address, tax_id, phone, currency, bank_details, invoice_notes FROM users WHERE id=?', (owner_id,)).fetchone()
         uid = owner_id
 
     biz_name = (user['business_name'] if user and user['business_name'] else '') or (user['full_name'] if user and user['full_name'] else '') or (user['username'] if user and user['username'] else 'Wholesale Store')
@@ -874,6 +879,8 @@ def get_invoice_data(inv_id, uid=None):
         'business_address': biz_addr,
         'tax_id': biz_tax,
         'currency': currency,
+        'bank_details': (user['bank_details'] if user and 'bank_details' in user.keys() and user['bank_details'] else '') or '',
+        'invoice_notes': (user['invoice_notes'] if user and 'invoice_notes' in user.keys() and user['invoice_notes'] else '') or '',
         'client_name': first['client_name'],
         'sale_date': first['sale_date'],
         'payment_status': first['payment_status'],
@@ -1556,3 +1563,170 @@ init_db()
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
+
+
+@app.route('/api/analytics/business-intelligence')
+@auth_required
+def api_business_intelligence():
+    uid = get_current_user_id()
+    conn = get_db()
+    c = conn.cursor()
+
+    user = c.execute('SELECT currency FROM users WHERE id=?', (uid,)).fetchone()
+    currency = user['currency'] if user and user['currency'] else 'PKR'
+
+    prods = c.execute('''
+        SELECT p.*,
+            COALESCE((SELECT SUM(quantity) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id), 0) -
+            COALESCE((SELECT SUM(quantity_sold) FROM sales WHERE product_id=p.id AND user_id=p.user_id), 0) as current_stock,
+            COALESCE((SELECT SUM(quantity_sold) FROM sales WHERE product_id=p.id AND user_id=p.user_id), 0) as total_sold,
+            COALESCE((SELECT SUM(total_amount) FROM sales WHERE product_id=p.id AND user_id=p.user_id), 0) as total_revenue,
+            COALESCE((SELECT COUNT(*) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id), 0) as restock_count,
+            COALESCE((SELECT MAX(purchase_date) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id), '') as last_restocked,
+            COALESCE((SELECT MAX(sale_date) FROM sales WHERE product_id=p.id AND user_id=p.user_id), '') as last_sold_date,
+            COALESCE((SELECT SUM(total_cost)/NULLIF(SUM(quantity),0) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id), 0) as avg_cost,
+            COALESCE((SELECT SUM(total_amount)/NULLIF(SUM(quantity_sold),0) FROM sales WHERE product_id=p.id AND user_id=p.user_id), 0) as avg_price
+        FROM products p
+        WHERE p.user_id=?
+        ORDER BY p.name ASC
+    ''', (uid,)).fetchall()
+
+    product_list = [dict(p) for p in prods]
+    capital_tied_up = sum(max(0, p['current_stock']) * (p['avg_cost'] or 0) for p in product_list)
+    total_store_revenue = sum(p['total_revenue'] or 0 for p in product_list)
+    total_store_sold_units = sum(p['total_sold'] or 0 for p in product_list)
+
+    slow_moving = []
+    fast_moving = []
+    reorder_alerts = []
+    margin_stars = []
+
+    today = date.today()
+
+    for p in product_list:
+        stock = p['current_stock']
+        sold = p['total_sold']
+        cost = p['avg_cost'] or 0
+        price = p['avg_price'] or 0
+        threshold = p.get('low_stock_threshold') or 5
+        margin_pct = round(((price - cost) / price * 100), 1) if price > cost and price > 0 else 0
+        p['margin_pct'] = margin_pct
+        p['tied_capital'] = round(max(0, stock) * cost, 2)
+
+        if stock <= threshold:
+            reorder_alerts.append({
+                **p,
+                'advice': f"Critical shortage: only {stock:g} {p['unit']} left (Threshold: {threshold:g}). Replenish stock immediately to avoid lost sales."
+            })
+
+        if sold > 0:
+            share = round((p['total_revenue'] / total_store_revenue * 100), 1) if total_store_revenue > 0 else 0
+            p['revenue_share_pct'] = share
+            fast_moving.append(p)
+
+        days_since_sold = 999
+        if p['last_sold_date']:
+            try:
+                days_since_sold = (today - date.fromisoformat(p['last_sold_date'])).days
+            except Exception:
+                pass
+
+        if stock > 0 and (sold == 0 or days_since_sold >= 14):
+            slow_moving.append({
+                **p,
+                'days_inactive': days_since_sold if sold > 0 else 'Never sold',
+                'advice': f"Capital of {currency} {p['tied_capital']:,.2f} is idle. Run a 5-10% bundle discount or flash deal to unlock working capital."
+            })
+
+        if margin_pct >= 20:
+            margin_stars.append({
+                **p,
+                'advice': f"Exceptional profit margin of {margin_pct}%. Train staff to highlight and prioritize this SKU on checkout bills."
+            })
+
+    fast_moving.sort(key=lambda x: x['total_sold'], reverse=True)
+    margin_stars.sort(key=lambda x: x['margin_pct'], reverse=True)
+    slow_moving.sort(key=lambda x: x['tied_capital'], reverse=True)
+
+    clients = c.execute('''
+        SELECT client_name, COUNT(*) as order_count, SUM(total_amount) as total_spent, 
+               MAX(sale_date) as last_order_date, AVG(total_amount) as avg_order_val
+        FROM sales
+        WHERE user_id=?
+        GROUP BY client_name
+        ORDER BY total_spent DESC
+        LIMIT 6
+    ''', (uid,)).fetchall()
+    vip_clients = [dict(cli) for cli in clients]
+    for cli in vip_clients:
+        cli['advice'] = f"Top-tier client with {cli['order_count']} lifetime orders ({currency} {cli['total_spent']:,.2f}). Provide VIP support and payment flexibility."
+
+    executive_advice = []
+    if reorder_alerts:
+        names = ", ".join([x['name'] for x in reorder_alerts[:2]])
+        executive_advice.append({
+            'type': 'warning',
+            'title': 'Supply Chain & Stockout Alert',
+            'desc': f"{len(reorder_alerts)} item(s) are running critically low ({names}). Create replenishment purchase orders right away.",
+            'action_tab': 'stock',
+            'action_label': 'Open Stock Purchases'
+        })
+
+    if slow_moving:
+        total_slow_cap = sum(x['tied_capital'] for x in slow_moving)
+        executive_advice.append({
+            'type': 'info',
+            'title': 'Working Capital Liquidity Optimization',
+            'desc': f"{currency} {total_slow_cap:,.2f} is currently locked in slow-moving inventory. Consider special bundle deals or wholesale clearance offers.",
+            'action_tab': 'sales',
+            'action_label': 'Create Promotional Sale'
+        })
+
+    if fast_moving:
+        top_prod = fast_moving[0]
+        executive_advice.append({
+            'type': 'success',
+            'title': 'Core Revenue Driver Protection',
+            'desc': f"'{top_prod['name']}' is your #1 best seller ({top_prod['total_sold']:g} units sold). Keep a reliable 2-week supplier buffer to prevent stockouts.",
+            'action_tab': 'products',
+            'action_label': 'View Product Directory'
+        })
+
+    if margin_stars:
+        top_margin = margin_stars[0]
+        executive_advice.append({
+            'type': 'profit',
+            'title': 'High Margin Profit Focus',
+            'desc': f"'{top_margin['name']}' generates an outstanding {top_margin['margin_pct']}% margin. Upsell this SKU prominently during checkout.",
+            'action_tab': 'sales',
+            'action_label': 'Add to Invoice'
+        })
+
+    if not executive_advice:
+        executive_advice.append({
+            'type': 'info',
+            'title': 'Catalog Operations In Optimal Balance',
+            'desc': 'Sales velocity and inventory levels are aligned. Continue recording daily commercial transactions for deeper trends.',
+            'action_tab': 'dashboard',
+            'action_label': 'Go to Dashboard'
+        })
+
+    conn.close()
+
+    return jsonify({
+        'summary': {
+            'currency': currency,
+            'capital_tied_up': round(capital_tied_up, 2),
+            'total_store_revenue': round(total_store_revenue, 2),
+            'total_sold_units': round(total_store_sold_units, 2),
+            'active_reorder_count': len(reorder_alerts),
+            'slow_moving_count': len(slow_moving),
+            'total_products': len(product_list)
+        },
+        'executive_advice': executive_advice,
+        'reorder_alerts': reorder_alerts,
+        'slow_moving': slow_moving,
+        'fast_moving': fast_moving[:8],
+        'margin_stars': margin_stars[:8],
+        'vip_clients': vip_clients
+    })
