@@ -1150,42 +1150,40 @@
       </div>
 
       <!-- Executive Store & Account Profile Card -->
-      <div class="p-3.5 mb-3.5 rounded-2xl bg-gradient-to-br from-[#161c10] via-[#121410] to-[#0c0c0c] border border-lime/30 shadow-md shadow-lime/5 relative overflow-hidden">
-        <div class="flex items-start justify-between gap-3">
+      <div class="p-3.5 mb-3.5 rounded-2xl bg-[#151910] border border-lime/30 shadow-md shadow-lime/5 relative overflow-hidden">
+        <div class="flex items-center justify-between gap-3">
           <div class="flex items-center gap-3 min-w-0 flex-1">
             <!-- Avatar / Logo -->
             <div class="relative flex-shrink-0">
               <div class="w-12 h-12 rounded-2xl bg-lime/15 border border-lime/40 text-lime font-black text-[18px] flex items-center justify-center shadow-inner" id="set-hub-avatar">
                 P
               </div>
-              <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-ok border-2 border-[#121410]" title="Authenticated &amp; Active"></div>
+              <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-ok border-2 border-[#151910]" title="Authenticated &amp; Active"></div>
             </div>
             <!-- Identity Info -->
             <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2">
-                <span class="text-[14.5px] font-black text-offwhite truncate" id="set-hub-biz-name">PANDA Wholesale Store</span>
-              </div>
-              <div class="text-[11.5px] text-lime font-semibold flex items-center gap-1.5 mt-0.5 truncate">
+              <div class="text-[14px] font-black text-offwhite truncate" id="set-hub-biz-name">PANDA Wholesale Store</div>
+              <div class="text-[11px] text-lime font-bold truncate flex items-center gap-1 mt-0.5">
                 <span id="set-hub-owner">Habib Naseer</span>
-                <span class="text-silver/40">&bull;</span>
-                <span id="set-hub-role" class="text-silver font-normal">Executive</span>
+                <span class="text-silver/50">&bull;</span>
+                <span id="set-hub-role" class="text-silver font-normal">Executive Owner</span>
               </div>
-              <div class="text-[10.5px] text-muted flex items-center gap-2 mt-1 truncate">
-                <span id="set-hub-email" class="truncate font-mono">x10deeredge@gmail.com</span>
-                <span class="text-silver/40">&bull;</span>
-                <span id="set-hub-phone" class="truncate">Active</span>
+              <div class="text-[10px] text-muted truncate mt-0.5 flex items-center gap-1.5">
+                <span id="set-hub-email">x10deeredge@gmail.com</span>
+                <span class="text-silver/50">&bull;</span>
+                <span id="set-hub-phone">Active Support</span>
               </div>
             </div>
           </div>
           <!-- Edit Profile Action Button -->
-          <button onclick="openSettingsCard('biz')" class="btn-ghost py-1.5 px-2.5 rounded-lg bg-lime/10 hover:bg-lime text-lime hover:text-black text-[11px] font-bold transition-all flex items-center gap-1 flex-shrink-0 border border-lime/20 shadow-sm" title="Edit Profile Details">
+          <button type="button" onclick="openSettingsCard('biz')" class="py-1.5 px-3 rounded-xl bg-lime/15 hover:bg-lime text-lime hover:text-black text-[11px] font-bold transition-all flex items-center gap-1.5 flex-shrink-0 border border-lime/30 shadow-sm cursor-pointer active:scale-95" style="width:auto" title="Edit Profile Details">
             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
             <span>Edit</span>
           </button>
         </div>
 
         <!-- Badges & Status Strip -->
-        <div class="mt-3 pt-2.5 border-t border-border/40 flex items-center justify-between text-[10px] text-muted flex-wrap gap-1.5">
+        <div class="mt-3 pt-2 border-t border-border/40 flex items-center justify-between text-[10px] text-muted flex-wrap gap-1.5">
           <div class="flex items-center gap-1.5 flex-wrap">
             <span class="badge b-lime font-mono text-[9px] font-bold" id="set-hub-cur">PKR (₨)</span>
             <span class="badge bg-ok/10 text-ok border border-ok/25 text-[9px] font-bold flex items-center gap-1">
@@ -1539,9 +1537,17 @@
           <div class="text-[11px] text-muted leading-relaxed">
             Download a comprehensive, human-readable, printable <strong>PDF store audit statement</strong> containing your complete store records (products &amp; stock valuations, sales invoice ledger, stock inward history, and expenses). Enter your account password to authorize download.
           </div>
+          <div class="p-2.5 rounded-xl bg-black/40 border border-border/60 text-[11px] flex items-center justify-between">
+            <span class="text-silver/80">Authorizing Account:</span>
+            <span class="font-mono font-bold text-lime flex items-center gap-1">
+              <i data-lucide="user" class="w-3 h-3"></i>
+              <span id="backup-auth-username">@panda_admin</span>
+            </span>
+          </div>
           <div>
             <label class="lbl">Confirm Password for Backup Authorization</label>
-            <input class="field font-mono" type="password" id="backup-auth-pass" placeholder="Enter your password to unlock download"/>
+            <input class="field font-mono" type="password" id="backup-auth-pass" placeholder="Enter password to unlock download"/>
+            <div class="text-[10px] text-silver/60 mt-1" id="backup-auth-hint">Demo account password: <code class="text-lime font-mono">panda123</code></div>
           </div>
           <button type="button" onclick="downloadAccountBackup(event)" id="btn-user-backup" class="btn-lime w-full py-2.5 font-bold text-[12px] flex items-center justify-center gap-1.5 shadow-sm">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
@@ -1805,6 +1811,17 @@ function openProfileSettingsModal() {
     if (curEl) curEl.textContent = `${u.currency || 'PKR'} (₨)`;
     const uidEl = document.getElementById('set-hub-uid');
     if (uidEl) uidEl.textContent = `UID #${u.id || 1} • @${u.username || 'admin'}`;
+
+    const bUser = document.getElementById('backup-auth-username');
+    if (bUser) bUser.textContent = '@' + (u.username || 'user');
+    const bHint = document.getElementById('backup-auth-hint');
+    if (bHint) {
+      if (u.username === 'panda_admin') {
+        bHint.innerHTML = 'Demo account password: <code class="text-lime font-mono">panda123</code>';
+      } else {
+        bHint.innerHTML = 'Enter the login password for account: <strong class="text-lime font-mono">@' + (u.username || 'user') + '</strong>';
+      }
+    }
   }
   lucide.createIcons();
 }
@@ -1875,8 +1892,15 @@ async function downloadAccountBackup(e) {
       body: JSON.stringify({ password })
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ error: 'Backup authorization failed' }));
-      throw new Error(err.error || 'Failed to generate PDF store statement');
+      let errMsg = 'Failed to generate PDF store statement';
+      try {
+        const err = await res.json();
+        if (err && err.error) errMsg = err.error;
+      } catch (e) {
+        const text = await res.text().catch(() => '');
+        errMsg = (text && text.length < 120) ? text : `Server authorization error (${res.status})`;
+      }
+      throw new Error(errMsg);
     }
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
