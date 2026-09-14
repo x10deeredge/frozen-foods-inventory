@@ -457,22 +457,6 @@
     </div>
     <div id="d-profit" class="text-[24px] font-black tracking-tight leading-tight">—</div>
   </div>
-
-  <!-- SMART BUSINESS INTELLIGENCE — LIVE STRATEGIC ADVISOR BANNER -->
-  <div class="card p-3.5 mb-2.5 border border-lime/40 bg-gradient-to-r from-[#14180d] to-[#121212] relative overflow-hidden shadow-lg shadow-lime/10 cursor-pointer hover:border-lime transition-all active:scale-[0.99] group" onclick="openBusinessIntelligence()">
-    <div class="flex items-center justify-between gap-3">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-10 h-10 rounded-xl bg-lime/15 text-lime flex items-center justify-center flex-shrink-0 border border-lime/30 group-hover:scale-110 transition-transform shadow-sm">
-          <i data-lucide="sparkles" class="w-5 h-5"></i>
-        </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-[13.5px] font-black text-offwhite group-hover:text-lime transition-colors">Smart Business Intelligence</span>
-            <span class="badge b-lime text-[9px] font-black tracking-wide">Live Strategic Advisor</span>
-          </div>
-          <div id="d-bi-teaser" class="text-[11.5px] text-muted truncate mt-0.5 leading-snug">Analyzing inventory turnover, stockouts, and margin drivers…</div>
-        </div>
-      </div>
       <div class="flex items-center gap-1.5 text-lime font-black text-[11.5px] flex-shrink-0 bg-lime/10 px-2.5 py-1.5 rounded-lg border border-lime/20 group-hover:bg-lime group-hover:text-black transition-all">
         <span>Strategic Insights</span>
         <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"></i>
@@ -480,32 +464,29 @@
     </div>
   </div>
 
-  <!-- SLEEK COMPACT ACTION BAR (MINIMALIST & HIGH-EFFICIENCY) -->
-  <div class="grid grid-cols-4 gap-1.5 mb-2.5">
-    <button onclick="switchTab('sales')" class="py-2.5 px-1.5 rounded-xl bg-[#141414] hover:bg-lime/10 border border-lime/30 hover:border-lime flex items-center justify-center gap-1.5 group active:scale-95 transition-all shadow-sm" title="New Sale Invoice">
-      <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-lime group-hover:scale-110 transition-transform flex-shrink-0"></i>
-      <span class="text-[11.5px] font-black text-offwhite group-hover:text-lime transition-colors truncate">New Sale</span>
+  <!-- SLEEK COMPACT 5-ACTION COMMERCIAL BAR -->
+  <div class="grid grid-cols-5 gap-1 sm:gap-1.5 mb-2.5">
+    <button onclick="switchTab('sales')" class="py-2 px-1 rounded-xl bg-[#141414] hover:bg-lime/10 border border-lime/30 hover:border-lime flex flex-col sm:flex-row items-center justify-center gap-1 group active:scale-95 transition-all shadow-sm" title="Create New Sale Bill">
+      <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-lime group-hover:scale-110 transition-transform"></i>
+      <span class="text-[10px] sm:text-[11px] font-black text-offwhite group-hover:text-lime transition-colors truncate">Sale</span>
     </button>
-    <button onclick="switchTab('stock')" class="py-2.5 px-1.5 rounded-xl bg-[#141414] hover:bg-info/10 border border-info/30 hover:border-info flex items-center justify-center gap-1.5 group active:scale-95 transition-all shadow-sm" title="Add / Buy Stock">
-      <i data-lucide="package-plus" class="w-3.5 h-3.5 text-info group-hover:scale-110 transition-transform flex-shrink-0"></i>
-      <span class="text-[11.5px] font-black text-offwhite group-hover:text-info transition-colors truncate">Add Stock</span>
+    <button onclick="switchTab('stock')" class="py-2 px-1 rounded-xl bg-[#141414] hover:bg-info/10 border border-info/30 hover:border-info flex flex-col sm:flex-row items-center justify-center gap-1 group active:scale-95 transition-all shadow-sm" title="Add Stock Purchases">
+      <i data-lucide="package-plus" class="w-3.5 h-3.5 text-info group-hover:scale-110 transition-transform"></i>
+      <span class="text-[10px] sm:text-[11px] font-black text-offwhite group-hover:text-info transition-colors truncate">Stock</span>
     </button>
-    <button onclick="switchTab('products');setTimeout(()=>{document.getElementById('p-name')?.focus();window.scrollTo({top:0,behavior:'smooth'});},200)" class="py-2.5 px-1.5 rounded-xl bg-[#141414] hover:bg-white/10 border border-white/15 hover:border-white/35 flex items-center justify-center gap-1.5 group active:scale-95 transition-all shadow-sm" title="Register New Product">
-      <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-silver group-hover:scale-110 transition-transform flex-shrink-0"></i>
-      <span class="text-[11.5px] font-black text-offwhite group-hover:text-white transition-colors truncate">New Item</span>
+    <button onclick="switchTab('products');setTimeout(()=>{document.getElementById('p-name')?.focus();window.scrollTo({top:0,behavior:'smooth'});},200)" class="py-2 px-1 rounded-xl bg-[#141414] hover:bg-white/10 border border-white/15 hover:border-white/35 flex flex-col sm:flex-row items-center justify-center gap-1 group active:scale-95 transition-all shadow-sm" title="Register New Item">
+      <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-silver group-hover:scale-110 transition-transform"></i>
+      <span class="text-[10px] sm:text-[11px] font-black text-offwhite group-hover:text-white transition-colors truncate">Item</span>
     </button>
-    <button onclick="switchTab('expenses');setTimeout(()=>{document.getElementById('ex-title')?.focus();window.scrollTo({top:0,behavior:'smooth'});},200)" class="py-2.5 px-1.5 rounded-xl bg-[#141414] hover:bg-danger/10 border border-danger/30 hover:border-danger flex items-center justify-center gap-1.5 group active:scale-95 transition-all shadow-sm" title="Log Expense">
-      <i data-lucide="receipt" class="w-3.5 h-3.5 text-danger group-hover:scale-110 transition-transform flex-shrink-0"></i>
-      <span class="text-[11.5px] font-black text-offwhite group-hover:text-danger transition-colors truncate">Expense</span>
+    <button onclick="switchTab('expenses');setTimeout(()=>{document.getElementById('ex-title')?.focus();window.scrollTo({top:0,behavior:'smooth'});},200)" class="py-2 px-1 rounded-xl bg-[#141414] hover:bg-danger/10 border border-danger/30 hover:border-danger flex flex-col sm:flex-row items-center justify-center gap-1 group active:scale-95 transition-all shadow-sm" title="Log Expense">
+      <i data-lucide="receipt" class="w-3.5 h-3.5 text-danger group-hover:scale-110 transition-transform"></i>
+      <span class="text-[10px] sm:text-[11px] font-black text-offwhite group-hover:text-danger transition-colors truncate">Expense</span>
+    </button>
+    <button onclick="openBusinessIntelligence()" class="py-2 px-1 rounded-xl bg-[#141414] hover:bg-lime/10 border border-lime/30 hover:border-lime flex flex-col sm:flex-row items-center justify-center gap-1 group active:scale-95 transition-all shadow-sm" title="Open Smart Business Intelligence">
+      <i data-lucide="sparkles" class="w-3.5 h-3.5 text-lime group-hover:scale-110 transition-transform"></i>
+      <span class="text-[10px] sm:text-[11px] font-black text-lime transition-colors truncate">Insights</span>
     </button>
   </div>
-
-  <!-- Quick Counts (Clickable to switch tab) -->
-  <div class="grid grid-cols-3 gap-1.5 mb-2.5">
-    <div class="card-sm p-2 text-center cursor-pointer group hover:border-lime/40 hover:bg-inner transition-all active:scale-95" onclick="switchTab('products')" title="Click to view all products">
-      <div id="d-cnt-p" class="text-[16px] font-black text-offwhite group-hover:text-lime transition-colors">—</div>
-      <div class="text-[9.5px] text-muted group-hover:text-offwhite mt-0.5">Products &rarr;</div>
-    </div>
     <div class="card-sm p-2 text-center cursor-pointer group hover:border-lime/40 hover:bg-inner transition-all active:scale-95" onclick="switchTab('sales')" title="Click to view sales & clients">
       <div id="d-cnt-c" class="text-[16px] font-black text-offwhite group-hover:text-lime transition-colors">—</div>
       <div class="text-[9.5px] text-muted group-hover:text-offwhite mt-0.5">Clients &rarr;</div>
@@ -1149,165 +1130,165 @@
   </div>
 </div>
 
-<!-- REAL MASTER-DETAIL SETTINGS SUITE (SENIOR ARCHITECTURE) -->
+<!-- REAL MASTER-DETAIL SETTINGS SUITE (MOBILE-PERFECT & ZERO OVERLAP) -->
 <div class="overlay" id="profile-settings-overlay">
   <div class="backdrop" onclick="closeProfileSettingsModal()"></div>
-  <div class="sheet" style="max-width:540px;max-height:88vh;overflow-y:auto">
+  <div class="sheet" style="max-width:520px;width:95%;margin:auto;max-height:86vh;overflow-y:auto">
     <div class="handle"></div>
 
-    <!-- MASTER HUB VIEW (Category Cards) -->
+    <!-- MASTER HUB VIEW (7 Category Cards with Safe Mobile Constraints) -->
     <div id="settings-hub-view">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <div class="text-[17px] font-black text-offwhite flex items-center gap-2">
-            <i data-lucide="sliders-horizontal" class="w-5 h-5 text-lime"></i>
-            <span>System Settings</span>
+      <div class="flex items-center justify-between mb-3.5">
+        <div class="min-w-0 flex-1">
+          <div class="text-[16px] sm:text-[17px] font-black text-offwhite flex items-center gap-2">
+            <i data-lucide="settings-2" class="w-5 h-5 text-lime flex-shrink-0"></i>
+            <span class="truncate">System Settings</span>
           </div>
-          <div class="text-[11px] text-muted mt-0.5">PANDA Enterprise Suite &bull; Commercial Configuration</div>
+          <div class="text-[10.5px] text-muted mt-0.5 truncate">PANDA Enterprise Suite &bull; Commercial Configuration</div>
         </div>
-        <button onclick="closeProfileSettingsModal()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+        <button onclick="closeProfileSettingsModal()" class="btn-icon flex-shrink-0 ml-2"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
 
       <!-- Quick Store Identity Card Banner -->
       <div class="p-3 mb-3 rounded-2xl bg-gradient-to-r from-[#181d10] to-[#121212] border border-lime/30 flex items-center justify-between shadow-sm">
-        <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-xl bg-lime/15 text-lime flex items-center justify-center font-black text-[15px] border border-lime/30 shadow-inner" id="set-hub-avatar">P</div>
-          <div>
-            <div class="text-[13.5px] font-black text-offwhite" id="set-hub-biz-name">Wholesale Store</div>
-            <div class="text-[11px] text-muted flex items-center gap-1.5 mt-0.5">
-              <span id="set-hub-owner">Admin</span>
+        <div class="flex items-center gap-2.5 min-w-0 flex-1 mr-2">
+          <div class="w-10 h-10 rounded-xl bg-lime/15 text-lime flex items-center justify-center font-black text-[15px] border border-lime/30 shadow-inner flex-shrink-0" id="set-hub-avatar">P</div>
+          <div class="min-w-0 flex-1">
+            <div class="text-[13.5px] font-black text-offwhite truncate" id="set-hub-biz-name">Wholesale Store</div>
+            <div class="text-[11px] text-muted flex items-center gap-1.5 mt-0.5 truncate">
+              <span id="set-hub-owner" class="truncate">Admin</span>
               <span>&bull;</span>
-              <span class="badge b-lime text-[9.5px] font-bold" id="set-hub-cur">PKR (₨)</span>
+              <span class="badge b-lime text-[9.5px] font-bold flex-shrink-0" id="set-hub-cur">PKR (₨)</span>
             </div>
           </div>
         </div>
-        <button onclick="openSettingsCard('biz')" class="btn-ghost py-1 px-2.5 text-[11px] text-lime font-bold hover:underline flex items-center gap-1">
+        <button onclick="openSettingsCard('biz')" class="btn-ghost py-1 px-2 text-[11px] text-lime font-bold hover:underline flex items-center gap-1 flex-shrink-0">
           <span>Edit</span>
           <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
         </button>
       </div>
 
-      <!-- 7 Category Cards Grid -->
+      <!-- 7 Category Cards (Carefully Constrained to Prevent Text Overlap) -->
       <div class="space-y-2">
         <!-- 1. Business Info -->
-        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('biz')">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-lime/10 text-lime flex items-center justify-center group-hover:scale-110 transition-transform">
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group shadow-sm" onclick="openSettingsCard('biz')">
+          <div class="flex items-center gap-3 min-w-0 flex-1 mr-2">
+            <div class="w-9 h-9 rounded-xl bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
               <i data-lucide="building-2" class="w-4 h-4"></i>
             </div>
-            <div>
-              <div class="text-[13px] font-bold text-offwhite group-hover:text-lime transition-colors">Business &amp; Store Identity</div>
-              <div class="text-[10.5px] text-muted mt-0.5">Company name, owner, tax NTN, address &amp; store currency</div>
+            <div class="min-w-0 flex-1">
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-lime transition-colors truncate">Business &amp; Store Identity</div>
+              <div class="text-[10.5px] text-muted mt-0.5 line-clamp-1 break-words">Company name, owner, tax NTN, address &amp; currency</div>
             </div>
           </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-lime group-hover:translate-x-0.5 transition-all"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-lime flex-shrink-0 transition-all"></i>
         </div>
 
         <!-- 2. Bank & Terms -->
-        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('inv')">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-info/10 text-info flex items-center justify-center group-hover:scale-110 transition-transform">
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group shadow-sm" onclick="openSettingsCard('inv')">
+          <div class="flex items-center gap-3 min-w-0 flex-1 mr-2">
+            <div class="w-9 h-9 rounded-xl bg-info/10 text-info flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
               <i data-lucide="landmark" class="w-4 h-4"></i>
             </div>
-            <div>
-              <div class="text-[13px] font-bold text-offwhite group-hover:text-info transition-colors">Bank Accounts &amp; Settlement Terms</div>
-              <div class="text-[10.5px] text-muted mt-0.5">Official bank details, IBAN &amp; payment notes printed on invoices</div>
+            <div class="min-w-0 flex-1">
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-info transition-colors truncate">Bank Accounts &amp; Settlement Terms</div>
+              <div class="text-[10.5px] text-muted mt-0.5 line-clamp-1 break-words">Official bank details &amp; invoice payment terms</div>
             </div>
           </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-info group-hover:translate-x-0.5 transition-all"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-info flex-shrink-0 transition-all"></i>
         </div>
 
         <!-- 3. Preferences -->
-        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('prefs')">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-amber/10 text-amber flex items-center justify-center group-hover:scale-110 transition-transform">
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group shadow-sm" onclick="openSettingsCard('prefs')">
+          <div class="flex items-center gap-3 min-w-0 flex-1 mr-2">
+            <div class="w-9 h-9 rounded-xl bg-amber/10 text-amber flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
               <i data-lucide="sliders" class="w-4 h-4"></i>
             </div>
-            <div>
-              <div class="text-[13px] font-bold text-offwhite group-hover:text-amber transition-colors">App Preferences &amp; Sound</div>
-              <div class="text-[10.5px] text-muted mt-0.5">Barcode scan audio, auto-print invoices &amp; compact table rows</div>
+            <div class="min-w-0 flex-1">
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-amber transition-colors truncate">App Preferences &amp; Sound</div>
+              <div class="text-[10.5px] text-muted mt-0.5 line-clamp-1 break-words">Barcode audio, auto-print invoices &amp; compact rows</div>
             </div>
           </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-amber group-hover:translate-x-0.5 transition-all"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-amber flex-shrink-0 transition-all"></i>
         </div>
 
-        <!-- 4. Security -->
-        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('sec')">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-danger/10 text-danger flex items-center justify-center group-hover:scale-110 transition-transform">
+        <!-- 4. Security & User Backup -->
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group shadow-sm" onclick="openSettingsCard('sec')">
+          <div class="flex items-center gap-3 min-w-0 flex-1 mr-2">
+            <div class="w-9 h-9 rounded-xl bg-danger/10 text-danger flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
               <i data-lucide="lock" class="w-4 h-4"></i>
             </div>
-            <div>
-              <div class="text-[13px] font-bold text-offwhite group-hover:text-danger transition-colors">Security &amp; Database Backup</div>
-              <div class="text-[10.5px] text-muted mt-0.5">Change login password &amp; export 1-click SQLite database</div>
+            <div class="min-w-0 flex-1">
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-danger transition-colors truncate">Security &amp; Account Backup</div>
+              <div class="text-[10.5px] text-muted mt-0.5 line-clamp-1 break-words">Password-protected export of your account data</div>
             </div>
           </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-danger group-hover:translate-x-0.5 transition-all"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-danger flex-shrink-0 transition-all"></i>
         </div>
 
         <!-- 5. About Us -->
-        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('about')">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-white/5 text-silver flex items-center justify-center group-hover:scale-110 transition-transform">
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group shadow-sm" onclick="openSettingsCard('about')">
+          <div class="flex items-center gap-3 min-w-0 flex-1 mr-2">
+            <div class="w-9 h-9 rounded-xl bg-white/5 text-silver flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
               <i data-lucide="info" class="w-4 h-4"></i>
             </div>
-            <div>
-              <div class="text-[13px] font-bold text-offwhite group-hover:text-white transition-colors">About System &amp; Architecture</div>
-              <div class="text-[10.5px] text-muted mt-0.5">Systems Architect Habib Naseer &bull; Version 2.5.0 Enterprise</div>
+            <div class="min-w-0 flex-1">
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-white transition-colors truncate">About System &amp; Architecture</div>
+              <div class="text-[10.5px] text-muted mt-0.5 line-clamp-1 break-words">Systems Architect Habib Naseer &bull; Version 2.5.0</div>
             </div>
           </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-white group-hover:translate-x-0.5 transition-all"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-white flex-shrink-0 transition-all"></i>
         </div>
 
         <!-- 6. Contact Us -->
-        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('contact')">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-ok/10 text-ok flex items-center justify-center group-hover:scale-110 transition-transform">
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group shadow-sm" onclick="openSettingsCard('contact')">
+          <div class="flex items-center gap-3 min-w-0 flex-1 mr-2">
+            <div class="w-9 h-9 rounded-xl bg-ok/10 text-ok flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
               <i data-lucide="headset" class="w-4 h-4"></i>
             </div>
-            <div>
-              <div class="text-[13px] font-bold text-offwhite group-hover:text-ok transition-colors">Technical Support &amp; Developer Contact</div>
-              <div class="text-[10.5px] text-muted mt-0.5">Direct contact with Habib Naseer (x10deeredge@gmail.com)</div>
+            <div class="min-w-0 flex-1">
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-ok transition-colors truncate">Support &amp; Developer Contact</div>
+              <div class="text-[10.5px] text-muted mt-0.5 line-clamp-1 break-words">Direct support via x10deeredge@gmail.com</div>
             </div>
           </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-ok group-hover:translate-x-0.5 transition-all"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-ok flex-shrink-0 transition-all"></i>
         </div>
 
         <!-- 7. Privacy Policy -->
-        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('legal')">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-white/5 text-silver flex items-center justify-center group-hover:scale-110 transition-transform">
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group shadow-sm" onclick="openSettingsCard('legal')">
+          <div class="flex items-center gap-3 min-w-0 flex-1 mr-2">
+            <div class="w-9 h-9 rounded-xl bg-white/5 text-silver flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
               <i data-lucide="shield-check" class="w-4 h-4"></i>
             </div>
-            <div>
-              <div class="text-[13px] font-bold text-offwhite group-hover:text-white transition-colors">Privacy Policy &amp; Commercial Terms</div>
-              <div class="text-[10.5px] text-muted mt-0.5">Google Play &amp; Apple App Store certified local data ownership</div>
+            <div class="min-w-0 flex-1">
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-white transition-colors truncate">Privacy Policy &amp; Commercial Terms</div>
+              <div class="text-[10.5px] text-muted mt-0.5 line-clamp-1 break-words">100% private SQLite data, App Store certified</div>
             </div>
           </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-white group-hover:translate-x-0.5 transition-all"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-white flex-shrink-0 transition-all"></i>
         </div>
       </div>
     </div>
 
-    <!-- DETAIL VIEW (Individual Focused Cards with Back Button) -->
+    <!-- DETAIL VIEW (Individual Focused Cards with Clean Responsive Grids) -->
     <div id="settings-detail-view" class="hidden">
       <!-- Top Navigation Bar for Detail View -->
       <div class="flex items-center justify-between pb-3 mb-3 border-b border-border/80">
-        <button onclick="backToSettingsHub()" class="btn-ghost py-1.5 px-2.5 text-[12px] font-bold text-lime flex items-center gap-1.5 hover:bg-lime/10 rounded-lg transition-all">
+        <button onclick="backToSettingsHub()" class="btn-ghost py-1.5 px-2.5 text-[12px] font-bold text-lime flex items-center gap-1.5 hover:bg-lime/10 rounded-lg transition-all flex-shrink-0">
           <i data-lucide="arrow-left" class="w-4 h-4"></i>
           <span>Settings</span>
         </button>
-        <div class="text-[13.5px] font-black text-offwhite" id="settings-detail-title">Configuration</div>
-        <button onclick="closeProfileSettingsModal()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+        <div class="text-[13.5px] font-black text-offwhite truncate mx-2 text-center" id="settings-detail-title">Configuration</div>
+        <button onclick="closeProfileSettingsModal()" class="btn-icon flex-shrink-0"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
 
-      <!-- 1. Business Profile Form -->
+      <!-- 1. Business Profile Form (Mobile Stacked Grids) -->
       <form id="form-profile-biz" class="space-y-3 hidden" onsubmit="saveProfileSettings(event)">
         <div>
           <label class="lbl">Business / Store Name (Printed on Invoices)</label>
           <input class="field font-bold" id="prof-biz-name" required placeholder="e.g. Metro Trading Co."/>
         </div>
-        <div class="grid grid-cols-2 gap-2.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
             <label class="lbl">Owner / Executive Name</label>
             <input class="field" id="prof-full-name" placeholder="Full name"/>
@@ -1321,7 +1302,7 @@
           <label class="lbl">Commercial / Warehouse Address</label>
           <input class="field" id="prof-address" placeholder="Commercial address, city"/>
         </div>
-        <div class="grid grid-cols-2 gap-2.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
             <label class="lbl">NTN / Tax ID #</label>
             <input class="field" id="prof-tax-id" placeholder="NTN or Tax Code"/>
@@ -1331,7 +1312,7 @@
             <input class="field" id="prof-phone" placeholder="+92 300 1234567"/>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-2.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
             <label class="lbl">Store Currency</label>
             <select class="field" id="prof-currency">
@@ -1348,12 +1329,8 @@
             <input class="field" id="prof-role" placeholder="e.g. Managing Partner"/>
           </div>
         </div>
-        <div class="pt-2 flex items-center gap-2">
-          <button type="submit" class="btn-lime flex-1 py-2.5">Save Business Details</button>
-          <a href="/api/admin/backup-db" class="btn-ghost text-[11px] py-2.5 px-3 flex items-center justify-center gap-1.5 text-chrome hover:text-lime" title="Download SQLite database backup">
-            <i data-lucide="database-backup" class="w-3.5 h-3.5"></i>
-            <span>Backup DB</span>
-          </a>
+        <div class="pt-2">
+          <button type="submit" class="btn-lime w-full py-2.5 font-bold text-[13px]">Save Business Details</button>
         </div>
       </form>
 
@@ -1372,39 +1349,39 @@
           <textarea class="field text-[12px] leading-relaxed" id="prof-invoice-notes" rows="2" placeholder="e.g. Payment due within 7 days. Electronic remittances must reference invoice number."></textarea>
         </div>
         <div class="pt-2">
-          <button type="submit" class="btn-lime w-full py-2.5">Save Invoice &amp; Bank Settings</button>
+          <button type="submit" class="btn-lime w-full py-2.5 font-bold text-[13px]">Save Invoice &amp; Bank Settings</button>
         </div>
       </form>
 
       <!-- 3. System & App Preferences -->
       <div id="panel-profile-prefs" class="space-y-3 hidden">
         <div class="p-3 rounded-xl bg-inner border border-border/80 space-y-3">
-          <div class="flex items-center justify-between">
-            <div>
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0 flex-1">
               <div class="text-[12.5px] font-bold text-offwhite">Audio Feedback</div>
-              <div class="text-[10px] text-muted">Play confirmation sound on bill generation &amp; barcode scans</div>
+              <div class="text-[10px] text-muted leading-tight">Play confirmation sound on bill generation &amp; barcode scans</div>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer">
+            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
               <input type="checkbox" id="pref-audio" class="sr-only peer" checked onchange="togglePref('audio', this.checked)">
               <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
             </label>
           </div>
-          <div class="border-t border-border/50 pt-2.5 flex items-center justify-between">
-            <div>
+          <div class="border-t border-border/50 pt-2.5 flex items-center justify-between gap-3">
+            <div class="min-w-0 flex-1">
               <div class="text-[12.5px] font-bold text-offwhite">Auto-Print Dialog</div>
-              <div class="text-[10px] text-muted">Automatically open browser print modal upon saving a sale</div>
+              <div class="text-[10px] text-muted leading-tight">Automatically open browser print modal upon saving a sale</div>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer">
+            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
               <input type="checkbox" id="pref-autoprint" class="sr-only peer" onchange="togglePref('autoprint', this.checked)">
               <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
             </label>
           </div>
-          <div class="border-t border-border/50 pt-2.5 flex items-center justify-between">
-            <div>
+          <div class="border-t border-border/50 pt-2.5 flex items-center justify-between gap-3">
+            <div class="min-w-0 flex-1">
               <div class="text-[12.5px] font-bold text-offwhite">Compact Grid Rows</div>
-              <div class="text-[10px] text-muted">Display high-density rows for rapid high-volume billing</div>
+              <div class="text-[10px] text-muted leading-tight">Display high-density rows for rapid high-volume billing</div>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer">
+            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
               <input type="checkbox" id="pref-compact" class="sr-only peer" checked onchange="togglePref('compact', this.checked)">
               <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
             </label>
@@ -1425,25 +1402,25 @@
         </div>
 
         <div class="card-sm p-3 space-y-2 text-[11.5px]">
-          <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
-            <span class="text-muted">Lead Developer &amp; Architect:</span>
-            <span class="font-black text-offwhite">Habib Naseer</span>
+          <div class="flex items-center justify-between pb-1.5 border-b border-border/50 gap-2">
+            <span class="text-muted flex-shrink-0">Lead Developer &amp; Architect:</span>
+            <span class="font-black text-offwhite truncate text-right">Habib Naseer</span>
           </div>
-          <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
-            <span class="text-muted">Official Email:</span>
-            <a href="mailto:x10deeredge@gmail.com" class="font-bold text-lime hover:underline font-mono text-[11px]">x10deeredge@gmail.com</a>
+          <div class="flex items-center justify-between pb-1.5 border-b border-border/50 gap-2">
+            <span class="text-muted flex-shrink-0">Official Email:</span>
+            <a href="mailto:x10deeredge@gmail.com" class="font-bold text-lime hover:underline font-mono text-[11px] truncate text-right">x10deeredge@gmail.com</a>
           </div>
-          <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
-            <span class="text-muted">Application Target:</span>
-            <span class="font-bold text-silver">Retail &bull; Wholesale &bull; Distribution</span>
+          <div class="flex items-center justify-between pb-1.5 border-b border-border/50 gap-2">
+            <span class="text-muted flex-shrink-0">Application Target:</span>
+            <span class="font-bold text-silver truncate text-right">Retail &bull; Wholesale &bull; Distribution</span>
           </div>
-          <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
-            <span class="text-muted">Mobile / App Store Support:</span>
-            <span class="font-bold text-ok">PWA + Native Android APK Ready</span>
+          <div class="flex items-center justify-between pb-1.5 border-b border-border/50 gap-2">
+            <span class="text-muted flex-shrink-0">Mobile / App Store Support:</span>
+            <span class="font-bold text-ok truncate text-right">PWA + Native Android APK Ready</span>
           </div>
-          <div class="flex items-center justify-between">
-            <span class="text-muted">Database Engine:</span>
-            <span class="font-bold text-silver">SQLite 3 WAL (Zero-Config / Private)</span>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-muted flex-shrink-0">Database Engine:</span>
+            <span class="font-bold text-silver truncate text-right">SQLite 3 WAL (Zero-Config / Private)</span>
           </div>
         </div>
 
@@ -1467,7 +1444,7 @@
             <div class="w-8 h-8 rounded-lg bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 mt-0.5">
               <i data-lucide="user" class="w-4 h-4"></i>
             </div>
-            <div>
+            <div class="min-w-0 flex-1">
               <div class="text-[12px] font-bold text-offwhite">Primary Contact</div>
               <div class="text-[11px] text-muted">Habib Naseer &bull; Senior Systems Engineer</div>
             </div>
@@ -1477,9 +1454,9 @@
             <div class="w-8 h-8 rounded-lg bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 mt-0.5">
               <i data-lucide="mail" class="w-4 h-4"></i>
             </div>
-            <div>
+            <div class="min-w-0 flex-1">
               <div class="text-[12px] font-bold text-offwhite">Direct Email</div>
-              <a href="mailto:x10deeredge@gmail.com" class="text-[11.5px] text-lime font-mono hover:underline font-bold">x10deeredge@gmail.com</a>
+              <a href="mailto:x10deeredge@gmail.com" class="text-[11.5px] text-lime font-mono hover:underline font-bold break-all">x10deeredge@gmail.com</a>
               <div class="text-[10px] text-muted mt-0.5">Response within 24 hours guaranteed</div>
             </div>
           </div>
@@ -1491,32 +1468,58 @@
         </a>
       </div>
 
-      <!-- 6. Privacy Policy & Commercial License (App Store & Play Store Compliant) -->
+      <!-- 6. Privacy Policy & Commercial License -->
       <div id="panel-profile-legal" class="space-y-3 hidden">
         <div class="p-3.5 rounded-xl bg-inner border border-border/80 space-y-2.5 text-[11px] text-muted leading-relaxed">
           <div class="text-[13px] font-black text-offwhite flex items-center gap-1.5 mb-1">
-            <i data-lucide="shield" class="w-4 h-4 text-ok"></i>
+            <i data-lucide="shield" class="w-4 h-4 text-ok flex-shrink-0"></i>
             <span>App Store Privacy &amp; Data Sovereignty</span>
           </div>
           <p><strong class="text-offwhite">100% Local Data Ownership:</strong> All store records, transactions, inventory levels, supplier contacts, and client names are maintained strictly within your private database instance. No data is harvested, analyzed, or shared with any third party.</p>
           <p><strong class="text-offwhite">Zero Third-Party Telemetry:</strong> PANDA ERP does not include any third-party advertising SDKs, analytics tracking beacons, or telemetry scripts.</p>
           <p><strong class="text-offwhite">Cryptographic Security:</strong> User credentials are protected using salted one-way hashing algorithms. Session security complies with standard commercial application guidelines.</p>
-          <p><strong class="text-offwhite">Data Portability:</strong> You can export full SQLite backups or printable audit statements anytime with a single click.</p>
+          <p><strong class="text-offwhite">Data Portability:</strong> You can export full user JSON backups or printable audit statements anytime with a single click.</p>
         </div>
       </div>
 
-      <!-- 7. Change Password Form -->
-      <form id="form-profile-sec" class="space-y-3 hidden" onsubmit="changeAccountPassword(event)">
-        <div>
-          <label class="lbl">Current Account Password</label>
-          <input class="field" type="password" id="prof-old-pass" required placeholder="Enter current password"/>
+      <!-- 7. Security & User Password-Protected Data Backup -->
+      <div id="panel-profile-sec" class="space-y-4 hidden">
+        <!-- Change Password Card -->
+        <form id="form-profile-sec" class="card-sm p-3.5 space-y-3" onsubmit="changeAccountPassword(event)">
+          <div class="text-[12.5px] font-black text-offwhite flex items-center gap-1.5 border-b border-border/50 pb-2">
+            <i data-lucide="key" class="w-4 h-4 text-lime flex-shrink-0"></i>
+            <span>Change Login Password</span>
+          </div>
+          <div>
+            <label class="lbl">Current Account Password</label>
+            <input class="field" type="password" id="prof-old-pass" required placeholder="Enter current password"/>
+          </div>
+          <div>
+            <label class="lbl">New Password (minimum 4 characters)</label>
+            <input class="field" type="password" id="prof-new-pass" required placeholder="Enter new password"/>
+          </div>
+          <button type="submit" class="btn-lime w-full py-2.5 font-bold text-[12px]">Update Account Password</button>
+        </form>
+
+        <!-- Dedicated Password-Protected User Backup Card -->
+        <div class="card-sm p-3.5 space-y-3 border border-lime/30 bg-[#12140d]">
+          <div class="text-[12.5px] font-black text-offwhite flex items-center gap-1.5 border-b border-border/50 pb-2">
+            <i data-lucide="database" class="w-4 h-4 text-lime flex-shrink-0"></i>
+            <span>Export Account Data Backup (.json)</span>
+          </div>
+          <div class="text-[11px] text-muted leading-relaxed">
+            Download a complete, private JSON backup containing <strong>strictly your own account's records</strong> (products, stock entries, invoices, and expenses). Enter your account password to authorize download.
+          </div>
+          <div>
+            <label class="lbl">Confirm Password for Backup Authorization</label>
+            <input class="field font-mono" type="password" id="backup-auth-pass" placeholder="Enter your password to unlock download"/>
+          </div>
+          <button type="button" onclick="downloadAccountBackup(event)" id="btn-user-backup" class="btn-lime w-full py-2.5 font-bold text-[12px] flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Authorize &amp; Download My Data Backup</span>
+          </button>
         </div>
-        <div>
-          <label class="lbl">New Password (minimum 4 characters)</label>
-          <input class="field" type="password" id="prof-new-pass" required placeholder="Enter new password"/>
-        </div>
-        <button type="submit" class="btn-lime mt-2 w-full py-2.5">Update Password</button>
-      </form>
+      </div>
     </div>
 
   </div>
@@ -1818,6 +1821,62 @@ function openSettingsCard(section) {
 
 function switchSettingsTab(tab) {
   openSettingsCard(tab);
+}
+
+
+async function downloadAccountBackup(e) {
+  if (e) e.preventDefault();
+  const passInput = document.getElementById('backup-auth-pass');
+  const password = passInput ? passInput.value.trim() : '';
+  if (!password) {
+    toast('Please enter your account password to authorize backup download', 'err');
+    if (passInput) passInput.focus();
+    return;
+  }
+
+  const btn = document.getElementById('btn-user-backup');
+  const origHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin"></i> Authorizing & Exporting...';
+    lucide.createIcons();
+  }
+
+  try {
+    const res = await fetch('/api/user/export-backup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Backup authorization failed' }));
+      throw new Error(err.error || 'Failed to generate backup');
+    }
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const contentDisp = res.headers.get('Content-Disposition');
+    let filename = `PANDA_Backup_${S.currentUser?.username || 'user'}.json`;
+    if (contentDisp && contentDisp.includes('filename=')) {
+      filename = contentDisp.split('filename=')[1].replace(/["']/g, '').trim();
+    }
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+    toast('Your private account data backup downloaded successfully!');
+    if (passInput) passInput.value = '';
+  } catch(err) {
+    toast(err.message, 'err');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = origHtml;
+      lucide.createIcons();
+    }
+  }
 }
 
 function togglePref(prefName, isChecked) {

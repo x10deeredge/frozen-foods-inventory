@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 import io
+import json
 from datetime import datetime, timedelta, date
 from functools import wraps
 import pdf_generator
@@ -1730,3 +1731,56 @@ def api_business_intelligence():
         'margin_stars': margin_stars[:8],
         'vip_clients': vip_clients
     })
+
+
+@app.route('/api/user/export-backup', methods=['POST'])
+@auth_required
+def api_user_export_backup():
+    uid = get_current_user_id()
+    data = request.get_json() or {}
+    password = data.get('password', '').strip()
+
+    if not password:
+        return jsonify({'error': 'Account password is required to authorize data backup.'}), 400
+
+    conn = get_db()
+    user = conn.execute('SELECT * FROM users WHERE id=?', (uid,)).fetchone()
+    if not user or not check_password_hash(user['password_hash'], password):
+        conn.close()
+        return jsonify({'error': 'Incorrect password. Data backup authorization rejected.'}), 403
+
+    user_dict = dict(user)
+    user_dict.pop('password_hash', None)
+
+    products = [dict(r) for r in conn.execute('SELECT * FROM products WHERE user_id=?', (uid,)).fetchall()]
+    stock_entries = [dict(r) for r in conn.execute('SELECT * FROM stock_entries WHERE user_id=?', (uid,)).fetchall()]
+    sales = [dict(r) for r in conn.execute('SELECT * FROM sales WHERE user_id=?', (uid,)).fetchall()]
+    expenses = [dict(r) for r in conn.execute('SELECT * FROM expenses WHERE user_id=?', (uid,)).fetchall()]
+    conn.close()
+
+    backup_payload = {
+        'export_format': 'PANDA_ERP_USER_BACKUP',
+        'version': '2.5.0',
+        'exported_at': datetime.now().isoformat(),
+        'account_id': uid,
+        'username': user['username'],
+        'user_profile': user_dict,
+        'summary': {
+            'total_products': len(products),
+            'total_stock_entries': len(stock_entries),
+            'total_sales': len(sales),
+            'total_expenses': len(expenses)
+        },
+        'records': {
+            'products': products,
+            'stock_entries': stock_entries,
+            'sales': sales,
+            'expenses': expenses
+        }
+    }
+
+    filename = f"PANDA_Backup_{user['username']}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    response = make_response(json.dumps(backup_payload, indent=2, default=str))
+    response.headers['Content-Type'] = 'application/json'
+    response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
