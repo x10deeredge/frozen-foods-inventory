@@ -611,7 +611,7 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
     tot_stock_cost = sum(float(st.get('total_cost') or 0) for st in stock_entries)
     tot_expenses = sum(float(e.get('amount') or 0) for e in expenses)
     net_profit = tot_sales - tot_stock_cost - tot_expenses
-    tot_valuation = sum(float(p.get('purchase_price') or 0) * max(0.0, float(p.get('available') or 0)) for p in products)
+    tot_valuation = sum(float(p.get('effective_cost') or p.get('purchase_price') or 0) * max(0.0, float(p.get('available') or 0)) for p in products)
 
     kpi_card_data = [
         [
@@ -658,6 +658,7 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
             Paragraph("<b>#</b>", tbl_hdr),
             Paragraph("<b>ITEM NAME &amp; DETAILS</b>", tbl_hdr),
             Paragraph("<b>CATEGORY</b>", tbl_hdr),
+            Paragraph("<b>ACTION DATE</b>", tbl_hdr),
             Paragraph("<b>UNIT</b>", tbl_hdr),
             Paragraph(f"<b>COST ({currency})</b>", tbl_hdr_r),
             Paragraph(f"<b>SALE ({currency})</b>", tbl_hdr_r),
@@ -669,8 +670,9 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
 
     for idx, p in enumerate(products, 1):
         avail = float(p.get('available') or 0)
-        c_price = float(p.get('purchase_price') or 0)
-        s_price = float(p.get('selling_price') or 0)
+        c_price = float(p.get('effective_cost') or p.get('purchase_price') or 0)
+        s_price = float(p.get('effective_sale_price') or p.get('selling_price') or 0)
+        act_date = str(p.get('last_action_date') or p.get('created_at') or '')[:10]
         val = c_price * max(0.0, avail)
         status_txt = "In Stock"
         status_color = "#15803d"
@@ -686,6 +688,7 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
             Paragraph(str(idx), tbl_body),
             Paragraph(f"<b>{p.get('name', '')}</b>", tbl_body),
             Paragraph(p.get('category', '') or 'General', tbl_body),
+            Paragraph(act_date or '—', tbl_body),
             Paragraph(p.get('unit', '') or 'unit', tbl_body),
             Paragraph(f"{c_price:,.2f}", tbl_body_r),
             Paragraph(f"{s_price:,.2f}", tbl_body_r),
@@ -695,11 +698,13 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
         ])
 
     if len(prod_rows) == 1:
-        prod_rows.append([Paragraph("—", tbl_body), Paragraph("No products registered in this account", tbl_body), Paragraph("—", tbl_body), Paragraph("—", tbl_body), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r), Paragraph("—", tbl_body)])
+        prod_rows.append([Paragraph("—", tbl_body), Paragraph("No products registered in this account", tbl_body), Paragraph("—", tbl_body), Paragraph("—", tbl_body), Paragraph("—", tbl_body), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r), Paragraph("—", tbl_body)])
     else:
+        # Total Row
         prod_rows.append([
             Paragraph("", tbl_body),
             Paragraph("<b>TOTAL PORTFOLIO VALUATION</b>", tbl_body_b),
+            Paragraph("", tbl_body),
             Paragraph("", tbl_body),
             Paragraph("", tbl_body),
             Paragraph("", tbl_body),
@@ -709,7 +714,7 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
             Paragraph("", tbl_body)
         ])
 
-    ptable = Table(prod_rows, colWidths=[7 * mm, 48 * mm, 24 * mm, 13 * mm, 19 * mm, 19 * mm, 17 * mm, 23 * mm, 16 * mm])
+    ptable = Table(prod_rows, colWidths=[6 * mm, 40 * mm, 18 * mm, 20 * mm, 10 * mm, 18 * mm, 18 * mm, 16 * mm, 24 * mm, 16 * mm])
     ptable.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0f172a')),
         ('TOPPADDING', (0, 0), (-1, -1), 3),
@@ -730,22 +735,23 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
         [
             Paragraph("<b>#</b>", tbl_hdr),
             Paragraph("<b>INVOICE #</b>", tbl_hdr),
-            Paragraph("<b>DATE</b>", tbl_hdr),
-            Paragraph("<b>CLIENT / CUSTOMER</b>", tbl_hdr),
-            Paragraph("<b>PRODUCT / SERVICE</b>", tbl_hdr),
+            Paragraph("<b>TRANSACTION DATE</b>", tbl_hdr),
+            Paragraph("<b>CLIENT / STORE</b>", tbl_hdr),
+            Paragraph("<b>PRODUCT SOLD</b>", tbl_hdr),
             Paragraph("<b>QTY</b>", tbl_hdr_r),
-            Paragraph("<b>STATUS</b>", tbl_hdr),
+            Paragraph("<b>PAYMENT STATUS</b>", tbl_hdr),
             Paragraph(f"<b>TOTAL ({currency})</b>", tbl_hdr_r)
         ]
     ]
 
     for idx, s in enumerate(sales, 1):
-        st_color = "#15803d" if s.get('payment_status') == 'paid' else ("#d97706" if s.get('payment_status') == 'partial' else "#b91c1c")
+        st_color = "#15803d" if str(s.get('payment_status', '')).lower() == 'paid' else ("#d97706" if str(s.get('payment_status', '')).lower() == 'partial' else "#b91c1c")
         inv_title = s.get('invoice_no') or f"INV-{s.get('id', '')}"
+        s_date = str(s.get('sale_date', ''))[:10]
         sales_rows.append([
             Paragraph(str(idx), tbl_body),
             Paragraph(f"<b>{inv_title}</b>", tbl_body),
-            Paragraph(str(s.get('sale_date', ''))[:10], tbl_body),
+            Paragraph(s_date or '—', tbl_body),
             Paragraph(f"<b>{s.get('client_name', '')}</b>", tbl_body),
             Paragraph(s.get('product_name', '') or '—', tbl_body),
             Paragraph(f"{float(s.get('quantity_sold') or 0):,.2f} {s.get('unit', '')}", tbl_body_r),
@@ -767,7 +773,7 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
             Paragraph(f"<b>{tot_sales:,.2f}</b>", tbl_body_br)
         ])
 
-    stable = Table(sales_rows, colWidths=[7 * mm, 24 * mm, 20 * mm, 42 * mm, 38 * mm, 20 * mm, 15 * mm, 20 * mm])
+    stable = Table(sales_rows, colWidths=[7 * mm, 24 * mm, 22 * mm, 41 * mm, 37 * mm, 18 * mm, 17 * mm, 20 * mm])
     stable.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0f172a')),
         ('TOPPADDING', (0, 0), (-1, -1), 3),
@@ -791,21 +797,26 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
             Paragraph("<b>PRODUCT PURCHASED</b>", tbl_hdr),
             Paragraph("<b>SUPPLIER / VENDOR</b>", tbl_hdr),
             Paragraph("<b>QTY ADDED</b>", tbl_hdr_r),
+            Paragraph(f"<b>UNIT COST</b>", tbl_hdr_r),
             Paragraph(f"<b>TOTAL COST ({currency})</b>", tbl_hdr_r)
         ]
     ]
     for idx, st in enumerate(stock_entries, 1):
+        q = float(st.get('quantity') or 0)
+        tc = float(st.get('total_cost') or 0)
+        uc = tc / q if q > 0 else 0.0
         stock_rows.append([
             Paragraph(str(idx), tbl_body),
-            Paragraph(str(st.get('purchase_date', ''))[:10], tbl_body),
+            Paragraph(str(st.get('purchase_date', ''))[:10] or '—', tbl_body),
             Paragraph(f"<b>{st.get('product_name', '')}</b>", tbl_body),
             Paragraph(st.get('supplier', '') or 'Standard Supplier', tbl_body),
-            Paragraph(f"{float(st.get('quantity') or 0):,.2f} {st.get('unit', '')}", tbl_body_r),
-            Paragraph(f"<b>{float(st.get('total_cost') or 0):,.2f}</b>", tbl_body_br)
+            Paragraph(f"{q:,.2f} {st.get('unit', '')}", tbl_body_r),
+            Paragraph(f"{uc:,.2f}", tbl_body_r),
+            Paragraph(f"<b>{tc:,.2f}</b>", tbl_body_br)
         ])
 
     if len(stock_rows) == 1:
-        stock_rows.append([Paragraph("—", tbl_body), Paragraph("No stock purchases recorded", tbl_body), Paragraph("—", tbl_body), Paragraph("—", tbl_body), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r)])
+        stock_rows.append([Paragraph("—", tbl_body), Paragraph("—", tbl_body), Paragraph("No stock purchases recorded", tbl_body), Paragraph("—", tbl_body), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r), Paragraph("0.00", tbl_body_r)])
     else:
         stock_rows.append([
             Paragraph("", tbl_body),
@@ -813,10 +824,11 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
             Paragraph("", tbl_body),
             Paragraph("", tbl_body),
             Paragraph("", tbl_body),
+            Paragraph("", tbl_body),
             Paragraph(f"<b>{tot_stock_cost:,.2f}</b>", tbl_body_br)
         ])
 
-    sktable = Table(stock_rows, colWidths=[8 * mm, 25 * mm, 55 * mm, 43 * mm, 25 * mm, 30 * mm])
+    sktable = Table(stock_rows, colWidths=[7 * mm, 24 * mm, 48 * mm, 38 * mm, 22 * mm, 20 * mm, 27 * mm])
     sktable.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0f172a')),
         ('TOPPADDING', (0, 0), (-1, -1), 3),
@@ -836,33 +848,36 @@ def build_user_backup_pdf(user, products, stock_entries, sales, expenses, logo_p
     exp_rows = [
         [
             Paragraph("<b>#</b>", tbl_hdr),
-            Paragraph("<b>DATE</b>", tbl_hdr),
+            Paragraph("<b>EXPENSE DATE</b>", tbl_hdr),
             Paragraph("<b>EXPENSE TITLE / REASON</b>", tbl_hdr),
             Paragraph("<b>CATEGORY</b>", tbl_hdr),
+            Paragraph("<b>PAYMENT MODE</b>", tbl_hdr),
             Paragraph(f"<b>AMOUNT ({currency})</b>", tbl_hdr_r)
         ]
     ]
     for idx, e in enumerate(expenses, 1):
         exp_rows.append([
             Paragraph(str(idx), tbl_body),
-            Paragraph(str(e.get('expense_date', ''))[:10], tbl_body),
+            Paragraph(str(e.get('expense_date', ''))[:10] or '—', tbl_body),
             Paragraph(f"<b>{e.get('title', '')}</b>", tbl_body),
             Paragraph(e.get('category', 'General'), tbl_body),
+            Paragraph(e.get('payment_method', 'Cash') or 'Cash', tbl_body),
             Paragraph(f"<b>{float(e.get('amount') or 0):,.2f}</b>", tbl_body_br)
         ])
 
     if len(exp_rows) == 1:
-        exp_rows.append([Paragraph("—", tbl_body), Paragraph("No operational expenses logged", tbl_body), Paragraph("—", tbl_body), Paragraph("—", tbl_body), Paragraph("0.00", tbl_body_r)])
+        exp_rows.append([Paragraph("—", tbl_body), Paragraph("—", tbl_body), Paragraph("No operational expenses logged", tbl_body), Paragraph("—", tbl_body), Paragraph("—", tbl_body), Paragraph("0.00", tbl_body_r)])
     else:
         exp_rows.append([
             Paragraph("", tbl_body),
             Paragraph("<b>TOTAL OPERATIONAL EXPENSES</b>", tbl_body_b),
             Paragraph("", tbl_body),
             Paragraph("", tbl_body),
+            Paragraph("", tbl_body),
             Paragraph(f"<b>{tot_expenses:,.2f}</b>", tbl_body_br)
         ])
 
-    etable = Table(exp_rows, colWidths=[8 * mm, 25 * mm, 75 * mm, 43 * mm, 35 * mm])
+    etable = Table(exp_rows, colWidths=[7 * mm, 24 * mm, 62 * mm, 33 * mm, 25 * mm, 35 * mm])
     etable.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0f172a')),
         ('TOPPADDING', (0, 0), (-1, -1), 3),

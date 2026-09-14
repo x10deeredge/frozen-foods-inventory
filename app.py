@@ -1754,12 +1754,28 @@ def api_user_export_backup():
 
     products = [dict(r) for r in conn.execute('''
         SELECT p.*,
-            COALESCE((SELECT SUM(quantity) FROM stock_entries WHERE product_id=p.id AND user_id=?),0) -
-            COALESCE((SELECT SUM(quantity_sold) FROM sales WHERE product_id=p.id AND user_id=?),0) as available
+            COALESCE((SELECT SUM(quantity) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id),0) -
+            COALESCE((SELECT SUM(quantity_sold) FROM sales WHERE product_id=p.id AND user_id=p.user_id),0) as available,
+            COALESCE(
+                NULLIF(p.purchase_price, 0),
+                (SELECT total_cost / quantity FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id AND quantity>0 ORDER BY purchase_date DESC, id DESC LIMIT 1),
+                (SELECT SUM(total_cost) / NULLIF(SUM(quantity), 0) FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id),
+                0.0
+            ) as effective_cost,
+            COALESCE(
+                NULLIF(p.selling_price, 0),
+                (SELECT unit_price FROM sales WHERE product_id=p.id AND user_id=p.user_id AND unit_price>0 ORDER BY sale_date DESC, id DESC LIMIT 1),
+                (SELECT total_amount / NULLIF(quantity_sold, 0) FROM sales WHERE product_id=p.id AND user_id=p.user_id AND quantity_sold>0 ORDER BY sale_date DESC, id DESC LIMIT 1),
+                0.0
+            ) as effective_sale_price,
+            COALESCE(
+                (SELECT purchase_date FROM stock_entries WHERE product_id=p.id AND user_id=p.user_id ORDER BY purchase_date DESC, id DESC LIMIT 1),
+                SUBSTR(p.created_at, 1, 10)
+            ) as last_action_date
         FROM products p
         WHERE p.user_id=?
         ORDER BY p.name ASC
-    ''', (uid, uid, uid)).fetchall()]
+    ''', (uid,)).fetchall()]
 
     stock_entries = [dict(r) for r in conn.execute('''
         SELECT s.*, p.name as product_name, p.unit
@@ -1785,7 +1801,12 @@ def api_user_export_backup():
     conn.close()
 
     try:
-        pdf_bytes = pdf_generator.build_user_backup_pdf(user_dict, products, stock_entries, sales, expenses)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        logo_path = os.path.join(base_dir, 'static', 'logo.jpg')
+        if not os.path.exists(logo_path):
+            logo_path = os.path.join(base_dir, 'static', 'icon-512.png')
+
+        pdf_bytes = pdf_generator.build_user_backup_pdf(user_dict, products, stock_entries, sales, expenses, logo_path=logo_path)
         safe_username = "".join(c for c in user_dict.get('username', 'user') if c.isalnum() or c in ('_', '-'))
         filename = f"PANDA_Store_Statement_{safe_username}_{datetime.now().strftime('%Y%m%d')}.pdf"
         return send_file(
