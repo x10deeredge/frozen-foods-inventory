@@ -459,7 +459,7 @@
   </div>
 
   <!-- SMART BUSINESS INTELLIGENCE — LIVE STRATEGIC ADVISOR BANNER -->
-  <div class="card p-3.5 mb-2.5 border border-lime/40 bg-gradient-to-r from-[#14180d] to-[#121212] relative overflow-hidden shadow-lg shadow-lime/10 cursor-pointer hover:border-lime transition-all active:scale-[0.99] group" onclick="switchTab('analytics'); setTimeout(() => switchSeg('intel'), 120)">
+  <div class="card p-3.5 mb-2.5 border border-lime/40 bg-gradient-to-r from-[#14180d] to-[#121212] relative overflow-hidden shadow-lg shadow-lime/10 cursor-pointer hover:border-lime transition-all active:scale-[0.99] group" onclick="openBusinessIntelligence()">
     <div class="flex items-center justify-between gap-3">
       <div class="flex items-center gap-2.5 min-w-0">
         <div class="w-10 h-10 rounded-xl bg-lime/15 text-lime flex items-center justify-center flex-shrink-0 border border-lime/30 group-hover:scale-110 transition-transform shadow-sm">
@@ -480,44 +480,24 @@
     </div>
   </div>
 
-  <!-- 1-TAP QUICK ACTIONS HUB (SUPER EASY TO OPERATE) -->
-  <div class="card p-3 mb-2.5 border border-border bg-[#101010]">
-    <div class="flex items-center justify-between mb-2 px-1">
-      <span class="text-[11px] font-black text-offwhite uppercase tracking-wider flex items-center gap-1.5">
-        <i data-lucide="zap" class="w-3.5 h-3.5 text-lime"></i> Quick Actions Hub
-      </span>
-      <span class="text-[9.5px] text-muted font-semibold">1-Tap Operations</span>
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-      <button onclick="switchTab('sales')" class="p-2.5 rounded-xl bg-[#161616] hover:bg-[#202020] border border-lime/30 hover:border-lime flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm">
-        <div class="w-9 h-9 rounded-lg bg-lime/10 text-lime flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
-          <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-        </div>
-        <span class="text-[12px] font-black text-offwhite group-hover:text-lime transition-colors">New Sale</span>
-        <span class="text-[9px] text-muted">Bill &amp; Invoice</span>
-      </button>
-      <button onclick="switchTab('stock')" class="p-2.5 rounded-xl bg-[#161616] hover:bg-[#202020] border border-info/30 hover:border-info flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm">
-        <div class="w-9 h-9 rounded-lg bg-info/10 text-info flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
-          <i data-lucide="package-plus" class="w-4 h-4"></i>
-        </div>
-        <span class="text-[12px] font-black text-offwhite group-hover:text-info transition-colors">Add Stock</span>
-        <span class="text-[9px] text-muted">Restock Inventory</span>
-      </button>
-      <button onclick="switchTab('products');setTimeout(()=>{document.getElementById('p-name')?.focus();window.scrollTo({top:0,behavior:'smooth'});},250)" class="p-2.5 rounded-xl bg-[#161616] hover:bg-[#202020] border border-white/10 hover:border-white/30 flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm">
-        <div class="w-9 h-9 rounded-lg bg-white/5 text-chrome flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
-          <i data-lucide="plus-circle" class="w-4 h-4"></i>
-        </div>
-        <span class="text-[12px] font-black text-offwhite group-hover:text-white transition-colors">New Product</span>
-        <span class="text-[9px] text-muted">Add New SKU</span>
-      </button>
-      <button onclick="switchTab('expenses');setTimeout(()=>{document.getElementById('ex-title')?.focus();window.scrollTo({top:0,behavior:'smooth'});},250)" class="p-2.5 rounded-xl bg-[#161616] hover:bg-[#202020] border border-danger/30 hover:border-danger flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm">
-        <div class="w-9 h-9 rounded-lg bg-danger/10 text-danger flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
-          <i data-lucide="receipt" class="w-4 h-4"></i>
-        </div>
-        <span class="text-[12px] font-black text-offwhite group-hover:text-danger transition-colors">Log Expense</span>
-        <span class="text-[9px] text-muted">Record Outflow</span>
-      </button>
-    </div>
+  <!-- SLEEK COMPACT ACTION BAR (MINIMALIST & HIGH-EFFICIENCY) -->
+  <div class="grid grid-cols-4 gap-1.5 mb-2.5">
+    <button onclick="switchTab('sales')" class="py-2.5 px-1.5 rounded-xl bg-[#141414] hover:bg-lime/10 border border-lime/30 hover:border-lime flex items-center justify-center gap-1.5 group active:scale-95 transition-all shadow-sm" title="New Sale Invoice">
+      <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-lime group-hover:scale-110 transition-transform flex-shrink-0"></i>
+      <span class="text-[11.5px] font-black text-offwhite group-hover:text-lime transition-colors truncate">New Sale</span>
+    </button>
+    <button onclick="switchTab('stock')" class="py-2.5 px-1.5 rounded-xl bg-[#141414] hover:bg-info/10 border border-info/30 hover:border-info flex items-center justify-center gap-1.5 group active:scale-95 transition-all shadow-sm" title="Add / Buy Stock">
+      <i data-lucide="package-plus" class="w-3.5 h-3.5 text-info group-hover:scale-110 transition-transform flex-shrink-0"></i>
+      <span class="text-[11.5px] font-black text-offwhite group-hover:text-info transition-colors truncate">Add Stock</span>
+    </button>
+    <button onclick="switchTab('products');setTimeout(()=>{document.getElementById('p-name')?.focus();window.scrollTo({top:0,behavior:'smooth'});},200)" class="py-2.5 px-1.5 rounded-xl bg-[#141414] hover:bg-white/10 border border-white/15 hover:border-white/35 flex items-center justify-center gap-1.5 group active:scale-95 transition-all shadow-sm" title="Register New Product">
+      <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-silver group-hover:scale-110 transition-transform flex-shrink-0"></i>
+      <span class="text-[11.5px] font-black text-offwhite group-hover:text-white transition-colors truncate">New Item</span>
+    </button>
+    <button onclick="switchTab('expenses');setTimeout(()=>{document.getElementById('ex-title')?.focus();window.scrollTo({top:0,behavior:'smooth'});},200)" class="py-2.5 px-1.5 rounded-xl bg-[#141414] hover:bg-danger/10 border border-danger/30 hover:border-danger flex items-center justify-center gap-1.5 group active:scale-95 transition-all shadow-sm" title="Log Expense">
+      <i data-lucide="receipt" class="w-3.5 h-3.5 text-danger group-hover:scale-110 transition-transform flex-shrink-0"></i>
+      <span class="text-[11.5px] font-black text-offwhite group-hover:text-danger transition-colors truncate">Expense</span>
+    </button>
   </div>
 
   <!-- Quick Counts (Clickable to switch tab) -->
@@ -1169,263 +1149,376 @@
   </div>
 </div>
 
-<!-- REAL PROFILE & BUSINESS SETTINGS MODAL -->
+<!-- REAL MASTER-DETAIL SETTINGS SUITE (SENIOR ARCHITECTURE) -->
 <div class="overlay" id="profile-settings-overlay">
   <div class="backdrop" onclick="closeProfileSettingsModal()"></div>
-  <div class="sheet" style="max-width:560px;max-height:88vh;overflow-y:auto">
+  <div class="sheet" style="max-width:540px;max-height:88vh;overflow-y:auto">
     <div class="handle"></div>
-    <div class="flex items-center justify-between mb-3.5">
-      <div>
-        <div class="text-[16px] font-black text-offwhite flex items-center gap-2">
-          <i data-lucide="settings" class="w-4 h-4 text-lime"></i>
-          <span>System &amp; Business Settings</span>
+
+    <!-- MASTER HUB VIEW (Category Cards) -->
+    <div id="settings-hub-view">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="text-[17px] font-black text-offwhite flex items-center gap-2">
+            <i data-lucide="sliders-horizontal" class="w-5 h-5 text-lime"></i>
+            <span>System Settings</span>
+          </div>
+          <div class="text-[11px] text-muted mt-0.5">PANDA Enterprise Suite &bull; Commercial Configuration</div>
         </div>
-        <div class="text-[10.5px] text-muted mt-0.5">Enterprise Commercial ERP &bull; Version 2.5.0</div>
+        <button onclick="closeProfileSettingsModal()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
-      <button onclick="closeProfileSettingsModal()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+
+      <!-- Quick Store Identity Card Banner -->
+      <div class="p-3 mb-3 rounded-2xl bg-gradient-to-r from-[#181d10] to-[#121212] border border-lime/30 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-lime/15 text-lime flex items-center justify-center font-black text-[15px] border border-lime/30 shadow-inner" id="set-hub-avatar">P</div>
+          <div>
+            <div class="text-[13.5px] font-black text-offwhite" id="set-hub-biz-name">Wholesale Store</div>
+            <div class="text-[11px] text-muted flex items-center gap-1.5 mt-0.5">
+              <span id="set-hub-owner">Admin</span>
+              <span>&bull;</span>
+              <span class="badge b-lime text-[9.5px] font-bold" id="set-hub-cur">PKR (₨)</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="openSettingsCard('biz')" class="btn-ghost py-1 px-2.5 text-[11px] text-lime font-bold hover:underline flex items-center gap-1">
+          <span>Edit</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- 7 Category Cards Grid -->
+      <div class="space-y-2">
+        <!-- 1. Business Info -->
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('biz')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-lime/10 text-lime flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="building-2" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-lime transition-colors">Business &amp; Store Identity</div>
+              <div class="text-[10.5px] text-muted mt-0.5">Company name, owner, tax NTN, address &amp; store currency</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-lime group-hover:translate-x-0.5 transition-all"></i>
+        </div>
+
+        <!-- 2. Bank & Terms -->
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('inv')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-info/10 text-info flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="landmark" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-info transition-colors">Bank Accounts &amp; Settlement Terms</div>
+              <div class="text-[10.5px] text-muted mt-0.5">Official bank details, IBAN &amp; payment notes printed on invoices</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-info group-hover:translate-x-0.5 transition-all"></i>
+        </div>
+
+        <!-- 3. Preferences -->
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('prefs')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber/10 text-amber flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="sliders" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-amber transition-colors">App Preferences &amp; Sound</div>
+              <div class="text-[10.5px] text-muted mt-0.5">Barcode scan audio, auto-print invoices &amp; compact table rows</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-amber group-hover:translate-x-0.5 transition-all"></i>
+        </div>
+
+        <!-- 4. Security -->
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('sec')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-danger/10 text-danger flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-danger transition-colors">Security &amp; Database Backup</div>
+              <div class="text-[10.5px] text-muted mt-0.5">Change login password &amp; export 1-click SQLite database</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-danger group-hover:translate-x-0.5 transition-all"></i>
+        </div>
+
+        <!-- 5. About Us -->
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('about')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-white/5 text-silver flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="info" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-white transition-colors">About System &amp; Architecture</div>
+              <div class="text-[10.5px] text-muted mt-0.5">Systems Architect Habib Naseer &bull; Version 2.5.0 Enterprise</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-white group-hover:translate-x-0.5 transition-all"></i>
+        </div>
+
+        <!-- 6. Contact Us -->
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('contact')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-ok/10 text-ok flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="headset" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-ok transition-colors">Technical Support &amp; Developer Contact</div>
+              <div class="text-[10.5px] text-muted mt-0.5">Direct contact with Habib Naseer (x10deeredge@gmail.com)</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-ok group-hover:translate-x-0.5 transition-all"></i>
+        </div>
+
+        <!-- 7. Privacy Policy -->
+        <div class="p-3 rounded-xl bg-[#141414] hover:bg-[#1a1a1a] border border-border/80 hover:border-lime/40 flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] group" onclick="openSettingsCard('legal')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-white/5 text-silver flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[13px] font-bold text-offwhite group-hover:text-white transition-colors">Privacy Policy &amp; Commercial Terms</div>
+              <div class="text-[10.5px] text-muted mt-0.5">Google Play &amp; Apple App Store certified local data ownership</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-muted group-hover:text-white group-hover:translate-x-0.5 transition-all"></i>
+        </div>
+      </div>
     </div>
 
-    <!-- Navigation Tabs inside Settings (Responsive & Clean) -->
-    <div class="card-sm p-1 flex items-center gap-1 mb-4 overflow-x-auto" style="-webkit-overflow-scrolling:touch">
-      <button id="set-tab-biz" class="seg-btn active text-[11px] whitespace-nowrap" onclick="switchSettingsTab('biz')">
-        <i data-lucide="building-2" class="w-3 h-3 inline mr-1"></i>Business
-      </button>
-      <button id="set-tab-inv" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('inv')">
-        <i data-lucide="landmark" class="w-3 h-3 inline mr-1"></i>Bank &amp; Terms
-      </button>
-      <button id="set-tab-prefs" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('prefs')">
-        <i data-lucide="sliders" class="w-3 h-3 inline mr-1"></i>Preferences
-      </button>
-      <button id="set-tab-about" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('about')">
-        <i data-lucide="info" class="w-3 h-3 inline mr-1"></i>About Us
-      </button>
-      <button id="set-tab-contact" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('contact')">
-        <i data-lucide="mail" class="w-3 h-3 inline mr-1"></i>Contact
-      </button>
-      <button id="set-tab-legal" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('legal')">
-        <i data-lucide="shield-check" class="w-3 h-3 inline mr-1"></i>Privacy
-      </button>
-      <button id="set-tab-sec" class="seg-btn text-[11px] whitespace-nowrap" onclick="switchSettingsTab('sec')">
-        <i data-lucide="lock" class="w-3 h-3 inline mr-1"></i>Security
-      </button>
-    </div>
+    <!-- DETAIL VIEW (Individual Focused Cards with Back Button) -->
+    <div id="settings-detail-view" class="hidden">
+      <!-- Top Navigation Bar for Detail View -->
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-border/80">
+        <button onclick="backToSettingsHub()" class="btn-ghost py-1.5 px-2.5 text-[12px] font-bold text-lime flex items-center gap-1.5 hover:bg-lime/10 rounded-lg transition-all">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Settings</span>
+        </button>
+        <div class="text-[13.5px] font-black text-offwhite" id="settings-detail-title">Configuration</div>
+        <button onclick="closeProfileSettingsModal()" class="btn-icon"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
 
-    <!-- 1. Business Profile Form -->
-    <form id="form-profile-biz" class="space-y-3" onsubmit="saveProfileSettings(event)">
-      <div>
-        <label class="lbl">Business / Store Name (Printed on Invoices)</label>
-        <input class="field font-bold" id="prof-biz-name" required placeholder="e.g. Metro Trading Co."/>
+      <!-- 1. Business Profile Form -->
+      <form id="form-profile-biz" class="space-y-3 hidden" onsubmit="saveProfileSettings(event)">
+        <div>
+          <label class="lbl">Business / Store Name (Printed on Invoices)</label>
+          <input class="field font-bold" id="prof-biz-name" required placeholder="e.g. Metro Trading Co."/>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="lbl">Owner / Executive Name</label>
+            <input class="field" id="prof-full-name" placeholder="Full name"/>
+          </div>
+          <div>
+            <label class="lbl">Official Email Address</label>
+            <input class="field" id="prof-email" type="email" placeholder="contact@domain.com"/>
+          </div>
+        </div>
+        <div>
+          <label class="lbl">Commercial / Warehouse Address</label>
+          <input class="field" id="prof-address" placeholder="Commercial address, city"/>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="lbl">NTN / Tax ID #</label>
+            <input class="field" id="prof-tax-id" placeholder="NTN or Tax Code"/>
+          </div>
+          <div>
+            <label class="lbl">Phone / WhatsApp</label>
+            <input class="field" id="prof-phone" placeholder="+92 300 1234567"/>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="lbl">Store Currency</label>
+            <select class="field" id="prof-currency">
+              <option value="PKR">PKR (₨)</option>
+              <option value="USD">USD ($)</option>
+              <option value="AED">AED (د.إ)</option>
+              <option value="SAR">SAR (﷼)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl">Job Title / Designation</label>
+            <input class="field" id="prof-role" placeholder="e.g. Managing Partner"/>
+          </div>
+        </div>
+        <div class="pt-2 flex items-center gap-2">
+          <button type="submit" class="btn-lime flex-1 py-2.5">Save Business Details</button>
+          <a href="/api/admin/backup-db" class="btn-ghost text-[11px] py-2.5 px-3 flex items-center justify-center gap-1.5 text-chrome hover:text-lime" title="Download SQLite database backup">
+            <i data-lucide="database-backup" class="w-3.5 h-3.5"></i>
+            <span>Backup DB</span>
+          </a>
+        </div>
+      </form>
+
+      <!-- 2. Invoice & Banking Terms Form -->
+      <form id="form-profile-inv" class="space-y-3 hidden" onsubmit="saveProfileSettings(event)">
+        <div class="p-2.5 rounded-xl bg-inner border border-border/80 text-[11px] text-muted leading-relaxed">
+          <div class="text-offwhite font-bold mb-0.5 flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5 text-lime"></i> Custom Settlement Instructions</div>
+          Enter your real bank account details or payment instructions below. These will automatically print on all generated PDF receipts and invoices. Leave blank for clean universal terms.
+        </div>
+        <div>
+          <label class="lbl">Bank Settlement Details</label>
+          <textarea class="field text-[12px] font-mono leading-relaxed" id="prof-bank-details" rows="3" placeholder="e.g. Bank: Standard Chartered&#10;Title: METRO TRADING CO&#10;IBAN / A/C: PK36SCBL0000001123456701"></textarea>
+        </div>
+        <div>
+          <label class="lbl">Invoice Policy / Settlement Notes</label>
+          <textarea class="field text-[12px] leading-relaxed" id="prof-invoice-notes" rows="2" placeholder="e.g. Payment due within 7 days. Electronic remittances must reference invoice number."></textarea>
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="btn-lime w-full py-2.5">Save Invoice &amp; Bank Settings</button>
+        </div>
+      </form>
+
+      <!-- 3. System & App Preferences -->
+      <div id="panel-profile-prefs" class="space-y-3 hidden">
+        <div class="p-3 rounded-xl bg-inner border border-border/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[12.5px] font-bold text-offwhite">Audio Feedback</div>
+              <div class="text-[10px] text-muted">Play confirmation sound on bill generation &amp; barcode scans</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="pref-audio" class="sr-only peer" checked onchange="togglePref('audio', this.checked)">
+              <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
+            </label>
+          </div>
+          <div class="border-t border-border/50 pt-2.5 flex items-center justify-between">
+            <div>
+              <div class="text-[12.5px] font-bold text-offwhite">Auto-Print Dialog</div>
+              <div class="text-[10px] text-muted">Automatically open browser print modal upon saving a sale</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="pref-autoprint" class="sr-only peer" onchange="togglePref('autoprint', this.checked)">
+              <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
+            </label>
+          </div>
+          <div class="border-t border-border/50 pt-2.5 flex items-center justify-between">
+            <div>
+              <div class="text-[12.5px] font-bold text-offwhite">Compact Grid Rows</div>
+              <div class="text-[10px] text-muted">Display high-density rows for rapid high-volume billing</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="pref-compact" class="sr-only peer" checked onchange="togglePref('compact', this.checked)">
+              <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
+            </label>
+          </div>
+        </div>
+        <div class="text-[11px] text-muted italic">Preferences are saved locally to your device.</div>
       </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="lbl">Owner / Executive Name</label>
-          <input class="field" id="prof-full-name" placeholder="Full name"/>
+
+      <!-- 4. Detailed About Us Section -->
+      <div id="panel-profile-about" class="space-y-3 hidden">
+        <div class="p-4 rounded-xl bg-inner border border-border/80 text-center">
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-lime/10 border-2 border-lime/40 flex items-center justify-center mb-3 shadow-lg shadow-lime/10">
+            <i data-lucide="boxes" class="w-7 h-7 text-lime"></i>
+          </div>
+          <div class="text-[16px] font-black text-offwhite">PANDA Commercial ERP System</div>
+          <div class="text-[11.5px] text-lime font-bold mt-0.5">Version 2.5.0 &bull; Enterprise Edition</div>
+          <div class="text-[11px] text-muted mt-1 max-w-sm mx-auto">Unified Commercial Inventory, Invoicing, Financial Auditing &amp; Smart Business Intelligence Platform.</div>
         </div>
-        <div>
-          <label class="lbl">Official Email Address</label>
-          <input class="field" id="prof-email" type="email" placeholder="contact@domain.com"/>
+
+        <div class="card-sm p-3 space-y-2 text-[11.5px]">
+          <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
+            <span class="text-muted">Lead Developer &amp; Architect:</span>
+            <span class="font-black text-offwhite">Habib Naseer</span>
+          </div>
+          <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
+            <span class="text-muted">Official Email:</span>
+            <a href="mailto:x10deeredge@gmail.com" class="font-bold text-lime hover:underline font-mono text-[11px]">x10deeredge@gmail.com</a>
+          </div>
+          <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
+            <span class="text-muted">Application Target:</span>
+            <span class="font-bold text-silver">Retail &bull; Wholesale &bull; Distribution</span>
+          </div>
+          <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
+            <span class="text-muted">Mobile / App Store Support:</span>
+            <span class="font-bold text-ok">PWA + Native Android APK Ready</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-muted">Database Engine:</span>
+            <span class="font-bold text-silver">SQLite 3 WAL (Zero-Config / Private)</span>
+          </div>
         </div>
-      </div>
-      <div>
-        <label class="lbl">Commercial / Warehouse Address</label>
-        <input class="field" id="prof-address" placeholder="Commercial address, city"/>
-      </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="lbl">NTN / Tax ID #</label>
-          <input class="field" id="prof-tax-id" placeholder="NTN or Tax Code"/>
-        </div>
-        <div>
-          <label class="lbl">Phone / WhatsApp</label>
-          <input class="field" id="prof-phone" placeholder="+92 300 1234567"/>
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="lbl">Store Currency</label>
-          <select class="field" id="prof-currency">
-            <option value="PKR">PKR (₨)</option>
-            <option value="USD">USD ($)</option>
-            <option value="AED">AED (د.إ)</option>
-            <option value="SAR">SAR (﷼)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="GBP">GBP (£)</option>
-          </select>
-        </div>
-        <div>
-          <label class="lbl">Job Title / Designation</label>
-          <input class="field" id="prof-role" placeholder="e.g. Managing Partner"/>
+
+        <div class="text-[11px] text-muted leading-relaxed">
+          PANDA ERP is engineered for exceptional speed, zero data leakage, and offline-first reliability. Built from the ground up to meet App Store and Google Play compliance benchmarks.
         </div>
       </div>
-      <div class="pt-2 flex items-center gap-2">
-        <button type="submit" class="btn-lime flex-1 py-2.5">Save Business Details</button>
-        <a href="/api/admin/backup-db" class="btn-ghost text-[11px] py-2.5 px-3 flex items-center justify-center gap-1.5 text-chrome hover:text-lime" title="Download SQLite database backup">
-          <i data-lucide="database-backup" class="w-3.5 h-3.5"></i>
-          <span>Backup DB</span>
+
+      <!-- 5. Contact & Support Section -->
+      <div id="panel-profile-contact" class="space-y-3 hidden">
+        <div class="p-3.5 rounded-xl bg-[#12140e] border border-lime/30 text-center">
+          <div class="w-10 h-10 mx-auto rounded-xl bg-lime/15 text-lime flex items-center justify-center mb-2">
+            <i data-lucide="headset" class="w-5 h-5"></i>
+          </div>
+          <div class="text-[14px] font-black text-offwhite">Official Technical Support</div>
+          <div class="text-[11px] text-muted mt-1">Have a feature request, bug report, or enterprise deployment question? Reach out directly.</div>
+        </div>
+
+        <div class="card-sm p-3.5 space-y-3">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[12px] font-bold text-offwhite">Primary Contact</div>
+              <div class="text-[11px] text-muted">Habib Naseer &bull; Senior Systems Engineer</div>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-[12px] font-bold text-offwhite">Direct Email</div>
+              <a href="mailto:x10deeredge@gmail.com" class="text-[11.5px] text-lime font-mono hover:underline font-bold">x10deeredge@gmail.com</a>
+              <div class="text-[10px] text-muted mt-0.5">Response within 24 hours guaranteed</div>
+            </div>
+          </div>
+        </div>
+
+        <a href="mailto:x10deeredge@gmail.com?subject=Wholesale%20ERP%20Support%20Inquiry" class="btn-lime w-full py-3 flex items-center justify-center gap-2 font-bold text-[12.5px] shadow-lg shadow-lime/10">
+          <i data-lucide="send" class="w-4 h-4"></i>
+          <span>Send Email to Habib Naseer</span>
         </a>
       </div>
-    </form>
 
-    <!-- 2. Invoice & Banking Terms Form -->
-    <form id="form-profile-inv" class="space-y-3 hidden" onsubmit="saveProfileSettings(event)">
-      <div class="p-2.5 rounded-xl bg-inner border border-border/80 text-[11px] text-muted leading-relaxed">
-        <div class="text-offwhite font-bold mb-0.5 flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5 text-lime"></i> Custom Settlement Instructions</div>
-        Enter your real bank account details or payment instructions below. These will automatically print on all generated PDF receipts and invoices. Leave blank for clean universal terms.
+      <!-- 6. Privacy Policy & Commercial License (App Store & Play Store Compliant) -->
+      <div id="panel-profile-legal" class="space-y-3 hidden">
+        <div class="p-3.5 rounded-xl bg-inner border border-border/80 space-y-2.5 text-[11px] text-muted leading-relaxed">
+          <div class="text-[13px] font-black text-offwhite flex items-center gap-1.5 mb-1">
+            <i data-lucide="shield" class="w-4 h-4 text-ok"></i>
+            <span>App Store Privacy &amp; Data Sovereignty</span>
+          </div>
+          <p><strong class="text-offwhite">100% Local Data Ownership:</strong> All store records, transactions, inventory levels, supplier contacts, and client names are maintained strictly within your private database instance. No data is harvested, analyzed, or shared with any third party.</p>
+          <p><strong class="text-offwhite">Zero Third-Party Telemetry:</strong> PANDA ERP does not include any third-party advertising SDKs, analytics tracking beacons, or telemetry scripts.</p>
+          <p><strong class="text-offwhite">Cryptographic Security:</strong> User credentials are protected using salted one-way hashing algorithms. Session security complies with standard commercial application guidelines.</p>
+          <p><strong class="text-offwhite">Data Portability:</strong> You can export full SQLite backups or printable audit statements anytime with a single click.</p>
+        </div>
       </div>
-      <div>
-        <label class="lbl">Bank Settlement Details</label>
-        <textarea class="field text-[12px] font-mono leading-relaxed" id="prof-bank-details" rows="3" placeholder="e.g. Bank: Standard Chartered&#10;Title: METRO TRADING CO&#10;IBAN / A/C: PK36SCBL0000001123456701"></textarea>
-      </div>
-      <div>
-        <label class="lbl">Invoice Policy / Settlement Notes</label>
-        <textarea class="field text-[12px] leading-relaxed" id="prof-invoice-notes" rows="2" placeholder="e.g. Payment due within 7 days. Electronic remittances must reference invoice number."></textarea>
-      </div>
-      <div class="pt-2">
-        <button type="submit" class="btn-lime w-full py-2.5">Save Invoice &amp; Bank Settings</button>
-      </div>
-    </form>
 
-    <!-- 3. System & App Preferences -->
-    <div id="panel-profile-prefs" class="space-y-3 hidden">
-      <div class="p-3 rounded-xl bg-inner border border-border/80 space-y-3">
-        <div class="flex items-center justify-between">
-          <div>
-            <div class="text-[12.5px] font-bold text-offwhite">Audio Feedback</div>
-            <div class="text-[10px] text-muted">Play confirmation sound on bill generation &amp; barcode scans</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="pref-audio" class="sr-only peer" checked onchange="togglePref('audio', this.checked)">
-            <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
-          </label>
+      <!-- 7. Change Password Form -->
+      <form id="form-profile-sec" class="space-y-3 hidden" onsubmit="changeAccountPassword(event)">
+        <div>
+          <label class="lbl">Current Account Password</label>
+          <input class="field" type="password" id="prof-old-pass" required placeholder="Enter current password"/>
         </div>
-        <div class="border-t border-border/50 pt-2.5 flex items-center justify-between">
-          <div>
-            <div class="text-[12.5px] font-bold text-offwhite">Auto-Print Dialog</div>
-            <div class="text-[10px] text-muted">Automatically open browser print modal upon saving a sale</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="pref-autoprint" class="sr-only peer" onchange="togglePref('autoprint', this.checked)">
-            <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
-          </label>
+        <div>
+          <label class="lbl">New Password (minimum 4 characters)</label>
+          <input class="field" type="password" id="prof-new-pass" required placeholder="Enter new password"/>
         </div>
-        <div class="border-t border-border/50 pt-2.5 flex items-center justify-between">
-          <div>
-            <div class="text-[12.5px] font-bold text-offwhite">Compact Grid Rows</div>
-            <div class="text-[10px] text-muted">Display high-density rows for rapid high-volume billing</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="pref-compact" class="sr-only peer" checked onchange="togglePref('compact', this.checked)">
-            <div class="w-9 h-5 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime"></div>
-          </label>
-        </div>
-      </div>
-      <div class="text-[11px] text-muted italic">Preferences are saved locally to your device.</div>
+        <button type="submit" class="btn-lime mt-2 w-full py-2.5">Update Password</button>
+      </form>
     </div>
 
-    <!-- 4. Detailed About Us Section -->
-    <div id="panel-profile-about" class="space-y-3 hidden">
-      <div class="p-4 rounded-xl bg-inner border border-border/80 text-center">
-        <div class="w-14 h-14 mx-auto rounded-2xl bg-lime/10 border-2 border-lime/40 flex items-center justify-center mb-3 shadow-lg shadow-lime/10">
-          <i data-lucide="boxes" class="w-7 h-7 text-lime"></i>
-        </div>
-        <div class="text-[16px] font-black text-offwhite">PANDA Commercial ERP System</div>
-        <div class="text-[11.5px] text-lime font-bold mt-0.5">Version 2.5.0 &bull; Enterprise Edition</div>
-        <div class="text-[11px] text-muted mt-1 max-w-sm mx-auto">Unified Commercial Inventory, Invoicing, Financial Auditing &amp; Smart Business Intelligence Platform.</div>
-      </div>
-
-      <div class="card-sm p-3 space-y-2 text-[11.5px]">
-        <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
-          <span class="text-muted">Lead Developer &amp; Architect:</span>
-          <span class="font-black text-offwhite">Habib Naseer</span>
-        </div>
-        <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
-          <span class="text-muted">Official Email:</span>
-          <a href="mailto:x10deeredge@gmail.com" class="font-bold text-lime hover:underline font-mono text-[11px]">x10deeredge@gmail.com</a>
-        </div>
-        <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
-          <span class="text-muted">Application Target:</span>
-          <span class="font-bold text-silver">Retail &bull; Wholesale &bull; Distribution</span>
-        </div>
-        <div class="flex items-center justify-between pb-1.5 border-b border-border/50">
-          <span class="text-muted">Mobile / App Store Support:</span>
-          <span class="font-bold text-ok">PWA + Native Android APK Ready</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-muted">Database Engine:</span>
-          <span class="font-bold text-silver">SQLite 3 WAL (Zero-Config / Private)</span>
-        </div>
-      </div>
-
-      <div class="text-[11px] text-muted leading-relaxed">
-        PANDA ERP is engineered for exceptional speed, zero data leakage, and offline-first reliability. Built from the ground up to meet App Store and Google Play compliance benchmarks.
-      </div>
-    </div>
-
-    <!-- 5. Contact & Support Section -->
-    <div id="panel-profile-contact" class="space-y-3 hidden">
-      <div class="p-3.5 rounded-xl bg-[#12140e] border border-lime/30 text-center">
-        <div class="w-10 h-10 mx-auto rounded-xl bg-lime/15 text-lime flex items-center justify-center mb-2">
-          <i data-lucide="headset" class="w-5 h-5"></i>
-        </div>
-        <div class="text-[14px] font-black text-offwhite">Official Technical Support</div>
-        <div class="text-[11px] text-muted mt-1">Have a feature request, bug report, or enterprise deployment question? Reach out directly.</div>
-      </div>
-
-      <div class="card-sm p-3.5 space-y-3">
-        <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-lg bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 mt-0.5">
-            <i data-lucide="user" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="text-[12px] font-bold text-offwhite">Primary Contact</div>
-            <div class="text-[11px] text-muted">Habib Naseer &bull; Senior Systems Engineer</div>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-lg bg-lime/10 text-lime flex items-center justify-center flex-shrink-0 mt-0.5">
-            <i data-lucide="mail" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="text-[12px] font-bold text-offwhite">Direct Email</div>
-            <a href="mailto:x10deeredge@gmail.com" class="text-[11.5px] text-lime font-mono hover:underline font-bold">x10deeredge@gmail.com</a>
-            <div class="text-[10px] text-muted mt-0.5">Response within 24 hours guaranteed</div>
-          </div>
-        </div>
-      </div>
-
-      <a href="mailto:x10deeredge@gmail.com?subject=Wholesale%20ERP%20Support%20Inquiry" class="btn-lime w-full py-3 flex items-center justify-center gap-2 font-bold text-[12.5px] shadow-lg shadow-lime/10">
-        <i data-lucide="send" class="w-4 h-4"></i>
-        <span>Send Email to Habib Naseer</span>
-      </a>
-    </div>
-
-    <!-- 6. Privacy Policy & Commercial License (App Store & Play Store Compliant) -->
-    <div id="panel-profile-legal" class="space-y-3 hidden">
-      <div class="p-3.5 rounded-xl bg-inner border border-border/80 space-y-2.5 text-[11px] text-muted leading-relaxed">
-        <div class="text-[13px] font-black text-offwhite flex items-center gap-1.5 mb-1">
-          <i data-lucide="shield" class="w-4 h-4 text-ok"></i>
-          <span>App Store Privacy &amp; Data Sovereignty</span>
-        </div>
-        <p><strong class="text-offwhite">100% Local Data Ownership:</strong> All store records, transactions, inventory levels, supplier contacts, and client names are maintained strictly within your private database instance. No data is harvested, analyzed, or shared with any third party.</p>
-        <p><strong class="text-offwhite">Zero Third-Party Telemetry:</strong> PANDA ERP does not include any third-party advertising SDKs, analytics tracking beacons, or telemetry scripts.</p>
-        <p><strong class="text-offwhite">Cryptographic Security:</strong> User credentials are protected using salted one-way hashing algorithms. Session security complies with standard commercial application guidelines.</p>
-        <p><strong class="text-offwhite">Data Portability:</strong> You can export full SQLite backups or printable audit statements anytime with a single click.</p>
-      </div>
-    </div>
-
-    <!-- 7. Change Password Form -->
-    <form id="form-profile-sec" class="space-y-3 hidden" onsubmit="changeAccountPassword(event)">
-      <div>
-        <label class="lbl">Current Account Password</label>
-        <input class="field" type="password" id="prof-old-pass" required placeholder="Enter current password"/>
-      </div>
-      <div>
-        <label class="lbl">New Password (minimum 4 characters)</label>
-        <input class="field" type="password" id="prof-new-pass" required placeholder="Enter new password"/>
-      </div>
-      <button type="submit" class="btn-lime mt-2 w-full py-2.5">Update Password</button>
-    </form>
   </div>
 </div>
 
@@ -1666,24 +1759,70 @@ function closeProfileSettingsModal() {
   document.getElementById('profile-settings-overlay').classList.remove('open');
 }
 
-function switchSettingsTab(tab) {
-  const tabs = ['biz', 'inv', 'prefs', 'about', 'contact', 'legal', 'sec'];
-  tabs.forEach(t => {
-    const btn = document.getElementById(`set-tab-${t}`);
-    if (btn) btn.classList.toggle('active', t === tab);
-    
-    // Panel or form
-    const form = document.getElementById(`form-profile-${t}`);
-    if (form) form.classList.toggle('hidden', t !== tab);
-    const panel = document.getElementById(`panel-profile-${t}`);
-    if (panel) panel.classList.toggle('hidden', t !== tab);
+
+// ─── MASTER-DETAIL SETTINGS CONTROLLER (SENIOR ARCHITECTURE) ──────────────────
+function openProfileSettingsModal() {
+  closeAllDropdowns();
+  backToSettingsHub();
+  document.getElementById('profile-settings-overlay').classList.add('open');
+  // Update quick identity chip on hub view
+  const u = S.currentUser;
+  if (u) {
+    const avatarEl = document.getElementById('set-hub-avatar');
+    if (avatarEl) avatarEl.textContent = (u.business_name || u.username || 'P')[0].toUpperCase();
+    const bizEl = document.getElementById('set-hub-biz-name');
+    if (bizEl) bizEl.textContent = u.business_name || 'Wholesale Store';
+    const ownEl = document.getElementById('set-hub-owner');
+    if (ownEl) ownEl.textContent = u.full_name || u.username;
+    const curEl = document.getElementById('set-hub-cur');
+    if (curEl) curEl.textContent = `${u.currency || 'PKR'}`;
+  }
+  lucide.createIcons();
+}
+
+function closeProfileSettingsModal() {
+  document.getElementById('profile-settings-overlay').classList.remove('open');
+}
+
+function backToSettingsHub() {
+  document.getElementById('settings-hub-view').classList.remove('hidden');
+  document.getElementById('settings-detail-view').classList.add('hidden');
+  lucide.createIcons();
+}
+
+const SETTINGS_TITLES = {
+  biz: 'Business & Store Identity',
+  inv: 'Bank Accounts & Settlement',
+  prefs: 'App Preferences & Sound',
+  sec: 'Security & Database Backup',
+  about: 'About System & Architecture',
+  contact: 'Technical Support & Contact',
+  legal: 'Privacy Policy & Terms'
+};
+
+function openSettingsCard(section) {
+  document.getElementById('settings-hub-view').classList.add('hidden');
+  document.getElementById('settings-detail-view').classList.remove('hidden');
+  document.getElementById('settings-detail-title').textContent = SETTINGS_TITLES[section] || 'Configuration';
+
+  // Hide all sections, show chosen section
+  const sections = ['biz', 'inv', 'prefs', 'about', 'contact', 'legal', 'sec'];
+  sections.forEach(s => {
+    const form = document.getElementById(`form-profile-${s}`);
+    if (form) form.classList.toggle('hidden', s !== section);
+    const panel = document.getElementById(`panel-profile-${s}`);
+    if (panel) panel.classList.toggle('hidden', s !== section);
   });
   lucide.createIcons();
 }
 
+function switchSettingsTab(tab) {
+  openSettingsCard(tab);
+}
+
 function togglePref(prefName, isChecked) {
   localStorage.setItem(`pref_${prefName}`, isChecked ? 'true' : 'false');
-  toast(`Preference updated: ${prefName} ${isChecked ? 'enabled' : 'disabled'}`);
+  toast(`Preference saved: ${prefName} ${isChecked ? 'enabled' : 'disabled'}`);
 }
 
 async function saveProfileSettings(e) {
@@ -2222,10 +2361,24 @@ function switchTab(tab) {
 
 function switchSeg(seg) {
   S.currentSeg = seg;
-  ['rev','prod','cli'].forEach(s => {
-    document.getElementById(`panel-${s}`).style.display = s===seg ? '' : 'none';
-    document.getElementById(`seg-${s}`).classList.toggle('active', s===seg);
+  const segments = ['rev', 'prod', 'cli', 'intel'];
+  segments.forEach(s => {
+    const p = document.getElementById(`panel-${s}`);
+    const b = document.getElementById(`seg-${s}`);
+    if (p) p.style.display = (s === seg) ? 'block' : 'none';
+    if (b) b.classList.toggle('active', s === seg);
   });
+  if (seg === 'intel') {
+    loadBusinessIntelligence();
+  }
+}
+
+function openBusinessIntelligence() {
+  switchTab('analytics');
+  setTimeout(() => {
+    switchSeg('intel');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 100);
 }
 
 function filterList(id, q) {
